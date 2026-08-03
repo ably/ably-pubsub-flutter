@@ -3,7 +3,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface AblyFlutter : NSObject<FlutterPlugin>
+@interface AblyFlutter : NSObject<FlutterPlugin, FlutterSceneLifeCycleDelegate>
 
 +(instancetype)new NS_UNAVAILABLE;
 -(instancetype)init NS_UNAVAILABLE;

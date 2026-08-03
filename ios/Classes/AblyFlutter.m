@@ -814,6 +814,7 @@ static const FlutterHandler _realtimeAuthCreateTokenRequest = ^void(AblyFlutter 
     if (!_registeredForDelegateCallbacks) {
         _registeredForDelegateCallbacks = YES;
         [registrar addApplicationDelegate:self];
+        [registrar addSceneDelegate:self];
     }
 }
 
@@ -863,15 +864,43 @@ static const FlutterHandler _realtimeAuthCreateTokenRequest = ^void(AblyFlutter 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [[UIApplication sharedApplication] registerForRemoteNotifications];
+
     // Check if application was launched from a notification tap.
-    
     // https://stackoverflow.com/a/21611009/7365866
+    //
+    // For apps on the UIScene life cycle Flutter calls this during
+    // scene:willConnectToSession:options: with nil launch options, so there the
+    // payload comes from the scene's connection options instead.
     NSDictionary *notification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
     if (notification) {
         PushHandlers.pushNotificationTapLaunchedAppFromTerminatedData = notification;
     }
-    
+
     return YES;
+}
+
+#pragma mark - UISceneDelegate
+
+/// The UIScene equivalent of application:didFinishLaunchingWithOptions:, for apps
+/// that have adopted the UIScene life cycle. The plugin stays registered for both
+/// so that apps on either life cycle work.
+- (BOOL)scene:(UIScene *)scene
+    willConnectToSession:(UISceneSession *)session
+                 options:(nullable UISceneConnectionOptions *)connectionOptions {
+    // Harmless if the forwarded application:didFinishLaunchingWithOptions: has
+    // already asked; iOS just replies with the token it already has.
+    [[UIApplication sharedApplication] registerForRemoteNotifications];
+
+    // Check if the app was launched from a notification tap. Only set this if it is
+    // not already set, because the ordering of this against the forwarded
+    // application:didFinishLaunchingWithOptions: is not guaranteed.
+    UNNotificationResponse *const response = connectionOptions.notificationResponse;
+    if (response && !PushHandlers.pushNotificationTapLaunchedAppFromTerminatedData) {
+        PushHandlers.pushNotificationTapLaunchedAppFromTerminatedData = response.notification.request.content.userInfo;
+    }
+
+    // We only observe the connection, so let other plugins have their turn at it.
+    return NO;
 }
 
 #pragma mark - Push Notifications Registration - UIApplicationDelegate
