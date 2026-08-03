@@ -32,7 +32,7 @@ class _CodecPair<T> {
       );
     }
     if (value == null) return null;
-    return _encoder!(value as T);
+    return _encoder(value as T);
   }
 
   /// @nodoc
@@ -46,7 +46,7 @@ class _CodecPair<T> {
       );
     }
     if (jsonMap == null) return null;
-    return _decoder!(jsonMap);
+    return _decoder(jsonMap);
   }
 }
 

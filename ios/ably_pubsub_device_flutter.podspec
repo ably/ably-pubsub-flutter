@@ -20,7 +20,8 @@ Pod::Spec.new do |s|
   s.dependency 'Flutter'
   s.dependency 'Ably', '1.2.53'
   s.platform = :ios
-  s.ios.deployment_target  = '10.0'
+  # UIScene, and therefore `FlutterSceneLifeCycleDelegate`, is iOS 13+ only.
+  s.ios.deployment_target  = '13.0'
 
   # Flutter 3.x ships both arm64 and x86_64 simulator slices; no arch restriction needed.
   s.pod_target_xcconfig = {
