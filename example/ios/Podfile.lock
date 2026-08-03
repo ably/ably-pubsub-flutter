@@ -42,14 +42,14 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Ably: 1756d6590a572809c10fc4bcc32e05fe9e7867d7
-  ably_flutter: 95785161fc2858c7be524af4334925d30682b3b0
+  ably_flutter: 03c57b59bcbf92ba2bd6910f10ed4e155bced176
   AblyDeltaCodec: add5d06a756b3581b12aab5b5500a320b8c55bea
   device_info_plus: 71ffc6ab7634ade6267c7a93088ed7e4f74e5896
-  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   flutter_local_notifications: ad39620c743ea4c15127860f4b5641649a988100
   fluttertoast: 2c67e14dce98bbdb200df9e1acf610d7a6264ea1
   msgpack: c85f6251873059738472ae136951cec5f30f3251
 
-PODFILE CHECKSUM: 5dac7b8eff57b86c98038531a0cc7562fb467acc
+PODFILE CHECKSUM: cc1f88378b4bfcf93a6ce00d2c587857c6008d3b
 
 COCOAPODS: 1.16.2

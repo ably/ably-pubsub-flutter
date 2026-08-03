@@ -17,7 +17,7 @@ jobs:
 
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
-          flutter-version: "3.24"
+          flutter-version: "3.41.9"
           cache: true
 
       - name: "Build example app for iOS"
@@ -39,7 +39,7 @@ jobs:
 
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
-          flutter-version: "3.29"
+          flutter-version: "3.41.9"
           cache: true
 
       - name: "Build example app for Android"

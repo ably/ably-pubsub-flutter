@@ -25,7 +25,7 @@ See [issue #226](https://github.com/ably/ably-flutter/issues/226).
 - Android API level 19+ (Android 4.4+)
     - Android devices
     - Android emulator (with Google APIs)
-- iOS 10+
+- iOS 13+
     - Physical devices only
     - **Not supported:** iOS Simulator. Calling [`UIApplication:registerForRemoteNotifications`](https://developer.apple.com/documentation/uikit/uiapplication/1623078-registerforremotenotifications) will result in [`application:didFailToRegisterForRemoteNotificationsWithError`](https://developer.apple.com/documentation/uikit/uiapplicationdelegate/1622962-application) method being called in your AppDelegate with an error: `remote notifications are not supported in the simulator`). This is an iOS simulator limitation.
     
