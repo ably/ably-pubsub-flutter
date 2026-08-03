@@ -2,3 +2,6 @@
 # See <https://github.com/ably/ably-flutter/issues/400#issuecomment-1129236627>
 test/
 test_integration/
+
+# Development-only lint helper, of no use to consumers
+ios/Tests/Support/
