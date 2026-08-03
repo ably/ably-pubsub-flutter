@@ -17,9 +17,5 @@ class DevicePushDetails {
 
   /// @nodoc
   /// Initializes an instance without any defaults
-  const DevicePushDetails({
-    this.errorReason,
-    this.recipient,
-    this.state,
-  });
+  const DevicePushDetails({this.errorReason, this.recipient, this.state});
 }

@@ -31,11 +31,14 @@ Future<Map<String, dynamic>> testRealtimeEvents({
       connectionStates.add(enumValueToString(realtime.connection.state));
 
   recordConnectionState(); //connection: initialized
+  realtime.connection.on().listen(
+    (e) => connectionStateChanges.add(encodeConnectionEvent(e)),
+  );
   realtime.connection
-      .on()
-      .listen((e) => connectionStateChanges.add(encodeConnectionEvent(e)));
-  realtime.connection.on(ConnectionEvent.connected).listen(
-      (e) => filteredConnectionStateChanges.add(encodeConnectionEvent(e)));
+      .on(ConnectionEvent.connected)
+      .listen(
+        (e) => filteredConnectionStateChanges.add(encodeConnectionEvent(e)),
+      );
 
   reporter.reportLog({'before realtime.connect': ''});
   recordConnectionState(); //connection: initialized

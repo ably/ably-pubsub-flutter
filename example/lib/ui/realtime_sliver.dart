@@ -18,8 +18,8 @@ class RealtimeSliver extends HookWidget {
   List<StreamSubscription<dynamic>> _subscriptions = [];
 
   RealtimeSliver(this.ablyService, {Key? key})
-      : realtime = ablyService.realtime,
-        super(key: key) {
+    : realtime = ablyService.realtime,
+      super(key: key) {
     channel = realtime.channels.get(Constants.channelName);
   }
 
@@ -30,70 +30,71 @@ class RealtimeSliver extends HookWidget {
     _subscriptions = [];
   }
 
-  Widget buildConnectButton() => TextButton(
-        onPressed: realtime.connect,
-        child: const Text('Connect'),
-      );
+  Widget buildConnectButton() =>
+      TextButton(onPressed: realtime.connect, child: const Text('Connect'));
 
   Widget buildDisconnectButton(ably.ConnectionState state) => TextButton(
-        onPressed:
-            (state == ably.ConnectionState.connected) ? realtime.close : null,
-        child: const Text('Disconnect'),
-      );
+    onPressed: (state == ably.ConnectionState.connected)
+        ? realtime.close
+        : null,
+    child: const Text('Disconnect'),
+  );
 
-  Widget buildChannelAttachButton(ably.ConnectionState connectionState,
-          ably.ChannelState channelState) =>
-      TextButton(
-        onPressed: (connectionState == ably.ConnectionState.connected &&
-                channelState != ably.ChannelState.attached)
-            ? () async {
-                try {
-                  await channel.attach();
-                } on ably.AblyException catch (e) {
-                  print('Unable to attach to channel: ${e.errorInfo}');
-                }
-              }
-            : null,
-        child: const Text('Attach'),
-      );
+  Widget buildChannelAttachButton(
+    ably.ConnectionState connectionState,
+    ably.ChannelState channelState,
+  ) => TextButton(
+    onPressed:
+        (connectionState == ably.ConnectionState.connected &&
+            channelState != ably.ChannelState.attached)
+        ? () async {
+            try {
+              await channel.attach();
+            } on ably.AblyException catch (e) {
+              print('Unable to attach to channel: ${e.errorInfo}');
+            }
+          }
+        : null,
+    child: const Text('Attach'),
+  );
 
   Widget buildChannelDetachButton(ably.ChannelState channelState) => TextButton(
-        onPressed: (channelState == ably.ChannelState.attached)
-            ? channel.detach
-            : null,
-        child: const Text('Detach'),
-      );
+    onPressed: (channelState == ably.ChannelState.attached)
+        ? channel.detach
+        : null,
+    child: const Text('Detach'),
+  );
 
   Widget buildChannelSubscribeButton(
-          ably.ChannelState channelState,
-          ValueNotifier<ably.Message?> latestMessage,
-          ValueNotifier<StreamSubscription<ably.Message>?>
-              channelSubscription) =>
-      TextButton(
-        onPressed: (channelState == ably.ChannelState.attached &&
-                channelSubscription.value == null)
-            ? () {
-                final subscription = channel.subscribe().listen((message) {
-                  latestMessage.value = message;
-                });
-                channelSubscription.value = subscription;
-                _subscriptions.add(subscription);
-              }
-            : null,
-        child: const Text('Subscribe'),
-      );
+    ably.ChannelState channelState,
+    ValueNotifier<ably.Message?> latestMessage,
+    ValueNotifier<StreamSubscription<ably.Message>?> channelSubscription,
+  ) => TextButton(
+    onPressed:
+        (channelState == ably.ChannelState.attached &&
+            channelSubscription.value == null)
+        ? () {
+            final subscription = channel.subscribe().listen((message) {
+              latestMessage.value = message;
+            });
+            channelSubscription.value = subscription;
+            _subscriptions.add(subscription);
+          }
+        : null,
+    child: const Text('Subscribe'),
+  );
 
   Widget buildChannelUnsubscribeButton(
-          ValueNotifier<StreamSubscription<dynamic>?> channelSubscription) =>
-      TextButton(
-        onPressed: (channelSubscription.value != null)
-            ? () async {
-                await channelSubscription.value!.cancel();
-                channelSubscription.value = null;
-              }
-            : null,
-        child: const Text('Unsubscribe'),
-      );
+    ValueNotifier<StreamSubscription<dynamic>?> channelSubscription,
+  ) => TextButton(
+    onPressed: (channelSubscription.value != null)
+        ? () async {
+            await channelSubscription.value!.cancel();
+            channelSubscription.value = null;
+          }
+        : null,
+    child: const Text('Unsubscribe'),
+  );
 
   int typeCounter = 0;
   int realtimePubCounter = 0;
@@ -102,15 +103,20 @@ class RealtimeSliver extends HookWidget {
       TextButton(
         onPressed: (channelState == ably.ChannelState.attached)
             ? () async {
-                final data = _messagesToPublish[
-                    (realtimePubCounter++ % _messagesToPublish.length)];
+                final data =
+                    _messagesToPublish[(realtimePubCounter++ %
+                        _messagesToPublish.length)];
                 final m = ably.Message(
-                    name: 'Message $realtimePubCounter', data: data);
+                  name: 'Message $realtimePubCounter',
+                  data: data,
+                );
                 try {
                   switch (typeCounter % 3) {
                     case 0:
                       await channel.publish(
-                          name: 'Message $realtimePubCounter', data: data);
+                        name: 'Message $realtimePubCounter',
+                        data: data,
+                      );
                       break;
                     case 1:
                       await channel.publish(message: m);
@@ -127,9 +133,7 @@ class RealtimeSliver extends HookWidget {
                 }
               }
             : null,
-        child: const Text(
-          'Publish',
-        ),
+        child: const Text('Publish'),
       );
 
   Widget buildReleaseRealtimeChannelButton(
@@ -137,55 +141,53 @@ class RealtimeSliver extends HookWidget {
     ValueNotifier<ably.ChannelState> channelState,
     ValueNotifier<String?> connectionId,
     ValueNotifier<String?> recoveryKey,
-  ) =>
-      TextButton(
-        onPressed: () async {
-          await channel.detach();
-          realtime.channels.release(Constants.channelName);
-          channel = realtime.channels.get(Constants.channelName);
-          setupListeners(
-              connectionState, channelState, connectionId, recoveryKey);
-        },
-        child: const Text('Release'),
-      );
+  ) => TextButton(
+    onPressed: () async {
+      await channel.detach();
+      realtime.channels.release(Constants.channelName);
+      channel = realtime.channels.get(Constants.channelName);
+      setupListeners(connectionState, channelState, connectionId, recoveryKey);
+    },
+    child: const Text('Release'),
+  );
 
   Widget buildEncryptionSwitch(ValueNotifier<bool> isEnabled) => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Text(
-            'Enable encryption',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-          Switch(
-            onChanged: (switchedOn) async {
-              isEnabled.value = switchedOn;
-              if (switchedOn) {
-                await channel.setOptions(
-                  await ably.RealtimeChannelOptions.withCipherKey(
-                    keyFromPassword(
-                      Constants.examplePasswordForEncryptedChannel,
-                    ),
-                  ),
-                );
-              } else {
-                await channel.setOptions(const ably.RealtimeChannelOptions());
-              }
-            },
-            value: isEnabled.value,
-          ),
-        ],
-      );
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      const Text(
+        'Enable encryption',
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+      ),
+      Switch(
+        onChanged: (switchedOn) async {
+          isEnabled.value = switchedOn;
+          if (switchedOn) {
+            await channel.setOptions(
+              await ably.RealtimeChannelOptions.withCipherKey(
+                keyFromPassword(Constants.examplePasswordForEncryptedChannel),
+              ),
+            );
+          } else {
+            await channel.setOptions(const ably.RealtimeChannelOptions());
+          }
+        },
+        value: isEnabled.value,
+      ),
+    ],
+  );
 
   @override
   Widget build(BuildContext context) {
-    final connectionState =
-        useState<ably.ConnectionState>(realtime.connection.state);
+    final connectionState = useState<ably.ConnectionState>(
+      realtime.connection.state,
+    );
     final connectionId = useState<String?>(realtime.connection.id);
     final recoveryKey = useState<String?>('');
     final channelState = useState<ably.ChannelState>(channel.state);
     final latestMessage = useState<ably.Message?>(null);
-    final channelSubscription =
-        useState<StreamSubscription<ably.Message>?>(null);
+    final channelSubscription = useState<StreamSubscription<ably.Message>?>(
+      null,
+    );
     final realtimeTime = useState<DateTime?>(null);
     final useEncryption = useState(false);
 
@@ -209,12 +211,8 @@ class RealtimeSliver extends HookWidget {
         buildEncryptionSwitch(useEncryption),
         Row(
           children: <Widget>[
-            Expanded(
-              child: buildConnectButton(),
-            ),
-            Expanded(
-              child: buildDisconnectButton(connectionState.value),
-            )
+            Expanded(child: buildConnectButton()),
+            Expanded(child: buildDisconnectButton(connectionState.value)),
           ],
         ),
         const Text(
@@ -225,94 +223,109 @@ class RealtimeSliver extends HookWidget {
         Row(
           children: <Widget>[
             Expanded(
-                child: buildChannelAttachButton(
-                    connectionState.value, channelState.value)),
+              child: buildChannelAttachButton(
+                connectionState.value,
+                channelState.value,
+              ),
+            ),
             Expanded(child: buildChannelDetachButton(channelState.value)),
             Expanded(
-                child: buildReleaseRealtimeChannelButton(
-                    connectionState, channelState, connectionId, recoveryKey)),
+              child: buildReleaseRealtimeChannelButton(
+                connectionState,
+                channelState,
+                connectionId,
+                recoveryKey,
+              ),
+            ),
           ],
         ),
         Row(
           children: <Widget>[
             Expanded(
-                child: buildChannelSubscribeButton(
-                    channelState.value, latestMessage, channelSubscription)),
+              child: buildChannelSubscribeButton(
+                channelState.value,
+                latestMessage,
+                channelSubscription,
+              ),
+            ),
             Expanded(child: buildChannelPublishButton(channelState.value)),
             Expanded(child: buildChannelUnsubscribeButton(channelSubscription)),
           ],
         ),
         TextRow(
-            'Latest message received', latestMessage.value?.data.toString()),
+          'Latest message received',
+          latestMessage.value?.data.toString(),
+        ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const TextRow('Next message to be published:', null),
             TextRow('  Name', 'Message $realtimePubCounter'),
             TextRow(
-                '  Data',
-                _messagesToPublish[
-                        realtimePubCounter % _messagesToPublish.length]
-                    .toString()),
+              '  Data',
+              _messagesToPublish[realtimePubCounter % _messagesToPublish.length]
+                  .toString(),
+            ),
           ],
         ),
-        RealtimePresenceSliver(
-          realtime: realtime,
-          channel: channel,
-        ),
+        RealtimePresenceSliver(realtime: realtime, channel: channel),
         PaginatedResultViewer<ably.Message>(
-            title: 'History',
-            subtitle: const Column(
-              children: [
-                TextRow(
-                    'Hint',
-                    'Use realtime history as a way to get messages that were'
-                        ' published before you are attached to the channel.'),
-                TextRow(
-                    'Warning',
-                    'If you are already attached to the channel, you must'
-                        ' detach and re-attach to get the latest messages '
-                        'published on the channel to get history whilst '
-                        'connected to a realtime channel, use '
-                        'RestChannel.history instead.'),
-              ],
-            ),
-            query: () => channel.history(
-                  ably.RealtimeHistoryParams(
-                    limit: 10,
-                    untilAttach: true,
-                  ),
-                ),
-            builder: (context, message, _) => Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextRow('Name', message.name),
-                    TextRow('Data', message.data.toString()),
-                  ],
-                )),
+          title: 'History',
+          subtitle: const Column(
+            children: [
+              TextRow(
+                'Hint',
+                'Use realtime history as a way to get messages that were'
+                    ' published before you are attached to the channel.',
+              ),
+              TextRow(
+                'Warning',
+                'If you are already attached to the channel, you must'
+                    ' detach and re-attach to get the latest messages '
+                    'published on the channel to get history whilst '
+                    'connected to a realtime channel, use '
+                    'RestChannel.history instead.',
+              ),
+            ],
+          ),
+          query: () => channel.history(
+            ably.RealtimeHistoryParams(limit: 10, untilAttach: true),
+          ),
+          builder: (context, message, _) => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextRow('Name', message.name),
+              TextRow('Data', message.data.toString()),
+            ],
+          ),
+        ),
       ],
     );
   }
 
   void setupListeners(
-      ValueNotifier<ably.ConnectionState> connectionState,
-      ValueNotifier<ably.ChannelState> channelState,
-      ValueNotifier<String?> connectionId,
-      ValueNotifier<String?> recoveryKey) {
+    ValueNotifier<ably.ConnectionState> connectionState,
+    ValueNotifier<ably.ChannelState> channelState,
+    ValueNotifier<String?> connectionId,
+    ValueNotifier<String?> recoveryKey,
+  ) {
     dispose();
-    final connectionSubscription =
-        realtime.connection.on().listen((connectionStateChange) {
+    final connectionSubscription = realtime.connection.on().listen((
+      connectionStateChange,
+    ) {
       if (connectionStateChange.current == ably.ConnectionState.failed) {
         logAndDisplayError(connectionStateChange.reason);
       }
       connectionState.value = connectionStateChange.current;
       connectionId.value = realtime.connection.id;
-      realtime.connection
-          .createRecoveryKey()
-          .then((value) => {recoveryKey.value = value});
-      print('${DateTime.now()}:'
-          ' ConnectionStateChange event: ${connectionStateChange.event}'
-          '\nReason: ${connectionStateChange.reason}');
+      realtime.connection.createRecoveryKey().then(
+        (value) => {recoveryKey.value = value},
+      );
+      print(
+        '${DateTime.now()}:'
+        ' ConnectionStateChange event: ${connectionStateChange.event}'
+        '\nReason: ${connectionStateChange.reason}',
+      );
     });
     _subscriptions.add(connectionSubscription);
     final channelSubscription = channel.on().listen((stateChange) {
@@ -329,8 +342,8 @@ List<dynamic> _messagesToPublish = [
     'I am': null,
     'and': {
       'also': 'nested',
-      'too': {'deep': true}
-    }
+      'too': {'deep': true},
+    },
   },
   [
     42,
@@ -341,8 +354,8 @@ List<dynamic> _messagesToPublish = [
       'I am': null,
       'and': {
         'also': 'nested',
-        'too': {'deep': true}
-      }
-    }
-  ]
+        'too': {'deep': true},
+      },
+    },
+  ],
 ];

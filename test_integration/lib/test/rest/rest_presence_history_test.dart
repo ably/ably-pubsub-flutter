@@ -26,8 +26,9 @@ Future<Map<String, dynamic>> testRestPresenceHistory({
   final historyInitial = await getPresenceHistory(channel);
 
   // creating presence history on channel
-  final realtimePresence =
-      Realtime(options: options).channels.get('test').presence;
+  final realtimePresence = Realtime(
+    options: options,
+  ).channels.get('test').presence;
   // single client enters channel
   await realtimePresence.enter(messagesToPublish.first[1]);
   // updates, multiple times with different messages

@@ -9,10 +9,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 class SystemDetailsSliver extends HookWidget {
   ApiKeyProvision apiKeyProvision;
 
-  SystemDetailsSliver({
-    required this.apiKeyProvision,
-    Key? key,
-  }) : super(key: key);
+  SystemDetailsSliver({required this.apiKeyProvision, Key? key})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,19 +37,24 @@ class SystemDetailsSliver extends HookWidget {
         if (apiKeyProvision.source != ApiKeySource.env)
           RichText(
             text: const TextSpan(
-                style: TextStyle(color: Colors.black),
-                children: [
-                  TextSpan(
-                      text: 'Warning: ',
-                      style: TextStyle(
-                          color: Colors.red, fontWeight: FontWeight.bold)),
-                  TextSpan(
-                    text: 'Ably API key is not configured! Application uses '
-                        'auto-provisioned sandbox key. Please follow '
-                        'instructions in the repository Readme file to '
-                        'setup the sample with your API key.',
-                  )
-                ]),
+              style: TextStyle(color: Colors.black),
+              children: [
+                TextSpan(
+                  text: 'Warning: ',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                TextSpan(
+                  text:
+                      'Ably API key is not configured! Application uses '
+                      'auto-provisioned sandbox key. Please follow '
+                      'instructions in the repository Readme file to '
+                      'setup the sample with your API key.',
+                ),
+              ],
+            ),
           ),
       ],
     );

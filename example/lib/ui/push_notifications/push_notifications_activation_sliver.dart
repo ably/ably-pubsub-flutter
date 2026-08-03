@@ -15,20 +15,23 @@ class PushNotificationsActivationSliver extends HookWidget {
   const PushNotificationsActivationSliver({
     required PushNotificationService pushNotificationService,
     Key? key,
-  })  : _pushNotificationService = pushNotificationService,
-        super(key: key);
+  }) : _pushNotificationService = pushNotificationService,
+       super(key: key);
 
   Future<void> showErrorDialog(
-      BuildContext context, ably.AblyException error) async {
+    BuildContext context,
+    ably.AblyException error,
+  ) async {
     await showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Push notification error'),
-        content:
-            Text('Failed to perform operation on push notification service. '
-                'Please verify your push notification setup with Readme '
-                'files in the ably-flutter repository.\n\n'
-                '${error.errorInfo?.message}'),
+        content: Text(
+          'Failed to perform operation on push notification service. '
+          'Please verify your push notification setup with Readme '
+          'files in the ably-flutter repository.\n\n'
+          '${error.errorInfo?.message}',
+        ),
       ),
     );
   }
@@ -66,16 +69,25 @@ class PushNotificationsActivationSliver extends HookWidget {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: RichText(
-            text: const TextSpan(children: [
-          TextSpan(
-              text: 'Warning: ',
-              style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
-          TextSpan(
-              text: 'APNs is not available on iOS simulators, so you cannot '
-                  'activate the device Ably, since this step requires the'
-                  ' APNs device token.',
-              style: TextStyle(color: Colors.black))
-        ])),
+          text: const TextSpan(
+            children: [
+              TextSpan(
+                text: 'Warning: ',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              TextSpan(
+                text:
+                    'APNs is not available on iOS simulators, so you cannot '
+                    'activate the device Ably, since this step requires the'
+                    ' APNs device token.',
+                style: TextStyle(color: Colors.black),
+              ),
+            ],
+          ),
+        ),
       );
     } else {
       return const SizedBox.shrink();
@@ -87,9 +99,9 @@ class PushNotificationsActivationSliver extends HookWidget {
     final isIOSSimulator = useState(false);
     useEffect(() {
       if (Platform.isIOS) {
-        DeviceInfoPlugin()
-            .iosInfo
-            .then((info) => isIOSSimulator.value = !info.isPhysicalDevice);
+        DeviceInfoPlugin().iosInfo.then(
+          (info) => isIOSSimulator.value = !info.isPhysicalDevice,
+        );
       }
       return;
     });
@@ -108,29 +120,34 @@ class PushNotificationsActivationSliver extends HookWidget {
             children: [
               Expanded(
                 child: BoolStreamButton(
-                    stream: _pushNotificationService.hasPushChannelStream,
-                    onPressed: () => handleActivateDeviceButton(context),
-                    child: const Text('Activate device')),
+                  stream: _pushNotificationService.hasPushChannelStream,
+                  onPressed: () => handleActivateDeviceButton(context),
+                  child: const Text('Activate device'),
+                ),
               ),
               Expanded(
                 child: BoolStreamButton(
-                    stream: _pushNotificationService.hasPushChannelStream,
-                    onPressed: () => handleDeactivateDeviceButton(context),
-                    child: const Text('Deactivate device')),
+                  stream: _pushNotificationService.hasPushChannelStream,
+                  onPressed: () => handleDeactivateDeviceButton(context),
+                  child: const Text('Deactivate device'),
+                ),
               ),
               Expanded(
                 child: BoolStreamButton(
-                    stream: _pushNotificationService.hasPushChannelStream,
-                    onPressed: () => handleResetDeviceButton(context),
-                    child: const Text('Reset activation')),
-              )
+                  stream: _pushNotificationService.hasPushChannelStream,
+                  onPressed: () => handleResetDeviceButton(context),
+                  child: const Text('Reset activation'),
+                ),
+              ),
             ],
           ),
-          const Text('Once devices are activated, a Push Admin can '
-              "send push messages to devices by it's device ID, client ID or "
-              'FCM/ APNs token. To send push messages between users, the '
-              'device must push-subscribe to the channel and a push payload '
-              'is added to the channel message.'),
+          const Text(
+            'Once devices are activated, a Push Admin can '
+            "send push messages to devices by it's device ID, client ID or "
+            'FCM/ APNs token. To send push messages between users, the '
+            'device must push-subscribe to the channel and a push payload '
+            'is added to the channel message.',
+          ),
         ],
       ),
     );
@@ -139,20 +156,24 @@ class PushNotificationsActivationSliver extends HookWidget {
   Future<void> showPermissionReminder(BuildContext context) async {
     if (Platform.isIOS) {
       final authorizationStatus = _pushNotificationService
-          .notificationSettingsStream.value.authorizationStatus;
+          .notificationSettingsStream
+          .value
+          .authorizationStatus;
       if (authorizationStatus == ably.UNAuthorizationStatus.notDetermined) {
         await showDialog<void>(
           context: context,
           builder: (context) => CupertinoAlertDialog(
             title: const Text('Reminder for the developer'),
             content: const Text(
-                'You should request permission to show notifications to the '
-                'user or a provisional permissions.'),
+              'You should request permission to show notifications to the '
+              'user or a provisional permissions.',
+            ),
             actions: [
               CupertinoDialogAction(
                 onPressed: () {
                   _pushNotificationService.requestNotificationPermission(
-                      provisional: true);
+                    provisional: true,
+                  );
                   Navigator.pop(context);
                 },
                 child: const Text('Request provisional permission'),
@@ -173,12 +194,13 @@ class PushNotificationsActivationSliver extends HookWidget {
         );
       } else if (authorizationStatus == ably.UNAuthorizationStatus.denied) {
         await Fluttertoast.showToast(
-            msg: 'The user has previously denied notifications from this app.',
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.CENTER,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16);
+          msg: 'The user has previously denied notifications from this app.',
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.CENTER,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16,
+        );
       }
     }
   }

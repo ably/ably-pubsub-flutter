@@ -10,7 +10,8 @@ void testRestPublish(FlutterDriver Function() getDriver) {
   const message = TestControlMessage(TestName.restPublish);
   late TestControlResponseMessage response;
   setUpAll(
-      () async => response = await requestDataForTest(getDriver(), message));
+    () async => response = await requestDataForTest(getDriver(), message),
+  );
 
   test('rest instance has a valid handle on publish', () {
     expect(response.payload['handle'], isA<int>());
@@ -22,10 +23,10 @@ void testRestRequestTokenPublish(FlutterDriver Function() getDriver) {
   const message = TestControlMessage(TestName.restRequestToken);
   late TestControlResponseMessage response;
   setUpAll(
-      () async => response = await requestDataForTest(getDriver(), message));
+    () async => response = await requestDataForTest(getDriver(), message),
+  );
 
-  test(
-      'rest instance with token has a valid handle and successfully'
+  test('rest instance with token has a valid handle and successfully'
       ' publishes messages', () {
     expect(response.payload['handle'], isA<int>());
     expect(response.payload['handle'], greaterThan(0));
@@ -36,10 +37,10 @@ void testRestCreateTokenRequestPublish(FlutterDriver Function() getDriver) {
   const message = TestControlMessage(TestName.restCreateTokenRequest);
   late TestControlResponseMessage response;
   setUpAll(
-      () async => response = await requestDataForTest(getDriver(), message));
+    () async => response = await requestDataForTest(getDriver(), message),
+  );
 
-  test(
-      'rest instance with token has a valid handle and successfully '
+  test('rest instance with token has a valid handle and successfully '
       'publishes messages', () {
     expect(response.payload['handle'], isA<int>());
     expect(response.payload['log'], greaterThan(0));
@@ -50,7 +51,8 @@ void testRestEncryptedPublish(FlutterDriver Function() getDriver) {
   const message = TestControlMessage(TestName.restEncryptedPublish);
   late TestControlResponseMessage response;
   setUpAll(
-      () async => response = await requestDataForTest(getDriver(), message));
+    () async => response = await requestDataForTest(getDriver(), message),
+  );
 
   test('rest instance has a valid handle on encrypted publish', () {
     expect(response.payload['handle'], isA<int>());
@@ -75,8 +77,9 @@ void testRestPublishSpec(FlutterDriver Function() getDriver) {
     messages = transformListResponse(response.payload['publishedMessages']);
     messages2 = transformListResponse(response.payload['publishedMessages2']);
     messages3 = transformListResponse(response.payload['publishedMessages3']);
-    messagesWithExtras =
-        transformListResponse(response.payload['publishedExtras']);
+    messagesWithExtras = transformListResponse(
+      response.payload['publishedExtras'],
+    );
     exception = response.payload['exception'] as Map<String, dynamic>?;
     exception2 = response.payload['exception2'] as Map<String, dynamic>?;
     exception3 = response.payload['exception3'] as Map<String, dynamic>?;
@@ -115,16 +118,17 @@ void testRestPublishSpec(FlutterDriver Function() getDriver) {
     });
 
     test(
-        '(RSL1m1) Publishing a Message with no clientId when the clientId'
-        ' is set to some value in the client options should result in a message'
-        ' received with the clientId property set to that value', () {
-      expect(messages[0]['clientId'], 'someClientId');
-    },
-        skip:
-            'Failing on Android, the clientId is null`. See https://github.com/ably/ably-flutter/issues/150');
+      '(RSL1m1) Publishing a Message with no clientId when the clientId'
+      ' is set to some value in the client options should result in a message'
+      ' received with the clientId property set to that value',
+      () {
+        expect(messages[0]['clientId'], 'someClientId');
+      },
+      skip:
+          'Failing on Android, the clientId is null`. See https://github.com/ably/ably-flutter/issues/150',
+    );
 
-    test(
-        '(RSL1m2) Publishing a Message with a clientId set to the same'
+    test('(RSL1m2) Publishing a Message with a clientId set to the same'
         ' value as the clientId in the client options should result in'
         ' a message received with the clientId property set to that value', () {
       expect(messages[7]['clientId'], 'someClientId');
@@ -165,26 +169,20 @@ void testRestPublishSpec(FlutterDriver Function() getDriver) {
       () => expect(messages2[0]['clientId'], 'client-id'),
     );
 
-    test(
-      '(RSL1i) If the total size of the message or (if publishing an array)'
-      ' messages, calculated per TO3l8, exceeds the maxMessageSize, then the'
-      ' client library should reject the publish and indicate an error'
-      ' with code 40009',
-      () {
-        // allows publishing messages length <= max allowed limit
-        expect(exception2 == null, true);
-        // errors out publishing messages length > max allowed limit
-        expect(exception3 == null, false);
-      },
-    );
+    test('(RSL1i) If the total size of the message or (if publishing an array)'
+        ' messages, calculated per TO3l8, exceeds the maxMessageSize, then the'
+        ' client library should reject the publish and indicate an error'
+        ' with code 40009', () {
+      // allows publishing messages length <= max allowed limit
+      expect(exception2 == null, true);
+      // errors out publishing messages length > max allowed limit
+      expect(exception3 == null, false);
+    });
 
-    test(
-      'publishes non-ascii characters',
-      () {
-        expect(messages3[0]['name'], 'Ωπ');
-        expect(messages3[0]['data'], 'ΨΔ');
-      },
-    );
+    test('publishes non-ascii characters', () {
+      expect(messages3[0]['name'], 'Ωπ');
+      expect(messages3[0]['data'], 'ΨΔ');
+    });
   });
 
   test('RSL6a2 publishes message extras', () {
@@ -206,21 +204,27 @@ void testRestEncryptedPublishSpec(FlutterDriver Function() getDriver) {
   setUpAll(() async {
     response = await requestDataForTest(getDriver(), message);
 
-    historyOfEncryptedChannel =
-        transformListResponse(response.payload['historyOfEncryptedChannel']);
-    historyOfPlaintextChannel =
-        transformListResponse(response.payload['historyOfPlaintextChannel']);
+    historyOfEncryptedChannel = transformListResponse(
+      response.payload['historyOfEncryptedChannel'],
+    );
+    historyOfPlaintextChannel = transformListResponse(
+      response.payload['historyOfPlaintextChannel'],
+    );
     historyOfEncryptedPushEnabledChannel = transformListResponse(
-        response.payload['historyOfEncryptedPushEnabledChannel']);
+      response.payload['historyOfEncryptedPushEnabledChannel'],
+    );
     historyOfPlaintextPushEnabledChannel = transformListResponse(
-        response.payload['historyOfPlaintextPushEnabledChannel']);
+      response.payload['historyOfPlaintextPushEnabledChannel'],
+    );
   });
 
   group('RSL5', () {
     test('does not encrypt name', () {
       for (var i = 0; i < historyOfEncryptedPushEnabledChannel.length; i++) {
-        expect(historyOfEncryptedChannel[i]['name'],
-            equals(historyOfPlaintextChannel[i]['name']));
+        expect(
+          historyOfEncryptedChannel[i]['name'],
+          equals(historyOfPlaintextChannel[i]['name']),
+        );
       }
     });
 
@@ -238,8 +242,10 @@ void testRestEncryptedPublishSpec(FlutterDriver Function() getDriver) {
 
     test('does not encrypt extras', () {
       for (var i = 0; i < historyOfEncryptedPushEnabledChannel.length; i++) {
-        expect(historyOfEncryptedPushEnabledChannel[i]['name'],
-            equals(historyOfPlaintextPushEnabledChannel[i]['name']));
+        expect(
+          historyOfEncryptedPushEnabledChannel[i]['name'],
+          equals(historyOfPlaintextPushEnabledChannel[i]['name']),
+        );
       }
     });
   });
@@ -249,7 +255,8 @@ void testRestPublishWithAuthCallback(FlutterDriver Function() getDriver) {
   const message = TestControlMessage(TestName.restPublishWithAuthCallback);
   late TestControlResponseMessage response;
   setUpAll(
-      () async => response = await requestDataForTest(getDriver(), message));
+    () async => response = await requestDataForTest(getDriver(), message),
+  );
 
   test('auth callback is invoked', () {
     expect(response.payload['authCallbackInvoked'], isTrue);
@@ -275,10 +282,12 @@ void testRestHistory(FlutterDriver Function() getDriver) {
     historyDefault = transformListResponse(response.payload['historyDefault']);
     historyLimit4 = transformListResponse(response.payload['historyLimit4']);
     historyLimit2 = transformListResponse(response.payload['historyLimit2']);
-    historyForwardLimit4 =
-        transformListResponse(response.payload['historyForwardLimit4']);
-    historyWithStart =
-        transformListResponse(response.payload['historyWithStart']);
+    historyForwardLimit4 = transformListResponse(
+      response.payload['historyForwardLimit4'],
+    );
+    historyWithStart = transformListResponse(
+      response.payload['historyWithStart'],
+    );
     historyWithStartAndEnd = transformListResponse(
       response.payload['historyWithStartAndEnd'],
     );
@@ -307,11 +316,13 @@ void testRestHistory(FlutterDriver Function() getDriver) {
       testAllPublishedMessages(historyLimit4.reversed.toList());
       testAllPublishedMessages(historyLimit2.reversed.toList());
     });
-    test('queries entries in reverse order with direction set to "forward"',
-        () {
-      expect(historyForwardLimit4.length, equals(8));
-      testAllPublishedMessages(historyForwardLimit4);
-    });
+    test(
+      'queries entries in reverse order with direction set to "forward"',
+      () {
+        expect(historyForwardLimit4.length, equals(8));
+        testAllPublishedMessages(historyForwardLimit4);
+      },
+    );
     test('returns entries created after specified time', () {
       expect(historyWithStart.length, equals(2));
       expect(historyWithStart[0]['name'], equals('history'));
@@ -331,7 +342,8 @@ void testRestHistoryWithAuthCallback(FlutterDriver Function() getDriver) {
   const message = TestControlMessage(TestName.restHistoryWithAuthCallback);
   late TestControlResponseMessage response;
   setUpAll(
-      () async => response = await requestDataForTest(getDriver(), message));
+    () async => response = await requestDataForTest(getDriver(), message),
+  );
 
   test('auth callback is invoked', () {
     expect(response.payload['authCallbackInvoked'], isTrue);
@@ -372,10 +384,12 @@ void testRestPresenceGet(FlutterDriver Function() getDriver) {
     membersDefault = transformListResponse(response.payload['membersDefault']);
     membersLimit4 = transformListResponse(response.payload['membersLimit4']);
     membersLimit2 = transformListResponse(response.payload['membersLimit2']);
-    membersClientId =
-        transformListResponse(response.payload['membersClientId']);
-    membersConnectionId =
-        transformListResponse(response.payload['membersConnectionId']);
+    membersClientId = transformListResponse(
+      response.payload['membersClientId'],
+    );
+    membersConnectionId = transformListResponse(
+      response.payload['membersConnectionId'],
+    );
   });
 
   group('rest#channels#channel#presence#get', () {
@@ -426,8 +440,9 @@ void testRestPresenceHistory(FlutterDriver Function() getDriver) {
     historyDefault = transformListResponse(response.payload['historyDefault']);
     historyLimit4 = transformListResponse(response.payload['historyLimit4']);
     historyLimit2 = transformListResponse(response.payload['historyLimit2']);
-    historyForwards =
-        transformListResponse(response.payload['historyForwards']);
+    historyForwards = transformListResponse(
+      response.payload['historyForwards'],
+    );
     historyWithStart = transformListResponse(
       response.payload['historyWithStart'],
     ).reversed.toList();

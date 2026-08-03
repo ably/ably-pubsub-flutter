@@ -61,15 +61,15 @@ class Message with ObjectHash {
 
   @override
   int get hashCode => objectHash([
-        id,
-        name,
-        encoding,
-        clientId,
-        timestamp,
-        connectionId,
-        data,
-        extras,
-      ]);
+    id,
+    name,
+    encoding,
+    clientId,
+    timestamp,
+    connectionId,
+    data,
+    extras,
+  ]);
 
   // https://docs.ably.com/client-lib-development-guide/features/#TM3
   //
@@ -84,22 +84,20 @@ class Message with ObjectHash {
   Message.fromEncoded(
     Map<String, dynamic> jsonObject, [
     RestChannelOptions? channelOptions,
-  ])  : clientId = jsonObject['clientId'] as String?,
-        connectionId = jsonObject['connectionId'] as String?,
-        _data = MessageData.fromValue(jsonObject['data']),
-        encoding = jsonObject['encoding'] as String?,
-        extras = MessageExtras.fromMap(
-          Map.castFrom<dynamic, dynamic, String, dynamic>(
-            jsonObject['extras'] as Map,
-          ),
-        ),
-        id = jsonObject['id'] as String?,
-        name = jsonObject['name'] as String?,
-        timestamp = jsonObject['timestamp'] != null
-            ? DateTime.fromMillisecondsSinceEpoch(
-                jsonObject['timestamp'] as int,
-              )
-            : null;
+  ]) : clientId = jsonObject['clientId'] as String?,
+       connectionId = jsonObject['connectionId'] as String?,
+       _data = MessageData.fromValue(jsonObject['data']),
+       encoding = jsonObject['encoding'] as String?,
+       extras = MessageExtras.fromMap(
+         Map.castFrom<dynamic, dynamic, String, dynamic>(
+           jsonObject['extras'] as Map,
+         ),
+       ),
+       id = jsonObject['id'] as String?,
+       name = jsonObject['name'] as String?,
+       timestamp = jsonObject['timestamp'] != null
+           ? DateTime.fromMillisecondsSinceEpoch(jsonObject['timestamp'] as int)
+           : null;
 
   /// A static factory method to create an array of Message objects from an
   /// [jsonArray] of deserialized Message-like object encoded using Ably's wire
@@ -108,11 +106,11 @@ class Message with ObjectHash {
   static List<Message> fromEncodedArray(
     List<Map<String, dynamic>> jsonArray, [
     RestChannelOptions? channelOptions,
-  ]) =>
-      jsonArray.map((e) => Message.fromEncoded(e, channelOptions)).toList();
+  ]) => jsonArray.map((e) => Message.fromEncoded(e, channelOptions)).toList();
 
   @override
-  String toString() => 'Message'
+  String toString() =>
+      'Message'
       ' id=$id'
       ' name=$name'
       ' data=$data'
@@ -122,5 +120,5 @@ class Message with ObjectHash {
       ' timestamp=$timestamp'
       ' connectionId=$connectionId';
 
-// TODO(tiholic) add support for fromEncoded and fromEncodedArray (TM3)
+  // TODO(tiholic) add support for fromEncoded and fromEncodedArray (TM3)
 }

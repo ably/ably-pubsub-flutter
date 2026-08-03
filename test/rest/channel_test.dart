@@ -32,8 +32,9 @@ void main() {
       final messageData = firstMessage.message as Map<dynamic, dynamic>;
       expect(messageData[TxTransportKeys.channelName], 'test');
       expect(messageData[TxTransportKeys.messages], isA<List<dynamic>>());
-      final messages =
-          List<Message>.from(messageData[TxTransportKeys.messages] as List);
+      final messages = List<Message>.from(
+        messageData[TxTransportKeys.messages] as List,
+      );
       expect(messages[0].name, 'name');
       expect(messages[0].data, 'data1');
     });
@@ -59,8 +60,9 @@ void main() {
       final messageData = firstMessage.message as Map<dynamic, dynamic>;
       expect(messageData[TxTransportKeys.channelName], 'test');
       expect(messageData[TxTransportKeys.messages], isA<List<dynamic>>());
-      final messages =
-          List<Message>.from(messageData[TxTransportKeys.messages] as List);
+      final messages = List<Message>.from(
+        messageData[TxTransportKeys.messages] as List,
+      );
       expect(messages[0].name, 'name');
       expect(messages[0].data, 'data2');
     });
@@ -95,8 +97,9 @@ void main() {
       final messageData = firstMessage.message as Map<dynamic, dynamic>;
       expect(messageData[TxTransportKeys.channelName], 'test');
       expect(messageData[TxTransportKeys.messages], isA<List<dynamic>>());
-      final messages =
-          List<Message>.from(messageData[TxTransportKeys.messages] as List);
+      final messages = List<Message>.from(
+        messageData[TxTransportKeys.messages] as List,
+      );
       expect(messages[0].name, 'name');
       expect(messages[0].data, 'data3-1');
     });
@@ -122,8 +125,9 @@ void main() {
       final messageData0 = message0.message as Map<dynamic, dynamic>;
       expect(messageData0[TxTransportKeys.channelName], 'test');
       expect(messageData0[TxTransportKeys.messages], isA<List<dynamic>>());
-      final messages =
-          List<Message>.from(messageData0[TxTransportKeys.messages] as List);
+      final messages = List<Message>.from(
+        messageData0[TxTransportKeys.messages] as List,
+      );
       expect(messages[0].name, 'name');
       expect(messages[0].data, 'data4');
 
@@ -131,8 +135,9 @@ void main() {
       final messageData1 = message1.message as Map<dynamic, dynamic>;
       expect(messageData1[TxTransportKeys.channelName], 'test');
       expect(messageData1[TxTransportKeys.messages], isA<List<dynamic>>());
-      final messages2 =
-          List<Message>.from(messageData1[TxTransportKeys.messages] as List);
+      final messages2 = List<Message>.from(
+        messageData1[TxTransportKeys.messages] as List,
+      );
       expect(messages2[0].name, 'name');
       expect(messages2[0].data, 'data5');
     }, timeout: Timeout.none);

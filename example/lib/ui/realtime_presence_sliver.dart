@@ -23,47 +23,48 @@ class RealtimePresenceSliver extends HookWidget {
     ValueNotifier<ably.PresenceMessage?> latestMessage,
     ably.ChannelState? channelState,
     ValueNotifier<StreamSubscription<ably.PresenceMessage?>?>
-        presenceSubscription,
-  ) =>
-      TextButton(
-        onPressed: (channelState == ably.ChannelState.attached &&
-                presenceSubscription.value == null)
-            ? () {
-                final presenceMessageStream = channel.presence.subscribe();
-                final subscription =
-                    presenceMessageStream.listen((presenceMessage) {
-                  latestMessage.value = presenceMessage;
-                });
-                presenceSubscription.value = subscription;
-                _subscriptions.add(subscription);
-              }
-            : null,
-        child: const Text('Subscribe'),
-      );
+    presenceSubscription,
+  ) => TextButton(
+    onPressed:
+        (channelState == ably.ChannelState.attached &&
+            presenceSubscription.value == null)
+        ? () {
+            final presenceMessageStream = channel.presence.subscribe();
+            final subscription = presenceMessageStream.listen((
+              presenceMessage,
+            ) {
+              latestMessage.value = presenceMessage;
+            });
+            presenceSubscription.value = subscription;
+            _subscriptions.add(subscription);
+          }
+        : null,
+    child: const Text('Subscribe'),
+  );
 
   Widget createChannelPresenceUnsubscribeButton(
     ValueNotifier<StreamSubscription<ably.PresenceMessage?>?>
-        presenceSubscription,
-  ) =>
-      TextButton(
-        onPressed: (presenceSubscription.value != null)
-            ? () async {
-                await presenceSubscription.value!.cancel();
-                presenceSubscription.value = null;
-              }
-            : null,
-        child: const Text('Unsubscribe'),
-      );
+    presenceSubscription,
+  ) => TextButton(
+    onPressed: (presenceSubscription.value != null)
+        ? () async {
+            await presenceSubscription.value!.cancel();
+            presenceSubscription.value = null;
+          }
+        : null,
+    child: const Text('Unsubscribe'),
+  );
 
   Widget getRealtimeChannelPresence(
-          ValueNotifier<List<ably.PresenceMessage>> presenceMembers) =>
-      TextButton(
-        onPressed: () async {
-          presenceMembers.value =
-              await channel.presence.get(const ably.RealtimePresenceParams());
-        },
-        child: const Text('Get Realtime presence members'),
+    ValueNotifier<List<ably.PresenceMessage>> presenceMembers,
+  ) => TextButton(
+    onPressed: () async {
+      presenceMembers.value = await channel.presence.get(
+        const ably.RealtimePresenceParams(),
       );
+    },
+    child: const Text('Get Realtime presence members'),
+  );
 
   final List<dynamic> _presenceData = [
     null,
@@ -74,10 +75,10 @@ class RealtimePresenceSliver extends HookWidget {
       1,
       'ably',
       null,
-      {'a': 'b'}
+      {'a': 'b'},
     ],
     {
-      'c': ['a', 'b']
+      'c': ['a', 'b'],
     },
   ];
 
@@ -88,26 +89,28 @@ class RealtimePresenceSliver extends HookWidget {
           .toString();
 
   Widget enterRealtimePresence() => TextButton(
-        onPressed: () async {
-          await channel.presence.enter(_nextPresenceData);
-        },
-        child: const Text('Enter'),
-      );
+    onPressed: () async {
+      await channel.presence.enter(_nextPresenceData);
+    },
+    child: const Text('Enter'),
+  );
 
   Widget updateRealtimePresence() => TextButton(
-        onPressed: () async {
-          await channel.presence
-              .updateClient(Constants.clientId, _nextPresenceData);
-        },
-        child: const Text('Update'),
+    onPressed: () async {
+      await channel.presence.updateClient(
+        Constants.clientId,
+        _nextPresenceData,
       );
+    },
+    child: const Text('Update'),
+  );
 
   Widget leaveRealtimePresence() => TextButton(
-        onPressed: () async {
-          await channel.presence.leave(_nextPresenceData);
-        },
-        child: const Text('Leave'),
-      );
+    onPressed: () async {
+      await channel.presence.leave(_nextPresenceData);
+    },
+    child: const Text('Leave'),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -128,11 +131,17 @@ class RealtimePresenceSliver extends HookWidget {
           Row(
             children: <Widget>[
               Expanded(
-                  child: createChannelPresenceSubscribeButton(
-                      latestMessage, channel.state, presenceSubscription)),
+                child: createChannelPresenceSubscribeButton(
+                  latestMessage,
+                  channel.state,
+                  presenceSubscription,
+                ),
+              ),
               Expanded(
-                  child: createChannelPresenceUnsubscribeButton(
-                      presenceSubscription)),
+                child: createChannelPresenceUnsubscribeButton(
+                  presenceSubscription,
+                ),
+              ),
             ],
           ),
           Text(
@@ -141,15 +150,9 @@ class RealtimePresenceSliver extends HookWidget {
           ),
           Row(
             children: [
-              Expanded(
-                child: enterRealtimePresence(),
-              ),
-              Expanded(
-                child: updateRealtimePresence(),
-              ),
-              Expanded(
-                child: leaveRealtimePresence(),
-              ),
+              Expanded(child: enterRealtimePresence()),
+              Expanded(child: updateRealtimePresence()),
+              Expanded(child: leaveRealtimePresence()),
             ],
           ),
           getRealtimeChannelPresence(presenceMembers),
@@ -157,11 +160,14 @@ class RealtimePresenceSliver extends HookWidget {
               .map((m) => Text('${m.id}:${m.clientId}:${m.data}'))
               .toList(),
           PaginatedResultViewer<ably.PresenceMessage>(
-              title: 'Presence history',
-              query: () => channel.presence
-                  .history(ably.RealtimeHistoryParams(limit: 10)),
-              builder: (context, message, _) => TextRow('clientId',
-                  '${message.id}:${message.clientId}:${message.data}')),
+            title: 'Presence history',
+            query: () =>
+                channel.presence.history(ably.RealtimeHistoryParams(limit: 10)),
+            builder: (context, message, _) => TextRow(
+              'clientId',
+              '${message.id}:${message.clientId}:${message.data}',
+            ),
+          ),
         ],
       ),
     );
