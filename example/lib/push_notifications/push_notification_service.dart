@@ -104,6 +104,9 @@ class PushNotificationService {
 
   Future<void> deactivateDevice() => getPushFromAblyClient().deactivate();
 
+  // `reset` is deliberately exercised here despite being experimental: this
+  // example app is how we manually verify it.
+  // ignore: experimental_member_use
   Future<void> resetActivation() => getPushFromAblyClient().reset();
 
   Future<void> getDevice() async {
