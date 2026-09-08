@@ -49,16 +49,16 @@ Then perform these steps in order:
    ```
    Filter the PRs to only those merged after that tag date. Format each as:
    ```
-   - Short, one sentence summary from PR title [#NUMBER](https://github.com/ably/ably-flutter/pull/NUMBER)
+   - Short, one sentence summary from PR title [#NUMBER](https://github.com/ably/ably-pubsub-flutter/pull/NUMBER)
    ```
    If the tag doesn't exist or there are no merged PRs, use a single `-` placeholder bullet instead.
 
 6. In `CHANGELOG.md`, insert the following block immediately after the `# Changelog` heading (and its trailing blank line), before the first existing `## [` version entry:
 
 ```
-## [NEW_VERSION](https://github.com/ably/ably-flutter/tree/vNEW_VERSION)
+## [NEW_VERSION](https://github.com/ably/ably-pubsub-flutter/tree/vNEW_VERSION)
 
-[Full Changelog](https://github.com/ably/ably-flutter/compare/vOLD_VERSION...vNEW_VERSION)
+[Full Changelog](https://github.com/ably/ably-pubsub-flutter/compare/vOLD_VERSION...vNEW_VERSION)
 
 BULLETS_FROM_STEP_5
 
