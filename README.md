@@ -1,6 +1,6 @@
 ![Ably Pub/Sub Flutter Header](images/flutter-github.png)
 [![Pub Version](https://img.shields.io/pub/v/ably_flutter)](https://pub.dev/packages/ably_flutter)
-[![License](https://badgen.net/github/license/ably/ably-flutter)](https://github.com/ably/ably-flutter/blob/main/LICENSE)
+[![License](https://badgen.net/github/license/ably/ably-pubsub-flutter)](https://github.com/ably/ably-pubsub-flutter/blob/main/LICENSE)
 
 ---
 
@@ -121,4 +121,4 @@ Read the [CONTRIBUTING.md](./CONTRIBUTING.md) guidelines to contribute to Ably.
 
 ## Support, feedback, and troubleshooting
 
-For help or technical support, visit the [Ably Support page](https://ably.com/support) or [GitHub Issues](https://github.com/ably/ably-flutter/issues) for community-reported bugs and discussions.
+For help or technical support, visit the [Ably Support page](https://ably.com/support) or [GitHub Issues](https://github.com/ably/ably-pubsub-flutter/issues) for community-reported bugs and discussions.

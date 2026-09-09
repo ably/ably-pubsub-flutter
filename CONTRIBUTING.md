@@ -21,9 +21,9 @@ There are two different ways the example application can be configured to use Ab
 
 Under the run/ debug configuration drop down menu, click `Edit Configurations...`. Duplicate the `Example App (Duplicate and modify)` configuration. Leave the "Store as project file" unchecked to avoid committing your Ably API key into a repository. Update this new run configuration's `additional run args` with your ably API key. Run or debug the your new run/ debug configuration.
 
-![Drop down menu for Run/Debug Configurations in Android Studio](https://github.com/ably/ably-flutter/raw/main/images/run-configuration-1.png)
+![Drop down menu for Run/Debug Configurations in Android Studio](https://github.com/ably/ably-pubsub-flutter/raw/main/images/run-configuration-1.png)
 
-![Run/Debug Configurations window in Android Studio](https://github.com/ably/ably-flutter/raw/main/images/run-configuration-2.png)
+![Run/Debug Configurations window in Android Studio](https://github.com/ably/ably-pubsub-flutter/raw/main/images/run-configuration-2.png)
 
 #### Visual Studio Code
 
@@ -171,7 +171,7 @@ Documentation stored in repository should follow the schema defined in [Ably Tem
 
 ### Including images in markdown files
 
-When referencing images in markdown files, using a local path such as `images/android.png`, for example `![An android device running on API level 30](images/android.png)` will result in the image missing on pub.dev README preview. Therefore, we currently reference images through the github.com URL path (`https://github.com/ably/ably-flutter/raw/`), for example to reference `images/android.png`, we would use `![An android device running on API level 30](https://github.com/ably/ably-flutter/raw/main/images/android.png)`. [A suggestion](https://github.com/dart-lang/pub-dev/issues/5068) has been made to automatically replace this relative image path to the github URL path.
+When referencing images in markdown files, using a local path such as `images/android.png`, for example `![An android device running on API level 30](images/android.png)` will result in the image missing on pub.dev README preview. Therefore, we currently reference images through the github.com URL path (`https://github.com/ably/ably-pubsub-flutter/raw/`), for example to reference `images/android.png`, we would use `![An android device running on API level 30](https://github.com/ably/ably-pubsub-flutter/raw/main/images/android.png)`. [A suggestion](https://github.com/dart-lang/pub-dev/issues/5068) has been made to automatically replace this relative image path to the github URL path.
 
 ## Release Process (Claude Code)
 
@@ -181,13 +181,13 @@ When referencing images in markdown files, using a local path such as `images/an
 4. Create a release PR (ensure you include an SDK Team Engineering Lead and the SDK Team Product Manager as reviewers) and gain approvals for it, then merge that to `main`
 5. Create a tag named like `v2.0.1` and push it to GitHub - e.g. `git tag v2.0.1 && git push origin v2.0.1`
 6. Create the release on GitHub including populating the release notes
-7. Go to the [Release Workflow](https://github.com/ably/ably-flutter/actions/workflows/release.yaml) and ask [ably/team-sdk](https://github.com/orgs/ably/teams/team-sdk) member to approve publishing to the pub.dev registry
+7. Go to the [Release Workflow](https://github.com/ably/ably-pubsub-flutter/actions/workflows/release.yaml) and ask [ably/team-sdk](https://github.com/orgs/ably/teams/team-sdk) member to approve publishing to the pub.dev registry
 8. Update the [Ably Changelog](https://changelog.ably.com/) (via [headwayapp](https://headwayapp.co/)) with these changes
 
 ## Release Process (Manual)
 
 Releases should always be made through a release pull request (PR), which needs to bump the version number and add to the [change log](CHANGELOG.md).
-For an example of a previous release PR, see [#89](https://github.com/ably/ably-flutter/pull/89).
+For an example of a previous release PR, see [#89](https://github.com/ably/ably-pubsub-flutter/pull/89).
 
 The release process must include the following steps:
 
@@ -211,8 +211,8 @@ The release process must include the following steps:
 9. Land the release PR to `main`
 10. Create a tag named like `v1.2.3`, using `git tag v1.2.3`
 11. Push the newly created tag to GitHub: `git push origin v1.2.3`
-12. Create a release on GitHub following the [previous releases]((https://github.com/ably/ably-flutter/releases)) as examples.
-13. Go to the [Release Workflow](https://github.com/ably/ably-flutter/actions/workflows/release.yaml) and ask [ably/team-sdk](https://github.com/orgs/ably/teams/team-sdk) member to approve publishing to the pub.dev registry
+12. Create a release on GitHub following the [previous releases]((https://github.com/ably/ably-pubsub-flutter/releases)) as examples.
+13. Go to the [Release Workflow](https://github.com/ably/ably-pubsub-flutter/actions/workflows/release.yaml) and ask [ably/team-sdk](https://github.com/orgs/ably/teams/team-sdk) member to approve publishing to the pub.dev registry
 14. Update the [Ably Changelog](https://changelog.ably.com/) (via [headwayapp](https://headwayapp.co/)) with these changes
 
 We tend to use [github_changelog_generator](https://github.com/skywinder/Github-Changelog-Generator) to collate the information required for a change log update.
