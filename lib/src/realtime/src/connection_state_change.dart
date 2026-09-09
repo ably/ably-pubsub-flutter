@@ -49,6 +49,9 @@ class EnrichedConnectionStateChange {
   final String? connectionKey;
 
   /// @nodoc
-  const EnrichedConnectionStateChange(
-      {required this.stateChange, this.connectionId, this.connectionKey});
+  const EnrichedConnectionStateChange({
+    required this.stateChange,
+    this.connectionId,
+    this.connectionKey,
+  });
 }

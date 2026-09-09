@@ -24,6 +24,10 @@ typedef void (^FlutterHandler)(AblyFlutter * ably, FlutterMethodCall * call, Flu
  */
 @interface AblyFlutter ()
 -(void)reset;
+-(instancetype)initPrivate;
+-(void)configureWithChannel:(FlutterMethodChannel *)channel
+             streamsChannel:(AblyStreamsChannel *)streamsChannel
+                  registrar:(NSObject<FlutterPluginRegistrar>*)registrar;
 @end
 
 NS_ASSUME_NONNULL_END
@@ -678,55 +682,58 @@ static const FlutterHandler _realtimeAuthCreateTokenRequest = ^void(AblyFlutter 
     AblyStreamsChannel* _streamsChannel;
     FlutterMethodChannel* _channel;
     PushNotificationEventHandlers* _pushNotificationEventHandlers;
+    BOOL _registeredForDelegateCallbacks;
 }
 
 @synthesize instanceStore = _instanceStore;
+
+/// A single instance is shared by the process rather than created per registrar,
+/// because apps have to be able to reach the plugin from their `AppDelegate`
+/// before Flutter has registered it — see `registerPushNotificationHandlers`.
+/// The rest of the plugin's state was already process-wide (`AblyInstanceStore`
+/// and `PushActivationEventHandlers` are both singletons); the consequence of
+/// this is that with more than one Flutter engine, the most recently registered
+/// engine's channels are the ones the plugin talks over.
++(instancetype)sharedInstance {
+    static AblyFlutter *sharedInstance = nil;
+    static dispatch_once_t onceToken = 0;
+    dispatch_once(&onceToken, ^{
+        sharedInstance = [[self alloc] initPrivate];
+    });
+    return sharedInstance;
+}
 
 +(void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
     // Initializing reader writer and method codecs
     FlutterStandardReaderWriter *const readerWriter = [AblyFlutterReaderWriter new];
     FlutterStandardMethodCodec *const methodCodec = [FlutterStandardMethodCodec codecWithReaderWriter:readerWriter];
-    
+
     // initializing event channel for event listeners
     AblyStreamsChannel *const streamsChannel =
     [AblyStreamsChannel streamsChannelWithName:@"io.ably.flutter.stream"
                                binaryMessenger:registrar.messenger
                                          codec:methodCodec];
-    
+
     // initializing method channel for round-trip method calls
     FlutterMethodChannel *const methodChannel = [FlutterMethodChannel methodChannelWithName:@"io.ably.flutter.plugin" binaryMessenger:[registrar messenger] codec:methodCodec];
-    NSNumber *handleAPNs = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AblyFlutterHandlePushNotifications"];
-    AblyFlutter *const ably = [[AblyFlutter alloc] initWithChannel:methodChannel
-                                                    streamsChannel:streamsChannel
-                                                         registrar:registrar
-                                                        handleAPNs:handleAPNs != nil ? [handleAPNs boolValue] : YES];
-    
+    AblyFlutter *const ably = [AblyFlutter sharedInstance];
+    [ably configureWithChannel:methodChannel streamsChannel:streamsChannel registrar:registrar];
+
     // registering method channel with registrar
     [registrar addMethodCallDelegate:ably channel:methodChannel];
-    
+
     // setting up stream handler factory for eventChannel to handle multiple listeners
     [streamsChannel setStreamHandlerFactory:^NSObject<FlutterStreamHandler> *(id arguments) {
         return [AblyFlutterStreamHandler new];
     }];
 }
 
--(instancetype)initWithChannel:(FlutterMethodChannel *const)channel
-                streamsChannel:(AblyStreamsChannel *const)streamsChannel
-                     registrar:(NSObject<FlutterPluginRegistrar>*)registrar
-                    handleAPNs:(BOOL)handleAPNs {
+-(instancetype)initPrivate {
     self = [super init];
     if (!self) {
         return nil;
     }
     _instanceStore = [AblyInstanceStore sharedInstance];
-    _channel = channel;
-    _streamsChannel = streamsChannel;
-
-    if (handleAPNs) {
-        UNUserNotificationCenter *const center = UNUserNotificationCenter.currentNotificationCenter;
-        _pushNotificationEventHandlers = [[PushNotificationEventHandlers alloc] initWithDelegate: center.delegate andMethodChannel: channel];
-        center.delegate = _pushNotificationEventHandlers;
-    }
 
     _handlers = @{
         AblyPlatformMethod_getPlatformVersion: _getPlatformVersion,
@@ -785,8 +792,55 @@ static const FlutterHandler _realtimeAuthCreateTokenRequest = ^void(AblyFlutter 
         AblyPlatformMethod_restAuthGetClientId: AuthHandlers.restAuthClientId
     };
 
-    [registrar addApplicationDelegate:self];
     return self;
+}
+
+-(void)configureWithChannel:(FlutterMethodChannel *const)channel
+             streamsChannel:(AblyStreamsChannel *const)streamsChannel
+                  registrar:(NSObject<FlutterPluginRegistrar>*const)registrar {
+    _channel = channel;
+    _streamsChannel = streamsChannel;
+
+    // Apps on the UIScene life cycle are required to have called this themselves
+    // already, from their own didFinishLaunchingWithOptions; doing it again here
+    // is what keeps apps on the UIApplicationDelegate life cycle working without
+    // any source changes.
+    [self registerPushNotificationHandlers];
+    [_pushNotificationEventHandlers attachMethodChannel:channel];
+
+    // Guarded because this instance is shared: an app running more than one Flutter
+    // engine registers the plugin once per engine, and registering the same object
+    // for delegate callbacks twice would deliver every event to Dart twice.
+    if (!_registeredForDelegateCallbacks) {
+        _registeredForDelegateCallbacks = YES;
+        [registrar addApplicationDelegate:self];
+        [registrar addSceneDelegate:self];
+    }
+}
+
+-(void)registerPushNotificationHandlers {
+    if (![self shouldHandlePushNotifications]) {
+        return;
+    }
+
+    UNUserNotificationCenter *const center = UNUserNotificationCenter.currentNotificationCenter;
+    if ([center.delegate isKindOfClass:[PushNotificationEventHandlers class]]) {
+        // Already installed. This method is called both by the app and by plugin
+        // registration, and wrapping our own delegate again would make every
+        // notification event reach Dart once per wrapper.
+        _pushNotificationEventHandlers = (PushNotificationEventHandlers *)center.delegate;
+        return;
+    }
+
+    _pushNotificationEventHandlers = [[PushNotificationEventHandlers alloc] initWithDelegate:center.delegate];
+    center.delegate = _pushNotificationEventHandlers;
+}
+
+/// Whether the app has opted out of Ably handling push notifications, via
+/// `AblyFlutterHandlePushNotifications` in its Info.plist. Defaults to handling them.
+-(BOOL)shouldHandlePushNotifications {
+    NSNumber *const handleAPNs = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AblyFlutterHandlePushNotifications"];
+    return handleAPNs != nil ? [handleAPNs boolValue] : YES;
 }
 
 -(void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
@@ -810,15 +864,43 @@ static const FlutterHandler _realtimeAuthCreateTokenRequest = ^void(AblyFlutter 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [[UIApplication sharedApplication] registerForRemoteNotifications];
+
     // Check if application was launched from a notification tap.
-    
     // https://stackoverflow.com/a/21611009/7365866
+    //
+    // For apps on the UIScene life cycle Flutter calls this during
+    // scene:willConnectToSession:options: with nil launch options, so there the
+    // payload comes from the scene's connection options instead.
     NSDictionary *notification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
     if (notification) {
         PushHandlers.pushNotificationTapLaunchedAppFromTerminatedData = notification;
     }
-    
+
     return YES;
+}
+
+#pragma mark - UISceneDelegate
+
+/// The UIScene equivalent of application:didFinishLaunchingWithOptions:, for apps
+/// that have adopted the UIScene life cycle. The plugin stays registered for both
+/// so that apps on either life cycle work.
+- (BOOL)scene:(UIScene *)scene
+    willConnectToSession:(UISceneSession *)session
+                 options:(nullable UISceneConnectionOptions *)connectionOptions {
+    // Harmless if the forwarded application:didFinishLaunchingWithOptions: has
+    // already asked; iOS just replies with the token it already has.
+    [[UIApplication sharedApplication] registerForRemoteNotifications];
+
+    // Check if the app was launched from a notification tap. Only set this if it is
+    // not already set, because the ordering of this against the forwarded
+    // application:didFinishLaunchingWithOptions: is not guaranteed.
+    UNNotificationResponse *const response = connectionOptions.notificationResponse;
+    if (response && !PushHandlers.pushNotificationTapLaunchedAppFromTerminatedData) {
+        PushHandlers.pushNotificationTapLaunchedAppFromTerminatedData = response.notification.request.content.userInfo;
+    }
+
+    // We only observe the connection, so let other plugins have their turn at it.
+    return NO;
 }
 
 #pragma mark - Push Notifications Registration - UIApplicationDelegate
@@ -835,6 +917,12 @@ static const FlutterHandler _realtimeAuthCreateTokenRequest = ^void(AblyFlutter 
 }
 
 - (BOOL)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    if (!_pushNotificationEventHandlers) {
+        // The app opted out of Ably handling push notifications, so let another
+        // application delegate deal with this. Returning NO without calling the
+        // completion handler leaves that to whoever handles it.
+        return NO;
+    }
     [_pushNotificationEventHandlers application:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
     return YES;
 }

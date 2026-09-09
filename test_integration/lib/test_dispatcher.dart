@@ -66,14 +66,18 @@ class _TestDispatcherState extends State<TestDispatcher> {
           });
           final testFunction = widget.testFactory[reporter.testName]!;
           await testFunction(
-            reporter: reporter,
-            payload: reporter.message.payload,
-          ).then(reporter.reportTestCompletion).catchError(
+                reporter: reporter,
+                payload: reporter.message.payload,
+              )
+              .then(reporter.reportTestCompletion)
+              .catchError(
                 (Object error, StackTrace stack) =>
                     reporter.reportTestCompletion({
-                  TestControlMessage.errorKey:
-                      ErrorHandler.encodeException(error, stack),
-                }),
+                      TestControlMessage.errorKey: ErrorHandler.encodeException(
+                        error,
+                        stack,
+                      ),
+                    }),
               );
         }
       } else if (reporter.testName == TestName.getFlutterErrors) {
@@ -83,7 +87,7 @@ class _TestDispatcherState extends State<TestDispatcher> {
         // report error otherwise
         reporter.reportTestCompletion({
           TestControlMessage.errorKey:
-              'Test ${reporter.testName} is not implemented'
+              'Test ${reporter.testName} is not implemented',
         });
       }
       setState(() {});
@@ -151,67 +155,65 @@ class _TestDispatcherState extends State<TestDispatcher> {
   }
 
   Widget getTestRow(BuildContext context, String testName) => Row(
-        children: [
-          Expanded(
-            child: Text(
-              testName,
-              style: TextStyle(color: _getColor(testName), fontSize: 16),
+    children: [
+      Expanded(
+        child: Text(
+          testName,
+          style: TextStyle(color: _getColor(testName), fontSize: 16),
+        ),
+      ),
+      _getAction(testName),
+      _getStatus(testName),
+      IconButton(
+        icon: const Icon(Icons.remove_red_eye),
+        color: Colors.white,
+        onPressed: () {
+          showDialog<void>(
+            context: context,
+            builder: (context) => AlertDialog(
+              contentPadding: const EdgeInsets.all(4),
+              insetPadding: const EdgeInsets.symmetric(vertical: 24),
+              content: SingleChildScrollView(
+                child: Text(_testResults[testName] ?? 'No result yet'),
+              ),
             ),
-          ),
-          _getAction(testName),
-          _getStatus(testName),
-          IconButton(
-            icon: const Icon(Icons.remove_red_eye),
-            color: Colors.white,
-            onPressed: () {
-              showDialog<void>(
-                context: context,
-                builder: (context) => AlertDialog(
-                  contentPadding: const EdgeInsets.all(4),
-                  insetPadding: const EdgeInsets.symmetric(vertical: 24),
-                  content: SingleChildScrollView(
-                    child: Text(
-                      _testResults[testName] ?? 'No result yet',
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
-        ],
-      );
+          );
+        },
+      ),
+    ],
+  );
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-      theme: ThemeData(scaffoldBackgroundColor: Colors.black),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Test dispatcher'),
-        ),
-        body: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Center(
-              child: Text(
-                  _reporters.isEmpty
-                      ? '-'
-                      : 'running ${_reporters.length}'
-                          ' (${_reporters.keys.toList().toString()}) tests',
-                  style: const TextStyle(color: Colors.white)),
+    theme: ThemeData(scaffoldBackgroundColor: Colors.black),
+    home: Scaffold(
+      appBar: AppBar(title: const Text('Test dispatcher')),
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Center(
+            child: Text(
+              _reporters.isEmpty
+                  ? '-'
+                  : 'running ${_reporters.length}'
+                        ' (${_reporters.keys.toList().toString()}) tests',
+              style: const TextStyle(color: Colors.white),
             ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: _testResults.keys.length,
-                itemBuilder: (context, idx) {
-                  final testName = _testResults.keys.toList()[idx];
-                  return ListTile(subtitle: getTestRow(context, testName));
-                },
-              ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: _testResults.keys.length,
+              itemBuilder: (context, idx) {
+                final testName = _testResults.keys.toList()[idx];
+                return ListTile(subtitle: getTestRow(context, testName));
+              },
             ),
-          ],
-        ),
-      ));
+          ),
+        ],
+      ),
+    ),
+  );
 
   void renderResponse(TestControlResponseMessage message) {
     final testName = message.testName;
@@ -220,8 +222,8 @@ class _TestDispatcherState extends State<TestDispatcher> {
       _reporters.remove(testName);
       _testStatuses[testName] =
           message.payload.containsKey(TestControlMessage.errorKey)
-              ? _TestStatus.error
-              : _TestStatus.success;
+          ? _TestStatus.error
+          : _TestStatus.success;
     });
   }
 }

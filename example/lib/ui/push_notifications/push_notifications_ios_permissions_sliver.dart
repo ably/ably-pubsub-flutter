@@ -13,8 +13,8 @@ class PushNotificationsIOSNotificationSettingsSliver extends StatelessWidget {
   const PushNotificationsIOSNotificationSettingsSliver({
     required PushNotificationService pushNotificationService,
     Key? key,
-  })  : _pushNotificationService = pushNotificationService,
-        super(key: key);
+  }) : _pushNotificationService = pushNotificationService,
+       super(key: key);
 
   Widget buildIOSPermissionSliver() {
     if (Platform.isIOS) {
@@ -42,15 +42,18 @@ class PushNotificationsIOSNotificationSettingsSliver extends StatelessWidget {
         stream: _pushNotificationService.hasPushChannelStream,
         onPressed: () {
           _pushNotificationService.requestNotificationPermission(
-              provisional: true);
+            provisional: true,
+          );
           Fluttertoast.showToast(
-              msg: 'Notifications will be delivered silently to '
-                  'the notification center.',
-              toastLength: Toast.LENGTH_LONG,
-              gravity: ToastGravity.CENTER,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              fontSize: 16);
+            msg:
+                'Notifications will be delivered silently to '
+                'the notification center.',
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.CENTER,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16,
+          );
         },
         child: const Text('Request Provisional Permission (no alert)'),
       );
@@ -80,22 +83,32 @@ class PushNotificationsIOSNotificationSettingsSliver extends StatelessWidget {
                     'iOS Notification Settings',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  TextRow('Authorization Status',
-                      '${settings.authorizationStatus}'),
+                  TextRow(
+                    'Authorization Status',
+                    '${settings.authorizationStatus}',
+                  ),
                   TextRow('Sound', '${settings.soundSetting}'),
                   TextRow('Badge', '${settings.badgeSetting}'),
                   TextRow('Alert', '${settings.alertSetting}'),
-                  TextRow('Notification Center',
-                      '${settings.notificationCenterSetting}'),
+                  TextRow(
+                    'Notification Center',
+                    '${settings.notificationCenterSetting}',
+                  ),
                   TextRow('Lock Screen', '${settings.lockScreenSetting}'),
                   TextRow('Alert Style', '${settings.alertStyle}'),
                   TextRow('Shows Preview', '${settings.showPreviewsSetting}'),
                   TextRow(
-                      'Critical Alerts', '${settings.criticalAlertSetting}'),
-                  TextRow('providesAppNotificationSettings',
-                      '${settings.providesAppNotificationSettings}'),
+                    'Critical Alerts',
+                    '${settings.criticalAlertSetting}',
+                  ),
                   TextRow(
-                      'Siri announcements', '${settings.announcementSetting}'),
+                    'providesAppNotificationSettings',
+                    '${settings.providesAppNotificationSettings}',
+                  ),
+                  TextRow(
+                    'Siri announcements',
+                    '${settings.announcementSetting}',
+                  ),
                   TextButton(
                     onPressed:
                         _pushNotificationService.updateNotificationSettings,
@@ -114,9 +127,6 @@ class PushNotificationsIOSNotificationSettingsSliver extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
-        children: [
-          buildIOSPermissionSliver(),
-          buildIOSNotificationSettings(),
-        ],
-      );
+    children: [buildIOSPermissionSliver(), buildIOSNotificationSettings()],
+  );
 }

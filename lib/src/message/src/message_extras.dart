@@ -37,10 +37,7 @@ class MessageExtras with ObjectHash {
         ? null
         : DeltaExtras.fromMap(Map<String, dynamic>.from(deltaMap));
 
-    return MessageExtras._withDelta(
-      mutableExtrasMap,
-      deltaExtras,
-    );
+    return MessageExtras._withDelta(mutableExtrasMap, deltaExtras);
   }
 
   @override
@@ -53,8 +50,5 @@ class MessageExtras with ObjectHash {
       other.delta == delta;
 
   @override
-  int get hashCode => objectHash([
-        map,
-        delta,
-      ]);
+  int get hashCode => objectHash([map, delta]);
 }

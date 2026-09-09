@@ -35,3 +35,6 @@ Icon?
 
 /Flutter/Generated.xcconfig
 /Flutter/flutter_export_environment.sh
+
+# Symlink to the local Flutter engine, created by Tests/Support/Flutter.podspec
+/Tests/Support/engine/

@@ -95,7 +95,7 @@ const List<Map<String, dynamic>> _platformMethods = [
   {'name': 'onRealtimePresenceMessage', 'value': 'onRealtimePresenceMessage'},
   {
     'name': 'publishRealtimeChannelMessage',
-    'value': 'publishRealtimeChannelMessage'
+    'value': 'publishRealtimeChannelMessage',
   },
   {'name': 'releaseRealtimeChannel', 'value': 'releaseRealtimeChannel'},
   {'name': 'realtimeHistory', 'value': 'realtimeHistory'},
@@ -104,7 +104,7 @@ const List<Map<String, dynamic>> _platformMethods = [
   {'name': 'realtimeAuthAuthorize', 'value': 'realtimeAuthAuthorize'},
   {
     'name': 'realtimeAuthCreateTokenRequest',
-    'value': 'realtimeAuthCreateTokenRequest'
+    'value': 'realtimeAuthCreateTokenRequest',
   },
   {'name': 'realtimeAuthRequestToken', 'value': 'realtimeAuthRequestToken'},
   {'name': 'realtimeAuthGetClientId', 'value': 'realtimeAuthGetClientId'},
@@ -124,7 +124,7 @@ const List<Map<String, dynamic>> _platformMethods = [
   // Used only on iOS
   {
     'name': 'pushGetNotificationSettings',
-    'value': 'pushGetNotificationSettings'
+    'value': 'pushGetNotificationSettings',
   },
   // Used only on iOS
   {'name': 'pushOpenSettingsFor', 'value': 'pushOpenSettingsFor'},
@@ -135,11 +135,11 @@ const List<Map<String, dynamic>> _platformMethods = [
   // Push Notification Events
   {
     'name': 'pushNotificationTapLaunchedAppFromTerminated',
-    'value': 'pushNotificationTapLaunchedAppFromTerminated'
+    'value': 'pushNotificationTapLaunchedAppFromTerminated',
   },
   {
     'name': 'pushOnShowNotificationInForeground',
-    'value': 'pushOnShowNotificationInForeground'
+    'value': 'pushOnShowNotificationInForeground',
   },
   {'name': 'pushOnMessage', 'value': 'pushOnMessage'},
   {'name': 'pushOnBackgroundMessage', 'value': 'pushOnBackgroundMessage'},
@@ -147,17 +147,17 @@ const List<Map<String, dynamic>> _platformMethods = [
   // Used only on Android
   {
     'name': 'pushBackgroundFlutterApplicationReadyOnAndroid',
-    'value': 'pushBackgroundFlutterApplicationReadyOnAndroid'
+    'value': 'pushBackgroundFlutterApplicationReadyOnAndroid',
   },
 
   // Realtime events
   {
     'name': 'onRealtimeConnectionStateChanged',
-    'value': 'onRealtimeConnectionStateChanged'
+    'value': 'onRealtimeConnectionStateChanged',
   },
   {
     'name': 'onRealtimeChannelStateChanged',
-    'value': 'onRealtimeChannelStateChanged'
+    'value': 'onRealtimeChannelStateChanged',
   },
   {'name': 'onRealtimeChannelMessage', 'value': 'onRealtimeChannelMessage'},
 
@@ -183,15 +183,15 @@ const List<Map<String, dynamic>> _objects = [
       'clientId',
       'options',
       'messages',
-    ]
+    ],
   },
   {
     'name': 'AblyMessage',
-    'properties': <String>['registrationHandle', 'type', 'message']
+    'properties': <String>['registrationHandle', 'type', 'message'],
   },
   {
     'name': 'AblyEventMessage',
-    'properties': <String>['eventName', 'type', 'message']
+    'properties': <String>['eventName', 'type', 'message'],
   },
   {
     'name': 'ErrorInfo',
@@ -201,20 +201,20 @@ const List<Map<String, dynamic>> _objects = [
       'statusCode',
       'href',
       'requestId',
-      'cause'
-    ]
+      'cause',
+    ],
   },
   {
     'name': 'MessageData',
-    'properties': <String>['data', 'type']
+    'properties': <String>['data', 'type'],
   },
   {
     'name': 'DeltaExtras',
-    'properties': <String>['format', 'from']
+    'properties': <String>['format', 'from'],
   },
   {
     'name': 'MessageExtras',
-    'properties': <String>['extras', 'delta']
+    'properties': <String>['extras', 'delta'],
   },
   {
     'name': 'ClientOptions',
@@ -255,15 +255,15 @@ const List<Map<String, dynamic>> _objects = [
       'channelRetryTimeout',
       'transportParams',
       'dartVersion',
-    ]
+    ],
   },
   {
     'name': 'RestChannelOptions',
-    'properties': <String>['cipherParams']
+    'properties': <String>['cipherParams'],
   },
   {
     'name': 'RealtimeChannelOptions',
-    'properties': <String>['params', 'modes', 'cipherParams']
+    'properties': <String>['params', 'modes', 'cipherParams'],
   },
   {
     'name': 'CipherParams',
@@ -276,8 +276,8 @@ const List<Map<String, dynamic>> _objects = [
       'expires',
       'issued',
       'capability',
-      'clientId'
-    ]
+      'clientId',
+    ],
   },
   {
     'name': 'AuthOptions',
@@ -291,8 +291,8 @@ const List<Map<String, dynamic>> _objects = [
       'authHeaders',
       'authParams',
       'queryTime',
-      'useTokenAuth'
-    ]
+      'useTokenAuth',
+    ],
   },
   {
     'name': 'TokenParams',
@@ -301,8 +301,8 @@ const List<Map<String, dynamic>> _objects = [
       'clientId',
       'nonce',
       'timestamp',
-      'ttl'
-    ]
+      'ttl',
+    ],
   },
   {
     'name': 'TokenRequest',
@@ -313,8 +313,8 @@ const List<Map<String, dynamic>> _objects = [
       'mac',
       'nonce',
       'timestamp',
-      'ttl'
-    ]
+      'ttl',
+    ],
   },
   {
     'name': 'EnumConstants',
@@ -342,8 +342,8 @@ const List<Map<String, dynamic>> _objects = [
       'presence',
       'publish',
       'subscribe',
-      'presenceSubscribe'
-    ]
+      'presenceSubscribe',
+    ],
   },
   {
     'name': 'FormFactorEnum',
@@ -355,8 +355,8 @@ const List<Map<String, dynamic>> _objects = [
       'watch',
       'car',
       'embedded',
-      'other'
-    ]
+      'other',
+    ],
   },
   {
     'name': 'LogLevelEnum',
@@ -364,19 +364,19 @@ const List<Map<String, dynamic>> _objects = [
   },
   {
     'name': 'DevicePlatformEnum',
-    'properties': <String>['ios', 'android', 'browser']
+    'properties': <String>['ios', 'android', 'browser'],
   },
   {
     'name': 'DevicePushStateEnum',
-    'properties': <String>['active', 'failing', 'failed']
+    'properties': <String>['active', 'failing', 'failed'],
   },
   {
     'name': 'ConnectionStateChange',
-    'properties': <String>['current', 'previous', 'event', 'retryIn', 'reason']
+    'properties': <String>['current', 'previous', 'event', 'retryIn', 'reason'],
   },
   {
     'name': 'ChannelStateChange',
-    'properties': <String>['current', 'previous', 'event', 'resumed', 'reason']
+    'properties': <String>['current', 'previous', 'event', 'resumed', 'reason'],
   },
   {
     'name': 'Message',
@@ -388,8 +388,8 @@ const List<Map<String, dynamic>> _objects = [
       'encoding',
       'data',
       'name',
-      'extras'
-    ]
+      'extras',
+    ],
   },
   {
     'name': 'PresenceMessage',
@@ -402,46 +402,27 @@ const List<Map<String, dynamic>> _objects = [
       'encoding',
       'extras',
       'timestamp',
-    ]
+    ],
   },
   {
     'name': 'PaginatedResult',
-    'properties': <String>['items', 'type', 'hasNext']
+    'properties': <String>['items', 'type', 'hasNext'],
   },
   {
     'name': 'RestHistoryParams',
-    'properties': <String>[
-      'start',
-      'end',
-      'direction',
-      'limit',
-    ]
+    'properties': <String>['start', 'end', 'direction', 'limit'],
   },
   {
     'name': 'RealtimeHistoryParams',
-    'properties': <String>[
-      'start',
-      'end',
-      'direction',
-      'limit',
-      'untilAttach',
-    ]
+    'properties': <String>['start', 'end', 'direction', 'limit', 'untilAttach'],
   },
   {
     'name': 'RestPresenceParams',
-    'properties': <String>[
-      'limit',
-      'clientId',
-      'connectionId',
-    ]
+    'properties': <String>['limit', 'clientId', 'connectionId'],
   },
   {
     'name': 'RealtimePresenceParams',
-    'properties': <String>[
-      'waitForSync',
-      'clientId',
-      'connectionId',
-    ]
+    'properties': <String>['waitForSync', 'clientId', 'connectionId'],
   },
   {
     'name': 'DeviceDetails',
@@ -451,20 +432,20 @@ const List<Map<String, dynamic>> _objects = [
       'platform',
       'formFactor',
       'metadata',
-      'devicePushDetails'
-    ]
+      'devicePushDetails',
+    ],
   },
   {
     'name': 'DevicePushDetails',
-    'properties': <String>['recipient', 'state', 'errorReason']
+    'properties': <String>['recipient', 'state', 'errorReason'],
   },
   {
     'name': 'LocalDevice',
-    'properties': <String>['deviceSecret', 'deviceIdentityToken']
+    'properties': <String>['deviceSecret', 'deviceIdentityToken'],
   },
   {
     'name': 'PushChannelSubscription',
-    'properties': <String>['channel', 'deviceId', 'clientId']
+    'properties': <String>['channel', 'deviceId', 'clientId'],
   },
   {
     'name': 'PushRequestPermission',
@@ -477,7 +458,7 @@ const List<Map<String, dynamic>> _objects = [
       'providesAppNotificationSettings',
       'provisional',
       'announcement',
-    ]
+    ],
   },
   {
     'name': 'UNNotificationSettings',
@@ -496,15 +477,15 @@ const List<Map<String, dynamic>> _objects = [
       'announcementSetting',
       'scheduledDeliverySetting',
       'timeSensitiveSetting',
-    ]
+    ],
   },
   {
     'name': 'UNNotificationSettingEnum',
-    'properties': ['notSupported', 'disabled', 'enabled']
+    'properties': ['notSupported', 'disabled', 'enabled'],
   },
   {
     'name': 'UNAlertStyleEnum',
-    'properties': ['none', 'banner', 'alert']
+    'properties': ['none', 'banner', 'alert'],
   },
   {
     'name': 'UNAuthorizationStatusEnum',
@@ -514,31 +495,28 @@ const List<Map<String, dynamic>> _objects = [
       'authorized',
       'provisional',
       'ephemeral',
-    ]
+    ],
   },
   {
     'name': 'UNShowPreviewsSettingEnum',
-    'properties': ['always', 'whenAuthenticated', 'never']
+    'properties': ['always', 'whenAuthenticated', 'never'],
   },
   {
     'name': 'RemoteMessage',
-    'properties': [
-      'data',
-      'notification',
-    ]
+    'properties': ['data', 'notification'],
   },
   {
     'name': 'Notification',
-    'properties': ['title', 'body']
+    'properties': ['title', 'body'],
   },
   {
     'name': 'CryptoGetParams',
-    'properties': ['algorithm', 'key']
+    'properties': ['algorithm', 'key'],
   },
   {
     'name': 'CryptoGenerateRandomKey',
-    'properties': ['keyLength']
-  }
+    'properties': ['keyLength'],
+  },
 ];
 
 // exporting all the constants as a single map
@@ -546,5 +524,5 @@ const List<Map<String, dynamic>> _objects = [
 Map<String, dynamic> context = {
   'types': _types,
   'methods': _platformMethods,
-  'objects': _objects
+  'objects': _objects,
 };

@@ -36,10 +36,11 @@ import 'package:ably_flutter_integration_test/test/rest/rest_publish_with_auth_c
 import 'package:ably_flutter_integration_test/test/rest/rest_request_token_test.dart';
 import 'package:ably_flutter_integration_test/test/rest/rest_time_test.dart';
 
-typedef TestFactory = Future<Map<String, dynamic>> Function({
-  required Reporter reporter,
-  Map<String, dynamic>? payload,
-});
+typedef TestFactory =
+    Future<Map<String, dynamic>> Function({
+      required Reporter reporter,
+      Map<String, dynamic>? payload,
+    });
 
 final testFactory = <String, TestFactory>{
   // platform and app key tests

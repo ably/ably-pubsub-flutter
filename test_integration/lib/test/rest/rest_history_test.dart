@@ -34,7 +34,9 @@ Future<Map<String, dynamic>> testRestHistory({
   await Future<void>.delayed(TestConstants.publishToHistoryDelay);
 
   final historyForwardLimit4 = await getHistory(
-      channel, RestHistoryParams(direction: 'forwards', limit: 4));
+    channel,
+    RestHistoryParams(direction: 'forwards', limit: 4),
+  );
   await Future<void>.delayed(TestConstants.publishToHistoryDelay);
 
   final time1 = DateTime.now();
@@ -51,10 +53,14 @@ Future<Map<String, dynamic>> testRestHistory({
   await channel.publish(name: 'history', data: 'test2');
   await Future<void>.delayed(TestConstants.publishToHistoryDelay);
 
-  final historyWithStart =
-      await getHistory(channel, RestHistoryParams(start: time1));
-  final historyWithStartAndEnd =
-      await getHistory(channel, RestHistoryParams(start: time1, end: time2));
+  final historyWithStart = await getHistory(
+    channel,
+    RestHistoryParams(start: time1),
+  );
+  final historyWithStartAndEnd = await getHistory(
+    channel,
+    RestHistoryParams(start: time1, end: time2),
+  );
   final historyAll = await getHistory(channel);
   return {
     'handle': await rest.handle,

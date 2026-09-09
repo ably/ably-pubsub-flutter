@@ -27,7 +27,7 @@ class RestPresence extends PlatformObject {
       PlatformMethod.restPresenceGet,
       {
         TxTransportKeys.channelName: _restChannel.name,
-        if (params != null) TxTransportKeys.params: params
+        if (params != null) TxTransportKeys.params: params,
       },
     );
     return PaginatedResult<PresenceMessage>.fromAblyMessage(
@@ -50,7 +50,7 @@ class RestPresence extends PlatformObject {
       PlatformMethod.restPresenceHistory,
       {
         TxTransportKeys.channelName: _restChannel.name,
-        if (params != null) TxTransportKeys.params: params
+        if (params != null) TxTransportKeys.params: params,
       },
     );
     return PaginatedResult<PresenceMessage>.fromAblyMessage(

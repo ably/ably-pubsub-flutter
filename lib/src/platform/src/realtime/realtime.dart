@@ -11,12 +11,10 @@ import 'package:ably_flutter/src/realtime/src/realtime_auth.dart';
 class Realtime extends PlatformObject {
   /// Constructs a `Realtime` object using an Ably [options] object or
   /// the Ably API [key] or token string used to validate the client.
-  Realtime({
-    ClientOptions? options,
-    final String? key,
-  })  : assert(options != null || key != null),
-        options = options ?? ClientOptions(key: key),
-        super() {
+  Realtime({ClientOptions? options, final String? key})
+    : assert(options != null || key != null),
+      options = options ?? ClientOptions(key: key),
+      super() {
     _connection = Connection(this);
     _channels = RealtimeChannels(this);
     push = Push(realtime: this);
@@ -31,10 +29,10 @@ class Realtime extends PlatformObject {
   ///@nodoc
   @override
   Future<int?> createPlatformInstance() async {
-    final handle =
-        await invokeWithoutHandle<int>(PlatformMethod.createRealtime, {
-      TxTransportKeys.options: options,
-    });
+    final handle = await invokeWithoutHandle<int>(
+      PlatformMethod.createRealtime,
+      {TxTransportKeys.options: options},
+    );
     _realtimeInstances[handle] = this;
 
     if (io.Platform.isAndroid && options.autoConnect) {
@@ -45,11 +43,7 @@ class Realtime extends PlatformObject {
       // to false, and call connect immediately once we get the handle.
       // This is also a specific case where it's required to pass the handle
       // value from external source
-      await invoke<void>(
-        PlatformMethod.connectRealtime,
-        null,
-        handle,
-      );
+      await invoke<void>(PlatformMethod.connectRealtime, null, handle);
     }
     return handle;
   }

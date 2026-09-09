@@ -25,7 +25,7 @@ See [issue #226](https://github.com/ably/ably-flutter/issues/226).
 - Android API level 19+ (Android 4.4+)
     - Android devices
     - Android emulator (with Google APIs)
-- iOS 10+
+- iOS 13+
     - Physical devices only
     - **Not supported:** iOS Simulator. Calling [`UIApplication:registerForRemoteNotifications`](https://developer.apple.com/documentation/uikit/uiapplication/1623078-registerforremotenotifications) will result in [`application:didFailToRegisterForRemoteNotificationsWithError`](https://developer.apple.com/documentation/uikit/uiapplicationdelegate/1622962-application) method being called in your AppDelegate with an error: `remote notifications are not supported in the simulator`). This is an iOS simulator limitation.
     
@@ -77,11 +77,65 @@ To get push notifications setup in your own app, read [Setting up your own app](
     - Add `remote notification` Background mode:
         - Under the **Signing & Capabilities** tab, click `+ Capability` and select `Background Modes`.
         - Check `remote notifications`.
-- In your `AppDelegate.swift` or `AppDelegate.m`, implement [`application:didFailToRegisterForRemoteNotificationsWithError:`](https://developer.apple.com/documentation/uikit/uiapplicationdelegate/1622962-application). An example is shown in the example app, [`AppDelegate.m`](./example/ios/Runner/AppDelegate.m). 
+- If your app uses the UIScene life cycle, register Ably's notification handlers from your `AppDelegate`. See [UIScene life cycle](#uiscene-life-cycle) below — this is required, and push notifications will not work correctly without it.
+- In your `AppDelegate.swift` or `AppDelegate.m`, implement [`application:didFailToRegisterForRemoteNotificationsWithError:`](https://developer.apple.com/documentation/uikit/uiapplicationdelegate/1622962-application). An example is shown in the example app, [`AppDelegate.swift`](./example/ios/Runner/AppDelegate.swift).
 - During development, place a breakpoint in this method to diagnose why your device cannot register with APNs. This method will be called when there is an error, for example, if entitlements are not configured or when registering for APNs on the iOS simulator. You can check the `error` argument. If an error occurs in this method, Ably will not get the APNs device token. [From the `application(_:didFailToRegisterForRemoteNotificationsWithError:)` documentation](https://developer.apple.com/documentation/uikit/uiapplicationdelegate/1622962-application):
 > UIKit calls this method if it was unable to register your app with APNs or if your app is not properly configured for remote notifications. During development, make sure your app has the proper entitlements and that its App ID is configured to support push notifications. You might use your implementation of this method to make a note of the failed registration so that you can try again later.
 - Like the example app, you do not need to implement [`UIApplication:registerForRemoteNotifications`](https://developer.apple.com/documentation/uikit/uiapplication/1623078-registerforremotenotifications), as the Ably plugin does this for you at app launch.
-- Handle messages received on your device by implementing the methods in your `AppDelegate`, such as `didReceiveRemoteNotification`, `didReceiveNotificationResponse` and `willPresentNotification`. This is shown in the example app, [`AppDelegate.m`](./example/ios/Runner/AppDelegate.m). For more information, have a look at the [receiving messages](#receiving-messages) section.
+- Handle messages received on your device by implementing the methods in your `AppDelegate`, such as `didReceiveRemoteNotification`, `didReceiveNotificationResponse` and `willPresentNotification`. This is shown in the example app, [`AppDelegate.swift`](./example/ios/Runner/AppDelegate.swift). For more information, have a look at the [receiving messages](#receiving-messages) section.
+
+### UIScene life cycle
+
+Apple will require UIKit apps built against the SDK released after iOS 26 to adopt the [UIScene life cycle](https://developer.apple.com/documentation/uikit/scenes), and Flutter is [migrating accordingly](https://docs.flutter.dev/release/breaking-changes/uiscenedelegate). If your app has adopted it — that is, its `Info.plist` declares a `UIApplicationSceneManifest` — you **must** register Ably's push notification handlers yourself, from `application:didFinishLaunchingWithOptions:`:
+
+```swift
+import UIKit
+import Flutter
+import ably_flutter
+
+@main
+@objc class AppDelegate: FlutterAppDelegate {
+    override func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+    ) -> Bool {
+        AblyFlutter.sharedInstance().registerPushNotificationHandlers()
+
+        GeneratedPluginRegistrant.register(with: self)
+        return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+    }
+}
+```
+
+```objective-c
+#import <ably_flutter/AblyFlutter.h>
+
+@implementation AppDelegate
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    [[AblyFlutter sharedInstance] registerPushNotificationHandlers];
+
+    [GeneratedPluginRegistrant registerWithRegistry:self];
+    return [super application:application didFinishLaunchingWithOptions:launchOptions];
+}
+@end
+```
+
+This is necessary because Apple requires [`UNUserNotificationCenter.delegate`](https://developer.apple.com/documentation/usernotifications/unusernotificationcenterdelegate) to be set before `application:didFinishLaunchingWithOptions:` returns, but for apps on the UIScene life cycle Flutter defers plugin registration until after it returns. The plugin therefore cannot install the delegate early enough on its own.
+
+Apps still on the `UIApplicationDelegate` life cycle do not need to call this — plugin registration does it for them. Calling it anyway is safe: repeat calls are ignored rather than installing the delegate twice, so it is fine to add the call before migrating.
+
+The example app ([`AppDelegate.swift`](./example/ios/Runner/AppDelegate.swift), [`Info.plist`](./example/ios/Runner/Info.plist)) runs on the UIScene life cycle and shows the whole setup.
+
+### Opting out of Ably handling push notifications
+
+By default the plugin installs its own `UNUserNotificationCenterDelegate` so it can forward notification events to Dart. To handle notifications entirely yourself, set `AblyFlutterHandlePushNotifications` to `NO` in your app's `Info.plist`:
+
+```xml
+<key>AblyFlutterHandlePushNotifications</key>
+<false/>
+```
+
+With this set, the plugin installs no notification delegate and declines remote notifications so that your own `AppDelegate` methods handle them. `registerPushNotificationHandlers` also becomes a no-op. Note that the Dart-side push notification event APIs will not fire.
 
 ## Usage
 
@@ -446,7 +500,7 @@ Then, in your Android Manifest, disable Ably Flutter's broadcast receiver by rem
 
 **iOS**: Implementing the [`didReceiveRemoteNotification` delegate method](https://developer.apple.com/documentation/uikit/uiapplicationdelegate/1623013-application) declared in `UIApplicationDelegate`.
 
-Take a look at the example app platform specific code to handle messages. For iOS, this is `AppDelegate.m`, and in Android, it is `PushMessagingService.java`. For further help on implementing the Platform specific message handlers, see "On Android" and "On iOS" sections on [Push Notifications - Device activation and subscription](https://ably.com/documentation/general/push/activate-subscribe).
+Take a look at the example app platform specific code to handle messages. For iOS, this is `AppDelegate.swift`, and in Android, it is `PushMessagingService.java`. For further help on implementing the Platform specific message handlers, see "On Android" and "On iOS" sections on [Push Notifications - Device activation and subscription](https://ably.com/documentation/general/push/activate-subscribe).
 
 ### Additional considerations and resources
 - For tips on how best to use push messaging on Android, read [Notifying your users with FCM](https://android-developers.googleblog.com/2018/09/notifying-your-users-with-fcm.html). For example:
@@ -563,7 +617,7 @@ For Android device registrations, the device push state error are errors passed 
 
 ### Why are notifications not shown to the user when the app is open on Android?
 
-When the app is in the foreground (open by the user), Firebase messaging ignores the message. You would need to send a data message and build a local notification instead. On iOS, you can specify this in your `UNUserNotificationCenterDelegate`'s `userNotificationCenter:_willPresentNotification:withCompletionHandler` method. In the example app, this is implemented in `AppDelegate.m`, where the notification is always shown. You can perform logic to decide if it should be shown or not based on the notification.
+When the app is in the foreground (open by the user), Firebase messaging ignores the message. You would need to send a data message and build a local notification instead. On iOS, the plugin handles `userNotificationCenter:willPresentNotification:withCompletionHandler:` for you and asks Dart whether to show the notification, so decide this from [`PushNotificationEvents#setOnShowNotificationInForeground`](#showinghiding-foreground-notifications) rather than in your `AppDelegate`.
 
 ### Messaging generated from the "compose notification" in Firebase cloud messaging console are not received.
 

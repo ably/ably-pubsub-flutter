@@ -35,8 +35,8 @@ This SDK supports the following platforms:
 | Platform | Support |
 |----------|---------|
 | Android  | Android 4.4 (API level 19) or newer. Java 8 language features supported via [Desugaring](https://developer.android.com/studio/write/java8-support#library-desugaring). |
-| iOS      | iOS 10 or newer |
-| Flutter  | Flutter 2.5.0 or higher |
+| iOS      | iOS 13 or newer |
+| Flutter  | Flutter 3.38.0 or higher |
 
 > [!NOTE]
 > If your project needs support for SDK Version lower than 24, Android Gradle Plugin 4.0.0+ must be used.

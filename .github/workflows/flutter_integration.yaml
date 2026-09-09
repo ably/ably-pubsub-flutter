@@ -18,7 +18,7 @@ jobs:
 
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
-          flutter-version: '3.29'
+          flutter-version: '3.41.9'
           cache: true
 
       # test_integration package depends on ably_flutter, so before we run integration
@@ -81,7 +81,7 @@ jobs:
 
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
-          flutter-version: '3.29'
+          flutter-version: '3.41.9'
           cache: true
 
       - name: 'Run Flutter Driver tests'

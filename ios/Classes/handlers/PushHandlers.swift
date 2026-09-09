@@ -150,9 +150,15 @@ public class PushHandlers: NSObject {
 
     @objc
     public static let pushNotificationTapLaunchedAppFromTerminated: FlutterHandler = { ably, call, result in
-        if let data = pushNotificationTapLaunchedAppFromTerminatedData {
-            result(pushNotificationTapLaunchedAppFromTerminatedData)
+        guard let data = pushNotificationTapLaunchedAppFromTerminatedData else {
+            // Dart awaits this, so a result has to be delivered even when the app was
+            // not launched by a notification tap.
+            result(nil)
+            return
         }
+        // Dart expects a RemoteMessage; the raw APNs payload is not something the
+        // codec knows how to encode.
+        result(RemoteMessage(data: data._bridgeToObjectiveC(), notification: Notification(from: data)))
     }
 
     /// Gets the client.push property from ARTRealtime or ARTRest when the call contains a handle.

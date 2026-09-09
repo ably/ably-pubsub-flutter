@@ -20,8 +20,5 @@ Future<Map<String, dynamic>> testRestTime({
 
   final restTime = await rest.time();
 
-  return {
-    'handle': await rest.handle,
-    'time': restTime.toIso8601String(),
-  };
+  return {'handle': await rest.handle, 'time': restTime.toIso8601String()};
 }

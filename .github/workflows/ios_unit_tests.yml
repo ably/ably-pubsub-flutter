@@ -18,19 +18,24 @@ jobs:
 
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
-          flutter-version: '3.29'
+          flutter-version: '3.41.9'
           cache: true
 
       - name: Set up iOS test project
         # --skip-tests sets up the CocoaPods workspace (downloads all deps, generates
-        # the ably_flutter-Unit-Tests scheme) without booting a simulator
+        # the ably_flutter-Unit-Tests scheme) without booting a simulator.
+        #
+        # --include-podspecs supplies a local Flutter pod backed by this SDK's engine
+        # artifacts; the one on CocoaPods trunk is pinned at 3.13.0 and predates the
+        # UIScene plugin APIs. See ios/Tests/Support/Flutter.podspec.
         run: |
           cd ios
           pod lib lint ably_flutter.podspec \
             --allow-warnings \
             --skip-tests \
             --validation-dir=/tmp/ably_test_build \
-            --no-clean 
+            --no-clean \
+            --include-podspecs=Tests/Support/Flutter.podspec
 
       - name: Pick simulator
         run: |

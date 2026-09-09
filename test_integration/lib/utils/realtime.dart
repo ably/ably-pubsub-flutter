@@ -24,19 +24,20 @@ Future<List<Map<String, dynamic>>> getHistory(
 Future<List<Map<String, dynamic>>> getPresenceMembers(
   RealtimeChannel channel, [
   RealtimePresenceParams? params,
-]) async =>
-    encodeList<PresenceMessage>(
-      await channel.presence.get(params),
-      encodePresenceMessage,
-    );
+]) async => encodeList<PresenceMessage>(
+  await channel.presence.get(params),
+  encodePresenceMessage,
+);
 
 Future<List<Map<String, dynamic>>> getPresenceHistory(
   RealtimeChannel channel, [
   RealtimeHistoryParams? params,
 ]) async {
   var results = await channel.presence.history(params);
-  final messages =
-      encodeList<PresenceMessage>(results.items, encodePresenceMessage);
+  final messages = encodeList<PresenceMessage>(
+    results.items,
+    encodePresenceMessage,
+  );
   while (results.hasNext()) {
     results = await results.next();
     messages.addAll(

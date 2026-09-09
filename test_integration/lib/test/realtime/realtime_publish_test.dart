@@ -23,10 +23,7 @@ Future<Map<String, dynamic>> testRealtimePublish({
   );
   await publishMessages(realtime.channels.get('test'));
   await realtime.close();
-  return {
-    'handle': await realtime.handle,
-    'log': logMessages,
-  };
+  return {'handle': await realtime.handle, 'log': logMessages};
 }
 
 Future<Map<String, dynamic>> testRealtimePublishSpec({
@@ -53,10 +50,12 @@ Future<Map<String, dynamic>> testRealtimePublishSpec({
     message: Message(name: 'message-name1', data: 'message-data1'),
   );
   await Future<void>.delayed(TestConstants.publishToHistoryDelay);
-  await channel.publish(messages: [
-    Message(name: 'messages-name1', data: 'messages-data1'),
-    Message(name: 'messages-name2', data: 'messages-data2'),
-  ]);
+  await channel.publish(
+    messages: [
+      Message(name: 'messages-name1', data: 'messages-data1'),
+      Message(name: 'messages-name2', data: 'messages-data2'),
+    ],
+  );
   await Future<void>.delayed(TestConstants.publishToHistoryDelay);
   await channel.publish(
     message: Message(
@@ -71,7 +70,8 @@ Future<Map<String, dynamic>> testRealtimePublishSpec({
   Map<String, dynamic>? exception;
   try {
     await channel.publish(
-        message: Message(name: 'name', clientId: 'client-id'));
+      message: Message(name: 'name', clientId: 'client-id'),
+    );
   } on AblyException catch (e) {
     exception = encodeAblyException(e);
   }
@@ -82,10 +82,7 @@ Future<Map<String, dynamic>> testRealtimePublishSpec({
 
   // client options - no client id, message has client id
   final realtime2 = Realtime(
-    options: ClientOptions(
-      key: appKey,
-      environment: 'sandbox',
-    ),
+    options: ClientOptions(key: appKey, environment: 'sandbox'),
   );
 
   final channel2 = realtime2.channels.get('test2');

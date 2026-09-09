@@ -21,7 +21,8 @@ abstract class PushNotificationEvents {
   /// notifications while the app is in the foreground, manually create one
   /// when a [onMessage] or [BackgroundMessageHandler] is called.
   void setOnShowNotificationInForeground(
-      Future<bool> Function(RemoteMessage message) callback);
+    Future<bool> Function(RemoteMessage message) callback,
+  );
 
   /// A stream that emmits messages while the app is in the foreground.
   Stream<RemoteMessage> get onMessage;

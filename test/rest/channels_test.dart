@@ -64,10 +64,7 @@ void main() {
 
       expect(
         channels.where((e) => e.name.endsWith('3')).map((e) => e.name).toList(),
-        orderedEquals(const [
-          'channel-3',
-          'channel-33',
-        ]),
+        orderedEquals(const ['channel-3', 'channel-33']),
       );
     });
 
@@ -86,8 +83,7 @@ void main() {
     });
 
     group('#release', () {
-      test(
-          '(RSN4a) Takes one argument, the channel name,'
+      test('(RSN4a) Takes one argument, the channel name,'
           ' and releases the corresponding channel entity', () {
         channels
           ..get('channel-1')
@@ -98,8 +94,7 @@ void main() {
         expect(channels.exists('channel-1'), false);
       });
 
-      test(
-          '(RSN4b) Calling release() with a channel name'
+      test('(RSN4b) Calling release() with a channel name'
           ' that does not correspond to an extant channel'
           ' entity must return without error', () {
         channels
