@@ -26,12 +26,15 @@ Future<List<Map<String, dynamic>>> getPresenceHistory(
   RestHistoryParams? params,
 ]) async {
   var results = await channel.presence.history(params);
-  final messages =
-      encodeList<PresenceMessage>(results.items, encodePresenceMessage);
+  final messages = encodeList<PresenceMessage>(
+    results.items,
+    encodePresenceMessage,
+  );
   while (results.hasNext()) {
     results = await results.next();
     messages.addAll(
-        encodeList<PresenceMessage>(results.items, encodePresenceMessage));
+      encodeList<PresenceMessage>(results.items, encodePresenceMessage),
+    );
   }
   return messages;
 }
@@ -41,12 +44,15 @@ Future<List<Map<String, dynamic>>> getPresenceMembers(
   RestPresenceParams? params,
 ]) async {
   var results = await channel.presence.get(params);
-  final messages =
-      encodeList<PresenceMessage>(results.items, encodePresenceMessage);
+  final messages = encodeList<PresenceMessage>(
+    results.items,
+    encodePresenceMessage,
+  );
   while (results.hasNext()) {
     results = await results.next();
     messages.addAll(
-        encodeList<PresenceMessage>(results.items, encodePresenceMessage));
+      encodeList<PresenceMessage>(results.items, encodePresenceMessage),
+    );
   }
   return messages;
 }

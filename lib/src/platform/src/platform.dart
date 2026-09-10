@@ -18,7 +18,8 @@ class Platform {
     AblyMethodCallHandler(_methodChannel!);
     BackgroundIsolateAndroidPlatform().setupCallHandler();
     _ablyClientsResetFuture = _invokePlatformMethodWithoutResetCheck<void>(
-        PlatformMethod.resetAblyClients);
+      PlatformMethod.resetAblyClients,
+    );
   }
 
   static Platform? _platform;
@@ -47,8 +48,10 @@ class Platform {
   /// @nodoc
   /// Call a platform method which may return null/void as a result and
   /// check that ably clients have successfully reset
-  Future<T?> invokePlatformMethod<T>(String method,
-      [AblyMessage<Map<String, dynamic>>? arguments]) async {
+  Future<T?> invokePlatformMethod<T>(
+    String method, [
+    AblyMessage<Map<String, dynamic>>? arguments,
+  ]) async {
     // Check if ably clients have successfully reset
     // (to ensure platform method calls won't interfere
     // with each other after Platform singleton is reinitialized)
@@ -58,13 +61,17 @@ class Platform {
 
   /// @nodoc
   /// Call a platform method which always provides a non-null result
-  Future<T> invokePlatformMethodNonNull<T>(String method,
-      [AblyMessage<Map<String, dynamic>>? arguments]) async {
+  Future<T> invokePlatformMethodNonNull<T>(
+    String method, [
+    AblyMessage<Map<String, dynamic>>? arguments,
+  ]) async {
     final result = await invokePlatformMethod<T>(method, arguments);
     if (result == null) {
       throw AblyException(
-          message: 'invokePlatformMethodNonNull("$method") platform '
-              'method unexpectedly returned a null value.');
+        message:
+            'invokePlatformMethodNonNull("$method") platform '
+            'method unexpectedly returned a null value.',
+      );
     } else {
       return result;
     }
@@ -72,8 +79,10 @@ class Platform {
 
   /// @nodoc
   /// Call a platform method which may return null/void as a result
-  Future<T?> _invokePlatformMethodWithoutResetCheck<T>(String method,
-      [AblyMessage<Map<String, dynamic>>? arguments]) async {
+  Future<T?> _invokePlatformMethodWithoutResetCheck<T>(
+    String method, [
+    AblyMessage<Map<String, dynamic>>? arguments,
+  ]) async {
     try {
       // If argument is null, pass an empty [AblyMessage], because codec fails
       // if argument value is null
@@ -92,15 +101,14 @@ class Platform {
   /// @nodoc
   /// Call a platform method which always provides an observable stream
   /// of data as a result
-  Stream<T> receiveBroadcastStream<T>(String methodName, int handle,
-          [final Object? payload]) =>
-      _streamsChannel!.receiveBroadcastStream<T>(
-        AblyMessage(
-          message: AblyEventMessage(
-            eventName: methodName,
-            message: payload,
-          ),
-          handle: handle,
-        ),
-      );
+  Stream<T> receiveBroadcastStream<T>(
+    String methodName,
+    int handle, [
+    final Object? payload,
+  ]) => _streamsChannel!.receiveBroadcastStream<T>(
+    AblyMessage(
+      message: AblyEventMessage(eventName: methodName, message: payload),
+      handle: handle,
+    ),
+  );
 }

@@ -9,13 +9,12 @@ final logMessages = <List<String?>>[];
 ClientOptions getClientOptions(
   String appKey, [
   String? clientId = 'someClientId',
-]) =>
-    ClientOptions(
-      key: appKey,
-      environment: 'sandbox',
-      clientId: clientId,
-      logLevel: LogLevel.error,
-    );
+]) => ClientOptions(
+  key: appKey,
+  environment: 'sandbox',
+  clientId: clientId,
+  logLevel: LogLevel.error,
+);
 
 Future<Map<String, dynamic>> testRealtimePresenceEnterUpdateLeave({
   required Reporter reporter,
@@ -27,10 +26,9 @@ Future<Map<String, dynamic>> testRealtimePresenceEnterUpdateLeave({
   final clientIds = [null, 'client-1', 'client-2'];
   final clientIDClashMatrix = <Map<String, dynamic>>[];
   for (final clientId in clientIds) {
-    final presence = Realtime(options: getClientOptions(appKey, clientId))
-        .channels
-        .get('test')
-        .presence;
+    final presence = Realtime(
+      options: getClientOptions(appKey, clientId),
+    ).channels.get('test').presence;
     for (final clientId2 in clientIds) {
       final result = <String, dynamic>{
         'realtimeClientId': clientId,
@@ -102,11 +100,9 @@ Future<Map<String, dynamic>> testRealtimePresenceEnterUpdateLeave({
 
   // Interact with different types of data.
   final actionMatrix = <Map<String, dynamic>>[];
-  final realtimePresence =
-      Realtime(options: getClientOptions(appKey, 'test-client'))
-          .channels
-          .get('test')
-          .presence;
+  final realtimePresence = Realtime(
+    options: getClientOptions(appKey, 'test-client'),
+  ).channels.get('test').presence;
   for (final message in messagesToPublish) {
     final action = <String, dynamic>{'data': message};
     try {

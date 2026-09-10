@@ -28,9 +28,5 @@ class RealtimeChannelOptions {
   /// If a [cipherParams] is set, messages will be encrypted with the cipher.
   ///
   /// https://docs.ably.com/client-lib-development-guide/features/#TB2
-  const RealtimeChannelOptions({
-    this.cipherParams,
-    this.modes,
-    this.params,
-  });
+  const RealtimeChannelOptions({this.cipherParams, this.modes, this.params});
 }

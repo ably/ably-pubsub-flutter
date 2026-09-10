@@ -10,7 +10,4 @@ import 'package:ably_flutter/ably_flutter.dart';
   'All usages of this type are marked as deprecated '
   'so it will be removed in a future release.',
 )
-typedef LogHandler = void Function({
-  String? msg,
-  AblyException? exception,
-});
+typedef LogHandler = void Function({String? msg, AblyException? exception});

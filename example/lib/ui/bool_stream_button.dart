@@ -38,11 +38,10 @@ class BoolStreamButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => StreamBuilder(
-        stream: (streams != null) ? combineStreams(streams!) : stream,
-        builder: (context, snapshot) => TextButton(
-          onPressed:
-              (snapshot.hasData && snapshot.data == true) ? onPressed : null,
-          child: child,
-        ),
-      );
+    stream: (streams != null) ? combineStreams(streams!) : stream,
+    builder: (context, snapshot) => TextButton(
+      onPressed: (snapshot.hasData && snapshot.data == true) ? onPressed : null,
+      child: child,
+    ),
+  );
 }

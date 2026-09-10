@@ -36,27 +36,31 @@ class AblyService {
 }
 
 class ExampleMessages {
-  static ably.Message message = ably.Message(data: const {
-    'I am': null,
-    'and': {
-      'also': 'nested',
-      'too': {'deep': true}
-    }
-  });
+  static ably.Message message = ably.Message(
+    data: const {
+      'I am': null,
+      'and': {
+        'also': 'nested',
+        'too': {'deep': true},
+      },
+    },
+  );
 
   static List<ably.Message> messages = [
     ably.Message(data: 42),
     ably.Message(data: const {'are': 'you'}),
     ably.Message(data: 'ok?'),
-    ably.Message(data: const [
-      false,
-      {
-        'I am': null,
-        'and': {
-          'also': 'nested',
-          'too': {'deep': true}
-        }
-      }
-    ]),
+    ably.Message(
+      data: const [
+        false,
+        {
+          'I am': null,
+          'and': {
+            'also': 'nested',
+            'too': {'deep': true},
+          },
+        },
+      ],
+    ),
   ];
 }

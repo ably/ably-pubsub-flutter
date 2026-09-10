@@ -13,9 +13,7 @@ Future<Map<String, dynamic>> testRealtimePublishWithAuthCallback({
       logLevel: LogLevel.error,
       authCallback: (params) async {
         authCallbackInvoked = true;
-        return TokenRequest.fromMap(
-          await AppProvisioning().getTokenRequest(),
-        );
+        return TokenRequest.fromMap(await AppProvisioning().getTokenRequest());
       },
     ),
   );

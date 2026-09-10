@@ -26,16 +26,18 @@ class AblyMethodCallHandler {
         case PlatformMethod.pushOnBackgroundMessage:
           return _onPushBackgroundMessage(call.arguments as RemoteMessage);
         case PlatformMethod.pushOnShowNotificationInForeground:
-          return _pushNotificationEvents
-              .showNotificationInForeground(call.arguments as RemoteMessage);
+          return _pushNotificationEvents.showNotificationInForeground(
+            call.arguments as RemoteMessage,
+          );
         case PlatformMethod.pushOnNotificationTap:
           return _onNotificationTap(call.arguments as RemoteMessage);
         case PlatformMethod.pushOpenSettingsFor:
           return _onOpenSettingsFor();
         default:
           throw PlatformException(
-              code: 'Received invalid method channel call from Platform side',
-              message: 'No such method ${call.method}');
+            code: 'Received invalid method channel call from Platform side',
+            message: 'No such method ${call.method}',
+          );
       }
     });
   }
@@ -47,7 +49,8 @@ class AblyMethodCallHandler {
     final rest = restInstances[message.handle];
     if (rest == null) {
       throw AblyException(
-        message: "AblyMethodCallHandler#onAuthCallback's "
+        message:
+            "AblyMethodCallHandler#onAuthCallback's "
             'rest handle is ${message.handle}, and rest is $rest',
       );
     }
@@ -61,7 +64,8 @@ class AblyMethodCallHandler {
     final realtime = realtimeInstances[message.handle];
     if (realtime == null) {
       throw AblyException(
-        message: "AblyMethodCallHandler#onRealtimeAuthCallback's "
+        message:
+            "AblyMethodCallHandler#onRealtimeAuthCallback's "
             'realtime handle is ${message.handle}, and realtime is $realtime',
       );
     }
@@ -99,8 +103,9 @@ class AblyMethodCallHandler {
   }
 
   Future<Object?> _onNotificationTap(RemoteMessage remoteMessage) async {
-    _pushNotificationEvents.onNotificationTapStreamController
-        .add(remoteMessage);
+    _pushNotificationEvents.onNotificationTapStreamController.add(
+      remoteMessage,
+    );
     return null;
   }
 

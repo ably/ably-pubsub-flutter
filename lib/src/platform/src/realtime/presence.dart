@@ -17,16 +17,12 @@ class RealtimePresence extends PlatformObject {
   /// Retrieves the current members present on the channel and the metadata for
   /// each member, such as their [PresenceAction] and ID, based on provided
   /// [params]. Returns an array of [PresenceMessage] objects.
-  Future<List<PresenceMessage>> get([
-    RealtimePresenceParams? params,
-  ]) async {
-    final presenceMessages = await invokeRequest<List<dynamic>>(
-      PlatformMethod.realtimePresenceGet,
-      {
-        TxTransportKeys.channelName: _channel.name,
-        if (params != null) TxTransportKeys.params: params
-      },
-    );
+  Future<List<PresenceMessage>> get([RealtimePresenceParams? params]) async {
+    final presenceMessages =
+        await invokeRequest<List<dynamic>>(PlatformMethod.realtimePresenceGet, {
+          TxTransportKeys.channelName: _channel.name,
+          if (params != null) TxTransportKeys.params: params,
+        });
     return presenceMessages
         .map<PresenceMessage>((e) => e as PresenceMessage)
         .toList();
@@ -46,7 +42,7 @@ class RealtimePresence extends PlatformObject {
       PlatformMethod.realtimePresenceHistory,
       {
         TxTransportKeys.channelName: _channel.name,
-        if (params != null) TxTransportKeys.params: params
+        if (params != null) TxTransportKeys.params: params,
       },
     );
     return PaginatedResult<PresenceMessage>.fromAblyMessage(
@@ -144,7 +140,9 @@ class RealtimePresence extends PlatformObject {
     if (action != null) actions ??= [action];
     return listen<PresenceMessage>(PlatformMethod.onRealtimePresenceMessage, {
       TxTransportKeys.channelName: _channel.name,
-    }).where((presenceMessage) =>
-        actions == null || actions.contains(presenceMessage.action));
+    }).where(
+      (presenceMessage) =>
+          actions == null || actions.contains(presenceMessage.action),
+    );
   }
 }

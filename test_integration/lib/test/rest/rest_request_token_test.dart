@@ -17,14 +17,15 @@ Future<Map<String, dynamic>> testRestRequestToken({
     logLevel: LogLevel.error,
   );
 
-  final restForToken = Rest(
-    options: clientOptionsForToken,
-  );
+  final restForToken = Rest(options: clientOptionsForToken);
 
   final token = await restForToken.auth.requestToken();
 
   final clientOptions = ClientOptions(
-      tokenDetails: token, environment: 'sandbox', logLevel: LogLevel.error);
+    tokenDetails: token,
+    environment: 'sandbox',
+    logLevel: LogLevel.error,
+  );
   final tokenedRest = Rest(options: clientOptions);
 
   await publishMessages(tokenedRest.channels.get('test'));

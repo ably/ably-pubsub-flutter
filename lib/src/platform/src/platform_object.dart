@@ -44,20 +44,22 @@ abstract class PlatformObject {
   /// This method should be protected since it's only used to cover edge
   /// case for creating rest and realtime instances.
   @protected
-  Future<T?> invokeWithoutHandle<T>(final String method,
-      [final Map<String, dynamic>? argument]) async {
-    final message = AblyMessage(
-      message: argument ?? {},
-    );
+  Future<T?> invokeWithoutHandle<T>(
+    final String method, [
+    final Map<String, dynamic>? argument,
+  ]) async {
+    final message = AblyMessage(message: argument ?? {});
     return _platform.invokePlatformMethod<T>(method, message);
   }
 
   /// @nodoc
   /// Invoke platform method channel with provided handle, or
   /// current handle if [externalHandle] is not provided.
-  Future<T?> invoke<T>(final String method,
-      [final Map<String, dynamic>? arguments,
-      final int? externalHandle]) async {
+  Future<T?> invoke<T>(
+    final String method, [
+    final Map<String, dynamic>? arguments,
+    final int? externalHandle,
+  ]) async {
     final message = AblyMessage(
       message: arguments ?? {},
       handle: externalHandle ?? await handle,
@@ -69,8 +71,10 @@ abstract class PlatformObject {
   /// Invoke platform method channel with AblyMessage encapsulation.
   ///
   /// This is similar to [invoke], but ensures the response is not null.
-  Future<T> invokeRequest<T>(final String method,
-      [final Map<String, dynamic>? arguments]) async {
+  Future<T> invokeRequest<T>(
+    final String method, [
+    final Map<String, dynamic>? arguments,
+  ]) async {
     final response = await invoke<T>(method, arguments);
     if (response == null) {
       throw AblyException(
@@ -89,8 +93,10 @@ abstract class PlatformObject {
     // ignore: close_sinks, will be closed by listener
     final controller = StreamController<T>();
     handle
-        .then((handle) =>
-            _platform.receiveBroadcastStream<T>(method, handle, payload))
+        .then(
+          (handle) =>
+              _platform.receiveBroadcastStream<T>(method, handle, payload),
+        )
         .then(controller.addStream);
     return controller.stream;
   }

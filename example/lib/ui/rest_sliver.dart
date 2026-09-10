@@ -16,51 +16,52 @@ class RestSliver extends HookWidget {
   }
 
   Widget buildPublishButton(
-          ValueNotifier<int> messageCount, String messageName) =>
-      TextButton(
-        onPressed: () async {
-          try {
-            await channel.publish(
-                name: messageName, data: 'Some data for $messageName');
-            messageCount.value += 1;
-          } on ably.AblyException catch (e) {
-            print('Rest message sending failed:: $e :: ${e.errorInfo}');
-          }
-        },
-        child: const Text('Publish'),
-      );
+    ValueNotifier<int> messageCount,
+    String messageName,
+  ) => TextButton(
+    onPressed: () async {
+      try {
+        await channel.publish(
+          name: messageName,
+          data: 'Some data for $messageName',
+        );
+        messageCount.value += 1;
+      } on ably.AblyException catch (e) {
+        print('Rest message sending failed:: $e :: ${e.errorInfo}');
+      }
+    },
+    child: const Text('Publish'),
+  );
 
   Widget buildReleaseChannelButton() => TextButton(
-        onPressed: () => rest.channels.release(Constants.channelName),
-        child: const Text('Release channel'),
-      );
+    onPressed: () => rest.channels.release(Constants.channelName),
+    child: const Text('Release channel'),
+  );
 
   Widget buildEncryptionSwitch(ValueNotifier<bool> isEnabled) => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Text(
-            'Enable encryption',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-          Switch(
-            onChanged: (switchedOn) async {
-              isEnabled.value = switchedOn;
-              if (switchedOn) {
-                await channel.setOptions(
-                  await ably.RestChannelOptions.withCipherKey(
-                    keyFromPassword(
-                      Constants.examplePasswordForEncryptedChannel,
-                    ),
-                  ),
-                );
-              } else {
-                await channel.setOptions(ably.RestChannelOptions());
-              }
-            },
-            value: isEnabled.value,
-          ),
-        ],
-      );
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      const Text(
+        'Enable encryption',
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+      ),
+      Switch(
+        onChanged: (switchedOn) async {
+          isEnabled.value = switchedOn;
+          if (switchedOn) {
+            await channel.setOptions(
+              await ably.RestChannelOptions.withCipherKey(
+                keyFromPassword(Constants.examplePasswordForEncryptedChannel),
+              ),
+            );
+          } else {
+            await channel.setOptions(ably.RestChannelOptions());
+          }
+        },
+        value: isEnabled.value,
+      ),
+    ],
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -87,42 +88,46 @@ class RestSliver extends HookWidget {
         Row(
           children: [
             Expanded(
-                child: buildPublishButton(messageCount, messageName.value)),
+              child: buildPublishButton(messageCount, messageName.value),
+            ),
             Expanded(child: buildReleaseChannelButton()),
           ],
         ),
         TextRow('Next message', messageName.value),
         PaginatedResultViewer<ably.Message>(
-            title: 'History',
-            query: () => channel.history(ably.RestHistoryParams(
-                  direction: 'forwards',
-                  limit: 10,
-                )),
-            builder: (context, message, _) => Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextRow('Name', message.name),
-                    TextRow('Data', message.data.toString()),
-                  ],
-                )),
+          title: 'History',
+          query: () => channel.history(
+            ably.RestHistoryParams(direction: 'forwards', limit: 10),
+          ),
+          builder: (context, message, _) => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextRow('Name', message.name),
+              TextRow('Data', message.data.toString()),
+            ],
+          ),
+        ),
         PaginatedResultViewer<ably.PresenceMessage>(
-            title: 'Presence members',
-            query: () =>
-                channel.presence.get(ably.RestPresenceParams(limit: 10)),
-            builder: (context, message, _) => Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextRow('Message ID', '${message.id}'),
-                    TextRow('Message client ID', '${message.clientId}'),
-                    TextRow('Message data', '${message.data}'),
-                  ],
-                )),
+          title: 'Presence members',
+          query: () => channel.presence.get(ably.RestPresenceParams(limit: 10)),
+          builder: (context, message, _) => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextRow('Message ID', '${message.id}'),
+              TextRow('Message client ID', '${message.clientId}'),
+              TextRow('Message data', '${message.data}'),
+            ],
+          ),
+        ),
         PaginatedResultViewer<ably.PresenceMessage>(
-            title: 'Presence history',
-            query: () =>
-                channel.presence.history(ably.RestHistoryParams(limit: 10)),
-            builder: (context, message, _) => TextRow('Message name',
-                '${message.id}:${message.clientId}:${message.data}')),
+          title: 'Presence history',
+          query: () =>
+              channel.presence.history(ably.RestHistoryParams(limit: 10)),
+          builder: (context, message, _) => TextRow(
+            'Message name',
+            '${message.id}:${message.clientId}:${message.data}',
+          ),
+        ),
       ],
     );
   }

@@ -199,16 +199,16 @@ class ClientOptions extends AuthOptions {
     bool? useBinaryProtocol,
     bool? useTokenAuth,
   }) : super(
-          authCallback: authCallback,
-          authUrl: authUrl,
-          authMethod: authMethod,
-          key: key,
-          tokenDetails: tokenDetails,
-          authHeaders: authHeaders,
-          authParams: authParams,
-          queryTime: queryTime,
-          useTokenAuth: useTokenAuth,
-        ) {
+         authCallback: authCallback,
+         authUrl: authUrl,
+         authMethod: authMethod,
+         key: key,
+         tokenDetails: tokenDetails,
+         authHeaders: authHeaders,
+         authParams: authParams,
+         queryTime: queryTime,
+         useTokenAuth: useTokenAuth,
+       ) {
     /// @nodoc
     /// These default value assignments are only required until
     /// [ClientOptions.fromKey] is removed, because then defaults can be set
@@ -236,16 +236,17 @@ class ClientOptions extends AuthOptions {
   ///
   /// See [AuthOptions.fromKey] for more details
   @Deprecated(
-      "Use ClientOptions constructor with named 'key' parameter instead")
+    "Use ClientOptions constructor with named 'key' parameter instead",
+  )
   ClientOptions.fromKey(String key) : super.fromKey(key);
 
-// TODO(tiholic) unimplemented:
-//
-//  (TO3m) logExceptionReportingUrl
-//  (TO3l6) httpMaxRetryDuration
-//  (TO3l8) maxMessageSize
-//  (TO3l9) maxFrameSize
-//  (TO3o) plugins
-//  (TO3p) addRequestIds
-//  (DF1a) connectionStateTtl
+  // TODO(tiholic) unimplemented:
+  //
+  //  (TO3m) logExceptionReportingUrl
+  //  (TO3l6) httpMaxRetryDuration
+  //  (TO3l8) maxMessageSize
+  //  (TO3l9) maxFrameSize
+  //  (TO3o) plugins
+  //  (TO3p) addRequestIds
+  //  (DF1a) connectionStateTtl
 }

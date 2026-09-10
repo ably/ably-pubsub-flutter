@@ -4,8 +4,17 @@ version: 1.2.44
 repository: https://github.com/ably/ably-pubsub-flutter
 
 environment:
-  sdk: ">=2.14.0 <4.0.0"
-  flutter: ">=2.5.0"
+  # Two iOS floors meet at Flutter 3.44:
+  #
+  # - The UIScene plugin APIs the iOS side relies on
+  #   (`FlutterSceneLifeCycleDelegate` and
+  #   `FlutterPluginRegistrar.addSceneDelegate:`) first shipped in 3.38. See
+  #   PushNotifications.md.
+  # - 3.44 is the first release where Swift Package Manager is the default
+  #   dependency manager rather than an opt-in experiment, which is what lets
+  #   this plugin ship a SwiftPM manifest and retire its podspec.
+  sdk: ">=3.12.0 <4.0.0"
+  flutter: ">=3.44.0"
 
 dependencies:
   collection: ^1.15.0

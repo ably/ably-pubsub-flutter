@@ -3,8 +3,8 @@ description: Demonstrates how to use the Ably Flutter plugin.
 publish_to: "none"
 
 environment:
-  sdk: ">=3.3.0 <4.0.0"
-  flutter: "3.24.0"
+  sdk: ">=3.12.0 <4.0.0"
+  flutter: ">=3.44.0"
 
 dependencies:
   flutter:
@@ -28,4 +28,10 @@ dev_dependencies:
   flutter_lints: ^1.0.4
 
 flutter:
+  # Flutter 3.44 turns Swift Package Manager on by default, and building this
+  # app would migrate its Xcode project off CocoaPods on the spot. Hold that
+  # off so the migration can land as its own reviewable commit rather than as
+  # a side effect of a version bump.
+  config:
+    enable-swift-package-manager: false
   uses-material-design: true

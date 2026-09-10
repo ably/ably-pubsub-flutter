@@ -17,17 +17,13 @@ class AblyException implements Exception {
   final ErrorInfo? errorInfo;
 
   /// initializes with no defaults
-  AblyException({
-    this.code,
-    this.errorInfo,
-    this.message,
-  });
+  AblyException({this.code, this.errorInfo, this.message});
 
   /// create AblyException from [PlatformException]
   AblyException.fromPlatformException(PlatformException exception)
-      : code = exception.code,
-        errorInfo = exception.details as ErrorInfo?,
-        message = exception.message;
+    : code = exception.code,
+      errorInfo = exception.details as ErrorInfo?,
+      message = exception.message;
 
   @override
   String toString() {

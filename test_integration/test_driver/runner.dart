@@ -25,8 +25,9 @@ void main(List<String> args) {
     return;
   }
 
-  final selectedModules =
-      _parseModulesStringIntoTestModules(argv['modules'] as List<String>);
+  final selectedModules = _parseModulesStringIntoTestModules(
+    argv['modules'] as List<String>,
+  );
 
   if (selectedModules.isEmpty) {
     runTests(all: true);
@@ -36,7 +37,8 @@ void main(List<String> args) {
 }
 
 Iterable<TestModules> _parseModulesStringIntoTestModules(
-    List<String> modulesStrings) {
+  List<String> modulesStrings,
+) {
   final modules = modulesStrings
       .map((module) => EnumToString.fromString(TestModules.values, module))
       .whereType<TestModules>()

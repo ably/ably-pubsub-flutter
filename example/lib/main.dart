@@ -22,33 +22,27 @@ Future<void> main() async {
 class AblyFlutterExampleApp extends StatelessWidget {
   final AblyService ablyService;
 
-  const AblyFlutterExampleApp({
-    required this.ablyService,
-    Key? key,
-  }) : super(key: key);
+  const AblyFlutterExampleApp({required this.ablyService, Key? key})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-        home: Scaffold(
-          appBar: AppBar(
-            title: const Text('Ably Flutter Example App'),
-          ),
-          body: Center(
-            child: ListView(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 24, horizontal: 36),
-                children: [
-                  SystemDetailsSliver(
-                    apiKeyProvision: ablyService.apiKeyProvision,
-                  ),
-                  const Divider(),
-                  RealtimeSliver(ablyService),
-                  const Divider(),
-                  RestSliver(ablyService.rest),
-                  const Divider(),
-                  PushNotificationsSliver(ablyService.pushNotificationService)
-                ]),
-          ),
+    home: Scaffold(
+      appBar: AppBar(title: const Text('Ably Flutter Example App')),
+      body: Center(
+        child: ListView(
+          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 36),
+          children: [
+            SystemDetailsSliver(apiKeyProvision: ablyService.apiKeyProvision),
+            const Divider(),
+            RealtimeSliver(ablyService),
+            const Divider(),
+            RestSliver(ablyService.rest),
+            const Divider(),
+            PushNotificationsSliver(ablyService.pushNotificationService),
+          ],
         ),
-      );
+      ),
+    ),
+  );
 }

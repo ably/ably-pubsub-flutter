@@ -30,12 +30,13 @@ class RestHistoryParams {
     DateTime? end,
     this.limit = 100,
     DateTime? start,
-  })  : assert(direction == 'backwards' || direction == 'forwards'),
-        end = end ?? DateTime.now(),
-        start = start ?? DateTime.fromMillisecondsSinceEpoch(0);
+  }) : assert(direction == 'backwards' || direction == 'forwards'),
+       end = end ?? DateTime.now(),
+       start = start ?? DateTime.fromMillisecondsSinceEpoch(0);
 
   @override
-  String toString() => 'RestHistoryParams:'
+  String toString() =>
+      'RestHistoryParams:'
       ' start=$start'
       ' end=$end'
       ' direction=$direction'

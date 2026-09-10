@@ -22,9 +22,7 @@ class Connection extends PlatformObject {
   ///
   /// Sets default [state] to [ConnectionState.initialized] and starts listening
   /// for updates to the connection [state].
-  Connection(this.realtime)
-      : _state = ConnectionState.initialized,
-        super() {
+  Connection(this.realtime) : _state = ConnectionState.initialized, super() {
     _onConnectionStateChange().listen((event) {
       _state = event.stateChange.current;
       _errorReason = event.stateChange.reason;
@@ -92,10 +90,13 @@ class Connection extends PlatformObject {
 
   /// Stream of connection events with specified [ConnectionEvent] type.
   Stream<ConnectionStateChange> on([ConnectionEvent? connectionEvent]) =>
-      _onConnectionStateChange().map((event) => event.stateChange).where(
-          (connectionStateChange) =>
-              connectionEvent == null ||
-              connectionStateChange.event == connectionEvent);
+      _onConnectionStateChange()
+          .map((event) => event.stateChange)
+          .where(
+            (connectionStateChange) =>
+                connectionEvent == null ||
+                connectionStateChange.event == connectionEvent,
+          );
 
   /// Causes the connection to close, entering the [ConnectionState.closing]
   /// state.

@@ -36,7 +36,8 @@ class ErrorInfo {
   });
 
   @override
-  String toString() => 'ErrorInfo'
+  String toString() =>
+      'ErrorInfo'
       ' message=$message'
       ' code=$code'
       ' statusCode=$statusCode'

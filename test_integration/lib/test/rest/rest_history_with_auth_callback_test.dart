@@ -16,9 +16,7 @@ Future<Map<String, dynamic>> testRestHistoryWithAuthCallback({
       logLevel: LogLevel.error,
       authCallback: (params) async {
         authCallbackInvoked = true;
-        return TokenRequest.fromMap(
-          await AppProvisioning().getTokenRequest(),
-        );
+        return TokenRequest.fromMap(await AppProvisioning().getTokenRequest());
       },
     ),
   );
@@ -31,6 +29,6 @@ Future<Map<String, dynamic>> testRestHistoryWithAuthCallback({
 
   return {
     'handle': await rest.handle,
-    'authCallbackInvoked': authCallbackInvoked
+    'authCallbackInvoked': authCallbackInvoked,
   };
 }
