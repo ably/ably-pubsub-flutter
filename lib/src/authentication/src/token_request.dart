@@ -67,12 +67,11 @@ class TokenRequest {
   /// Ably ensures that all fields are consistently serialized and deserialized
   /// across platforms.
   TokenRequest.fromMap(Map<String, dynamic> map)
-      : capability = map['capability'] as String?,
-        clientId = map['clientId'] as String?,
-        mac = map['mac'] as String?,
-        nonce = map['nonce'] as String?,
-        timestamp =
-            DateTime.fromMillisecondsSinceEpoch(map['timestamp'] as int),
-        ttl = map['ttl'] as int?,
-        keyName = map['keyName'] as String?;
+    : capability = map['capability'] as String?,
+      clientId = map['clientId'] as String?,
+      mac = map['mac'] as String?,
+      nonce = map['nonce'] as String?,
+      timestamp = DateTime.fromMillisecondsSinceEpoch(map['timestamp'] as int),
+      ttl = map['ttl'] as int?,
+      keyName = map['keyName'] as String?;
 }

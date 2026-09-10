@@ -21,8 +21,5 @@ Future<Map<String, dynamic>> testPlatformAndAblyVersion({
   final _platformVersion = await platformVersion();
   final _ablyVersion = await version();
 
-  return {
-    'platformVersion': _platformVersion,
-    'ablyVersion': _ablyVersion,
-  };
+  return {'platformVersion': _platformVersion, 'ablyVersion': _ablyVersion};
 }

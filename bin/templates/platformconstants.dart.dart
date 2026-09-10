@@ -1,6 +1,7 @@
 String getPrefix(String str) => (str.length > 26) ? '\n      ' : ' ';
 
-String $(Map<String, dynamic> c) => '''
+String $(Map<String, dynamic> c) =>
+    '''
 // ignore_for_file: public_member_api_docs
 
 class CodecTypes {

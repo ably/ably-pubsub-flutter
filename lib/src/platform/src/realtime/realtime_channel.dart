@@ -29,10 +29,10 @@ class RealtimeChannel extends PlatformObject {
   /// sets default [state] to [ChannelState.initialized] and start listening
   /// for updates to the channel [state]/
   RealtimeChannel(Realtime realtime, String channelName)
-      : _realtime = realtime,
-        _channelName = channelName,
-        state = ChannelState.initialized,
-        super() {
+    : _realtime = realtime,
+      _channelName = channelName,
+      state = ChannelState.initialized,
+      super() {
     _presence = RealtimePresence(this);
     push = PushChannel(_channelName, realtime: _realtime);
     on().listen((event) => state = event.current);
@@ -55,10 +55,12 @@ class RealtimeChannel extends PlatformObject {
     RealtimeHistoryParams? params,
   ]) async {
     final message = await invokeRequest<AblyMessage<dynamic>>(
-        PlatformMethod.realtimeHistory, {
-      TxTransportKeys.channelName: _channelName,
-      if (params != null) TxTransportKeys.params: params,
-    });
+      PlatformMethod.realtimeHistory,
+      {
+        TxTransportKeys.channelName: _channelName,
+        if (params != null) TxTransportKeys.params: params,
+      },
+    );
     return PaginatedResult<Message>.fromAblyMessage(
       AblyMessage.castFrom<dynamic, PaginatedResult<dynamic>>(message),
     );
@@ -76,7 +78,7 @@ class RealtimeChannel extends PlatformObject {
     Object? data,
   }) async {
     messages ??= [
-      if (message == null) Message(name: name, data: data) else message
+      if (message == null) Message(name: name, data: data) else message,
     ];
     await invoke<void>(PlatformMethod.publishRealtimeChannelMessage, {
       TxTransportKeys.channelName: _channelName,
@@ -114,8 +116,8 @@ class RealtimeChannel extends PlatformObject {
   /// [RealtimePresence.subscribe] are called on the [RealtimePresence] object
   /// for this channel.
   Future<void> attach() => invoke(PlatformMethod.attachRealtimeChannel, {
-        TxTransportKeys.channelName: _channelName,
-      });
+    TxTransportKeys.channelName: _channelName,
+  });
 
   /// Detach from this channel. Any resulting channel state change is emitted to
   /// any listeners registered using the [RealtimeChannel.on] stream.
@@ -123,8 +125,8 @@ class RealtimeChannel extends PlatformObject {
   /// Once all clients globally have detached from the channel, the channel will
   /// be released in the Ably service within two minutes.
   Future<void> detach() => invoke(PlatformMethod.detachRealtimeChannel, {
-        TxTransportKeys.channelName: _channelName,
-      });
+    TxTransportKeys.channelName: _channelName,
+  });
 
   /// Sets the [options] for the channel.
   Future<void> setOptions(RealtimeChannelOptions options) =>
@@ -135,10 +137,9 @@ class RealtimeChannel extends PlatformObject {
 
   /// Stream of channel events with specified [ChannelEvent] type
   Stream<ChannelStateChange> on([ChannelEvent? channelEvent]) =>
-      listen<ChannelStateChange>(
-        PlatformMethod.onRealtimeChannelStateChanged,
-        {TxTransportKeys.channelName: _channelName},
-      ).where(
+      listen<ChannelStateChange>(PlatformMethod.onRealtimeChannelStateChanged, {
+        TxTransportKeys.channelName: _channelName,
+      }).where(
         (stateChange) =>
             channelEvent == null || stateChange.event == channelEvent,
       );
@@ -156,8 +157,10 @@ class RealtimeChannel extends PlatformObject {
     final subscribedNames = {name, ...?names}.where((n) => n != null).toList();
     return listen<Message>(PlatformMethod.onRealtimeChannelMessage, {
       TxTransportKeys.channelName: _channelName,
-    }).where((message) =>
-        subscribedNames.isEmpty ||
-        subscribedNames.any((n) => n == message.name));
+    }).where(
+      (message) =>
+          subscribedNames.isEmpty ||
+          subscribedNames.any((n) => n == message.name),
+    );
   }
 }

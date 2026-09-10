@@ -12,8 +12,10 @@ class MockMethodCallManager {
   final publishedMessages = <AblyMessage<dynamic>>[];
 
   MockMethodCallManager() {
-    final channel =
-        MethodChannel('io.ably.flutter.plugin', StandardMethodCodec(Codec()));
+    final channel = MethodChannel(
+      'io.ably.flutter.plugin',
+      StandardMethodCodec(Codec()),
+    );
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, handler);
     Platform(methodChannel: channel);
@@ -23,8 +25,10 @@ class MockMethodCallManager {
     channels.clear();
     publishedMessages.clear();
     handleCounter = 0;
-    final channel =
-        MethodChannel('io.ably.flutter.plugin', StandardMethodCodec(Codec()));
+    final channel = MethodChannel(
+      'io.ably.flutter.plugin',
+      StandardMethodCodec(Codec()),
+    );
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, handler);
     Platform(methodChannel: channel);
@@ -54,7 +58,9 @@ class MockMethodCallManager {
         // PlatformChannel.
         if (!isAuthenticated && clientOptions.authUrl == 'hasAuthCallback') {
           final channel = MethodChannel(
-              'io.ably.flutter.plugin', StandardMethodCodec(Codec()));
+            'io.ably.flutter.plugin',
+            StandardMethodCodec(Codec()),
+          );
           await AblyMethodCallHandler(channel).onAuthCallback(
             AblyMessage(
               message: TokenParams(timestamp: DateTime.now()),
@@ -75,12 +81,12 @@ class MockMethodCallManager {
         // PlatformChannel.
         if (!isAuthenticated && clientOptions.authUrl == 'hasAuthCallback') {
           final channel = MethodChannel(
-              'io.ably.flutter.plugin', StandardMethodCodec(Codec()));
+            'io.ably.flutter.plugin',
+            StandardMethodCodec(Codec()),
+          );
           await AblyMethodCallHandler(channel).onRealtimeAuthCallback(
             AblyMessage(
-              message: TokenParams(
-                timestamp: DateTime.now(),
-              ),
+              message: TokenParams(timestamp: DateTime.now()),
               handle: ablyMessage.handle,
             ),
           );
@@ -95,8 +101,10 @@ class MockMethodCallManager {
         return null;
 
       default:
-        return throw Exception('Unexpected method call: ${methodCall.method}'
-            ' args: ${methodCall.arguments}');
+        return throw Exception(
+          'Unexpected method call: ${methodCall.method}'
+          ' args: ${methodCall.arguments}',
+        );
     }
   }
 }

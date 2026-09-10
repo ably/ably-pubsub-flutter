@@ -20,7 +20,8 @@ class PushChannel extends PlatformObject {
     final moreThanOneAblyClientPresent = rest != null && realtime != null;
     if (ablyClientNotPresent || moreThanOneAblyClientPresent) {
       throw Exception(
-          'Specify one Ably client when creating ${(Push).toString()}.');
+        'Specify one Ably client when creating ${(Push).toString()}.',
+      );
     }
   }
 
@@ -31,24 +32,28 @@ class PushChannel extends PlatformObject {
       : (rest as Rest).handle;
 
   /// Subscribes the device to push notifications for the channel.
-  Future<void> subscribeDevice() => invoke(
-      PlatformMethod.pushSubscribeDevice, {TxTransportKeys.channelName: _name});
+  Future<void> subscribeDevice() => invoke(PlatformMethod.pushSubscribeDevice, {
+    TxTransportKeys.channelName: _name,
+  });
 
   /// Unsubscribes the device from receiving push notifications for the channel.
   Future<void> unsubscribeDevice() => invoke(
-      PlatformMethod.pushUnsubscribeDevice,
-      {TxTransportKeys.channelName: _name});
+    PlatformMethod.pushUnsubscribeDevice,
+    {TxTransportKeys.channelName: _name},
+  );
 
   /// Subscribes all devices associated with the current device's `clientId` to
   /// push notifications for the channel.
-  Future<void> subscribeClient() => invoke(
-      PlatformMethod.pushSubscribeClient, {TxTransportKeys.channelName: _name});
+  Future<void> subscribeClient() => invoke(PlatformMethod.pushSubscribeClient, {
+    TxTransportKeys.channelName: _name,
+  });
 
   /// Unsubscribes all devices associated with the current device's `clientId`
   /// from receiving push notifications for the channel.
   Future<void> unsubscribeClient() => invoke(
-      PlatformMethod.pushUnsubscribeClient,
-      {TxTransportKeys.channelName: _name});
+    PlatformMethod.pushUnsubscribeClient,
+    {TxTransportKeys.channelName: _name},
+  );
 
   /// Retrieves all push subscriptions for the channel.
   ///
@@ -60,7 +65,8 @@ class PushChannel extends PlatformObject {
   /// Returns a [PaginatedResult] object containing a list of
   /// [PushChannelSubscription] objects.
   Future<PaginatedResult<PushChannelSubscription>> listSubscriptions(
-      Map<String, String> params) async {
+    Map<String, String> params,
+  ) async {
     if (!params.containsKey('deviceId') &&
         !params.containsKey('clientId') &&
         !params.containsKey('deviceClientId') &&
@@ -68,7 +74,8 @@ class PushChannel extends PlatformObject {
       // This error only happen on Androids. They are thrown here
       // for both platforms (iOS/ Android) to make the API more consistent.
       throw AblyException(
-        message: "expected parameter 'deviceId', 'clientId', "
+        message:
+            "expected parameter 'deviceId', 'clientId', "
             "'deviceClientId', and/or 'channel'",
       );
     }
@@ -79,6 +86,7 @@ class PushChannel extends PlatformObject {
     );
 
     return PaginatedResult<PushChannelSubscription>.fromAblyMessage(
-        AblyMessage.castFrom<dynamic, PaginatedResult<dynamic>>(message));
+      AblyMessage.castFrom<dynamic, PaginatedResult<dynamic>>(message),
+    );
   }
 }

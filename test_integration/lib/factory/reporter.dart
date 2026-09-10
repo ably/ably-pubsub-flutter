@@ -8,10 +8,8 @@ class Reporter {
   final DispatcherController controller;
   final Completer<TestControlResponseMessage> response;
 
-  Reporter(
-    this.message,
-    this.controller,
-  ) : response = Completer<TestControlResponseMessage>();
+  Reporter(this.message, this.controller)
+    : response = Completer<TestControlResponseMessage>();
 
   String get testName => message.testName;
 

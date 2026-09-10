@@ -12,8 +12,9 @@ Future<Map<String, dynamic>> testRestEncryptedPublish({
   reporter.reportLog('init start');
   final appKey = await AppProvisioning().provisionApp();
 
-  final cipherParams =
-      await Crypto.getDefaultParams(key: TestConstants.encryptedChannelKey);
+  final cipherParams = await Crypto.getDefaultParams(
+    key: TestConstants.encryptedChannelKey,
+  );
 
   final channelOptions = RestChannelOptions(cipherParams: cipherParams);
 
@@ -30,9 +31,7 @@ Future<Map<String, dynamic>> testRestEncryptedPublish({
   await channel.setOptions(channelOptions);
 
   await publishMessages(channel);
-  return {
-    'handle': await rest.handle,
-  };
+  return {'handle': await rest.handle};
 }
 
 Future<Map<String, dynamic>> testRestEncryptedPublishSpec({
@@ -42,8 +41,9 @@ Future<Map<String, dynamic>> testRestEncryptedPublishSpec({
   const clientId = 'clientId';
   final appKey = await AppProvisioning().provisionApp();
 
-  final cipherParams =
-      await Crypto.getDefaultParams(key: TestConstants.encryptedChannelKey);
+  final cipherParams = await Crypto.getDefaultParams(
+    key: TestConstants.encryptedChannelKey,
+  );
 
   final channelOptions = RestChannelOptions(cipherParams: cipherParams);
 
@@ -70,18 +70,17 @@ Future<Map<String, dynamic>> testRestEncryptedPublishSpec({
 
   // Send single message object
   await encryptedChannel.publish(
-    message: Message(
-      name: 'single-message-name',
-      data: 'single-message-data',
-    ),
+    message: Message(name: 'single-message-name', data: 'single-message-data'),
   );
   await Future<void>.delayed(TestConstants.publishToHistoryDelay);
 
   // Send multiple message objects at once
-  await encryptedChannel.publish(messages: [
-    Message(name: 'multi-message-name-1', data: 'multi-message-data-1'),
-    Message(name: 'multi-message-name-2', data: 'multi-message-data-2'),
-  ]);
+  await encryptedChannel.publish(
+    messages: [
+      Message(name: 'multi-message-name-1', data: 'multi-message-data-1'),
+      Message(name: 'multi-message-name-2', data: 'multi-message-data-2'),
+    ],
+  );
   await Future<void>.delayed(TestConstants.publishToHistoryDelay);
 
   // Send message with [clientId] defined
@@ -101,8 +100,9 @@ Future<Map<String, dynamic>> testRestEncryptedPublishSpec({
   );
 
   // Create encrypted channel with push capability
-  final encryptedPushEnabledChannel =
-      restWithClientId.channels.get('pushenabled:test:extras');
+  final encryptedPushEnabledChannel = restWithClientId.channels.get(
+    'pushenabled:test:extras',
+  );
   await encryptedPushEnabledChannel.setOptions(channelOptions);
 
   // Send message with extras to encrypted push-enabled channel
@@ -115,8 +115,9 @@ Future<Map<String, dynamic>> testRestEncryptedPublishSpec({
   );
 
   // Retrieve history of push-enabled channels
-  final historyOfEncryptedPushEnabledChannel =
-      await getHistory(encryptedPushEnabledChannel);
+  final historyOfEncryptedPushEnabledChannel = await getHistory(
+    encryptedPushEnabledChannel,
+  );
 
   // Retreive plaintext history of encrypted channel
   await encryptedChannel.setOptions(RestChannelOptions());
@@ -125,8 +126,9 @@ Future<Map<String, dynamic>> testRestEncryptedPublishSpec({
     RestHistoryParams(direction: 'forwards'),
   );
   await encryptedPushEnabledChannel.setOptions(RestChannelOptions());
-  final historyOfPlaintextPushEnabledChannel =
-      await getHistory(encryptedPushEnabledChannel);
+  final historyOfPlaintextPushEnabledChannel = await getHistory(
+    encryptedPushEnabledChannel,
+  );
 
   return {
     'handle': await restWithClientId.handle,

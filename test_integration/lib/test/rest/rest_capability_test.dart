@@ -9,15 +9,18 @@ Future<Map<String, dynamic>> testRestCapabilities({
   Map<String, dynamic>? payload,
 }) async {
   final capabilitySpec = <String, List<dynamic>>{};
-  final combinations = getAllSubsets(['publish', 'history', 'subscribe'])
-      .where((spec) => spec.isNotEmpty)
-      .toList();
+  final combinations = getAllSubsets([
+    'publish',
+    'history',
+    'subscribe',
+  ]).where((spec) => spec.isNotEmpty).toList();
 
   for (var i = 0; i < combinations.length; i++) {
     capabilitySpec['channel-$i'] = combinations[i];
   }
-  final appKey =
-      await AppProvisioning(keyCapabilities: capabilitySpec).provisionApp();
+  final appKey = await AppProvisioning(
+    keyCapabilities: capabilitySpec,
+  ).provisionApp();
 
   final rest = Rest(
     options: ClientOptions(

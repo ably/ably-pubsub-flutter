@@ -25,15 +25,13 @@ class Push extends PlatformObject {
 
   /// @nodoc
   /// Pass an Ably realtime or rest client.
-  Push({
-    this.realtime,
-    this.rest,
-  }) : super() {
+  Push({this.realtime, this.rest}) : super() {
     final ablyClientNotPresent = rest == null && realtime == null;
     final moreThanOneAblyClientPresent = rest != null && realtime != null;
     if (ablyClientNotPresent || moreThanOneAblyClientPresent) {
       throw Exception(
-          'Specify one Ably client when creating ${(Push).toString()}.');
+        'Specify one Ably client when creating ${(Push).toString()}.',
+      );
     }
   }
 
@@ -105,7 +103,8 @@ class Push extends PlatformObject {
   Future<UNNotificationSettings> getNotificationSettings() async {
     if (io.Platform.isIOS) {
       return invokeRequest<UNNotificationSettings>(
-          PlatformMethod.pushGetNotificationSettings);
+        PlatformMethod.pushGetNotificationSettings,
+      );
     } else {
       throw UnsupportedError('getNotificationSettings is only valid on iOS.');
     }

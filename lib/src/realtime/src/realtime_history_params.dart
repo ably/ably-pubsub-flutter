@@ -41,12 +41,13 @@ class RealtimeHistoryParams {
     this.limit = 100,
     DateTime? start,
     this.untilAttach,
-  })  : assert(direction == 'backwards' || direction == 'forwards'),
-        end = end ?? DateTime.now(),
-        start = start ?? DateTime.fromMillisecondsSinceEpoch(0);
+  }) : assert(direction == 'backwards' || direction == 'forwards'),
+       end = end ?? DateTime.now(),
+       start = start ?? DateTime.fromMillisecondsSinceEpoch(0);
 
   @override
-  String toString() => 'RealtimeHistoryParams:'
+  String toString() =>
+      'RealtimeHistoryParams:'
       ' start=$start'
       ' end=$end'
       ' direction=$direction'

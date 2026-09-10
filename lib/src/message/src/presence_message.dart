@@ -68,15 +68,15 @@ class PresenceMessage with ObjectHash {
 
   @override
   int get hashCode => objectHash([
-        id,
-        encoding,
-        clientId,
-        timestamp,
-        connectionId,
-        data,
-        action,
-        extras,
-      ]);
+    id,
+    encoding,
+    clientId,
+    timestamp,
+    connectionId,
+    data,
+    action,
+    extras,
+  ]);
 
   // https://docs.ably.com/client-lib-development-guide/features/#TP4
   //
@@ -93,23 +93,22 @@ class PresenceMessage with ObjectHash {
   PresenceMessage.fromEncoded(
     Map<String, dynamic> jsonObject, [
     RestChannelOptions? channelOptions,
-  ])  : id = jsonObject['id'] as String?,
-        action = PresenceAction.values.firstWhere((e) =>
-            e.toString().split('.')[1] == jsonObject['action'] as String?),
-        clientId = jsonObject['clientId'] as String?,
-        connectionId = jsonObject['connectionId'] as String?,
-        _data = MessageData.fromValue(jsonObject['data']),
-        encoding = jsonObject['encoding'] as String?,
-        extras = MessageExtras.fromMap(
-          Map.castFrom<dynamic, dynamic, String, dynamic>(
-            jsonObject['extras'] as Map,
-          ),
-        ),
-        timestamp = jsonObject['timestamp'] != null
-            ? DateTime.fromMillisecondsSinceEpoch(
-                jsonObject['timestamp'] as int,
-              )
-            : null;
+  ]) : id = jsonObject['id'] as String?,
+       action = PresenceAction.values.firstWhere(
+         (e) => e.toString().split('.')[1] == jsonObject['action'] as String?,
+       ),
+       clientId = jsonObject['clientId'] as String?,
+       connectionId = jsonObject['connectionId'] as String?,
+       _data = MessageData.fromValue(jsonObject['data']),
+       encoding = jsonObject['encoding'] as String?,
+       extras = MessageExtras.fromMap(
+         Map.castFrom<dynamic, dynamic, String, dynamic>(
+           jsonObject['extras'] as Map,
+         ),
+       ),
+       timestamp = jsonObject['timestamp'] != null
+           ? DateTime.fromMillisecondsSinceEpoch(jsonObject['timestamp'] as int)
+           : null;
 
   /// Decodes and decrypts a [jsonArray] of deserialized PresenceMessage-like
   /// object using the cipher in [channelOptions].
@@ -121,16 +120,15 @@ class PresenceMessage with ObjectHash {
   static List<PresenceMessage> fromEncodedArray(
     List<Map<String, dynamic>> jsonArray, [
     RestChannelOptions? channelOptions,
-  ]) =>
-      jsonArray
-          .map((jsonObject) => PresenceMessage.fromEncoded(
-                jsonObject,
-                channelOptions,
-              ))
-          .toList();
+  ]) => jsonArray
+      .map(
+        (jsonObject) => PresenceMessage.fromEncoded(jsonObject, channelOptions),
+      )
+      .toList();
 
   @override
-  String toString() => 'PresenceMessage'
+  String toString() =>
+      'PresenceMessage'
       ' id=$id'
       ' data=$data'
       ' action=$action'

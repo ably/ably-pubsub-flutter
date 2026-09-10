@@ -15,15 +15,13 @@ Future<Map<String, dynamic>> testRestPublishWithAuthCallback({
       logLevel: LogLevel.error,
       authCallback: (params) async {
         authCallbackInvoked = true;
-        return TokenRequest.fromMap(
-          await AppProvisioning().getTokenRequest(),
-        );
+        return TokenRequest.fromMap(await AppProvisioning().getTokenRequest());
       },
     ),
   );
   await publishMessages(rest.channels.get('test'));
   return {
     'handle': await rest.handle,
-    'authCallbackInvoked': authCallbackInvoked
+    'authCallbackInvoked': authCallbackInvoked,
   };
 }
