@@ -14,12 +14,9 @@ Iterable<Map<String, dynamic>> get _types sync* {
     'tokenParams',
     'tokenDetails',
     'tokenRequest',
-    'restChannelOptions',
     'realtimeChannelOptions',
     'paginatedResult',
-    'restHistoryParams',
     'realtimeHistoryParams',
-    'restPresenceParams',
     'presenceMessage',
     'realtimePresenceParams',
 
@@ -64,21 +61,7 @@ const List<Map<String, dynamic>> _platformMethods = [
   {'name': 'resetAblyClients', 'value': 'resetAblyClients'},
 
   // Auth
-  {'name': 'authCallback', 'value': 'authCallback'},
   {'name': 'realtimeAuthCallback', 'value': 'realtimeAuthCallback'},
-
-  // Rest
-  {'name': 'createRest', 'value': 'createRest'},
-  {'name': 'setRestChannelOptions', 'value': 'setRestChannelOptions'},
-  {'name': 'publish', 'value': 'publish'},
-  {'name': 'restHistory', 'value': 'restHistory'},
-  {'name': 'restPresenceGet', 'value': 'restPresenceGet'},
-  {'name': 'restPresenceHistory', 'value': 'restPresenceHistory'},
-  {'name': 'releaseRestChannel', 'value': 'releaseRestChannel'},
-  {'name': 'restAuthAuthorize', 'value': 'restAuthAuthorize'},
-  {'name': 'restAuthCreateTokenRequest', 'value': 'restAuthCreateTokenRequest'},
-  {'name': 'restAuthRequestToken', 'value': 'restAuthRequestToken'},
-  {'name': 'restAuthGetClientId', 'value': 'restAuthGetClientId'},
 
   // Realtime
   {'name': 'createRealtime', 'value': 'createRealtime'},
@@ -100,7 +83,6 @@ const List<Map<String, dynamic>> _platformMethods = [
   {'name': 'releaseRealtimeChannel', 'value': 'releaseRealtimeChannel'},
   {'name': 'realtimeHistory', 'value': 'realtimeHistory'},
   {'name': 'realtimeTime', 'value': 'realtimeTime'},
-  {'name': 'restTime', 'value': 'restTime'},
   {'name': 'realtimeAuthAuthorize', 'value': 'realtimeAuthAuthorize'},
   {
     'name': 'realtimeAuthCreateTokenRequest',
@@ -108,6 +90,7 @@ const List<Map<String, dynamic>> _platformMethods = [
   },
   {'name': 'realtimeAuthRequestToken', 'value': 'realtimeAuthRequestToken'},
   {'name': 'realtimeAuthGetClientId', 'value': 'realtimeAuthGetClientId'},
+  {'name': 'connectionRecoveryKey', 'value': 'connectionRecoveryKey'},
 
   // Push Notifications
   {'name': 'pushActivate', 'value': 'pushActivate'},
@@ -244,6 +227,9 @@ const List<Map<String, dynamic>> _objects = [
       'recover',
       'environment',
       'idempotentRestPublishing',
+      'disconnectedRetryTimeout',
+      'suspendedRetryTimeout',
+      'httpMaxRetryDuration',
       'httpOpenTimeout',
       'httpRequestTimeout',
       'httpMaxRetryCount',
@@ -256,10 +242,6 @@ const List<Map<String, dynamic>> _objects = [
       'transportParams',
       'dartVersion',
     ]
-  },
-  {
-    'name': 'RestChannelOptions',
-    'properties': <String>['cipherParams']
   },
   {
     'name': 'RealtimeChannelOptions',
@@ -372,7 +354,15 @@ const List<Map<String, dynamic>> _objects = [
   },
   {
     'name': 'ConnectionStateChange',
-    'properties': <String>['current', 'previous', 'event', 'retryIn', 'reason']
+    'properties': <String>[
+      'current',
+      'previous',
+      'event',
+      'retryIn',
+      'reason',
+      'connectionId',
+      'connectionKey'
+    ]
   },
   {
     'name': 'ChannelStateChange',
@@ -409,15 +399,6 @@ const List<Map<String, dynamic>> _objects = [
     'properties': <String>['items', 'type', 'hasNext']
   },
   {
-    'name': 'RestHistoryParams',
-    'properties': <String>[
-      'start',
-      'end',
-      'direction',
-      'limit',
-    ]
-  },
-  {
     'name': 'RealtimeHistoryParams',
     'properties': <String>[
       'start',
@@ -425,14 +406,6 @@ const List<Map<String, dynamic>> _objects = [
       'direction',
       'limit',
       'untilAttach',
-    ]
-  },
-  {
-    'name': 'RestPresenceParams',
-    'properties': <String>[
-      'limit',
-      'clientId',
-      'connectionId',
     ]
   },
   {

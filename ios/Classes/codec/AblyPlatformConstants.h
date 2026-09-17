@@ -16,24 +16,21 @@ typedef NS_ENUM(UInt8, CodecType) {
     CodecTypeTokenParams = 135,
     CodecTypeTokenDetails = 136,
     CodecTypeTokenRequest = 137,
-    CodecTypeRestChannelOptions = 138,
-    CodecTypeRealtimeChannelOptions = 139,
-    CodecTypePaginatedResult = 140,
-    CodecTypeRestHistoryParams = 141,
-    CodecTypeRealtimeHistoryParams = 142,
-    CodecTypeRestPresenceParams = 143,
-    CodecTypePresenceMessage = 144,
-    CodecTypeRealtimePresenceParams = 145,
-    CodecTypeDeviceDetails = 146,
-    CodecTypeLocalDevice = 147,
-    CodecTypePushChannelSubscription = 148,
-    CodecTypeUnNotificationSettings = 149,
-    CodecTypeRemoteMessage = 150,
-    CodecTypeErrorInfo = 151,
-    CodecTypeLogLevel = 152,
-    CodecTypeConnectionStateChange = 153,
-    CodecTypeChannelStateChange = 154,
-    CodecTypeCipherParams = 155,
+    CodecTypeRealtimeChannelOptions = 138,
+    CodecTypePaginatedResult = 139,
+    CodecTypeRealtimeHistoryParams = 140,
+    CodecTypePresenceMessage = 141,
+    CodecTypeRealtimePresenceParams = 142,
+    CodecTypeDeviceDetails = 143,
+    CodecTypeLocalDevice = 144,
+    CodecTypePushChannelSubscription = 145,
+    CodecTypeUnNotificationSettings = 146,
+    CodecTypeRemoteMessage = 147,
+    CodecTypeErrorInfo = 148,
+    CodecTypeLogLevel = 149,
+    CodecTypeConnectionStateChange = 150,
+    CodecTypeChannelStateChange = 151,
+    CodecTypeCipherParams = 152,
 };
 
 
@@ -41,19 +38,7 @@ typedef NS_ENUM(UInt8, CodecType) {
 extern NSString *const AblyPlatformMethod_getPlatformVersion;
 extern NSString *const AblyPlatformMethod_getVersion;
 extern NSString *const AblyPlatformMethod_resetAblyClients;
-extern NSString *const AblyPlatformMethod_authCallback;
 extern NSString *const AblyPlatformMethod_realtimeAuthCallback;
-extern NSString *const AblyPlatformMethod_createRest;
-extern NSString *const AblyPlatformMethod_setRestChannelOptions;
-extern NSString *const AblyPlatformMethod_publish;
-extern NSString *const AblyPlatformMethod_restHistory;
-extern NSString *const AblyPlatformMethod_restPresenceGet;
-extern NSString *const AblyPlatformMethod_restPresenceHistory;
-extern NSString *const AblyPlatformMethod_releaseRestChannel;
-extern NSString *const AblyPlatformMethod_restAuthAuthorize;
-extern NSString *const AblyPlatformMethod_restAuthCreateTokenRequest;
-extern NSString *const AblyPlatformMethod_restAuthRequestToken;
-extern NSString *const AblyPlatformMethod_restAuthGetClientId;
 extern NSString *const AblyPlatformMethod_createRealtime;
 extern NSString *const AblyPlatformMethod_connectRealtime;
 extern NSString *const AblyPlatformMethod_closeRealtime;
@@ -70,14 +55,11 @@ extern NSString *const AblyPlatformMethod_publishRealtimeChannelMessage;
 extern NSString *const AblyPlatformMethod_releaseRealtimeChannel;
 extern NSString *const AblyPlatformMethod_realtimeHistory;
 extern NSString *const AblyPlatformMethod_realtimeTime;
-extern NSString *const AblyPlatformMethod_restTime;
 extern NSString *const AblyPlatformMethod_realtimeAuthAuthorize;
 extern NSString *const AblyPlatformMethod_realtimeAuthCreateTokenRequest;
 extern NSString *const AblyPlatformMethod_realtimeAuthRequestToken;
 extern NSString *const AblyPlatformMethod_realtimeAuthGetClientId;
-
 extern NSString *const AblyPlatformMethod_connectionRecoveryKey;
-
 extern NSString *const AblyPlatformMethod_pushActivate;
 extern NSString *const AblyPlatformMethod_pushDeactivate;
 extern NSString *const AblyPlatformMethod_pushReset;
@@ -169,6 +151,9 @@ extern NSString *const TxClientOptions_echoMessages;
 extern NSString *const TxClientOptions_recover;
 extern NSString *const TxClientOptions_environment;
 extern NSString *const TxClientOptions_idempotentRestPublishing;
+extern NSString *const TxClientOptions_disconnectedRetryTimeout;
+extern NSString *const TxClientOptions_suspendedRetryTimeout;
+extern NSString *const TxClientOptions_httpMaxRetryDuration;
 extern NSString *const TxClientOptions_httpOpenTimeout;
 extern NSString *const TxClientOptions_httpRequestTimeout;
 extern NSString *const TxClientOptions_httpMaxRetryCount;
@@ -180,9 +165,6 @@ extern NSString *const TxClientOptions_defaultTokenParams;
 extern NSString *const TxClientOptions_channelRetryTimeout;
 extern NSString *const TxClientOptions_transportParams;
 extern NSString *const TxClientOptions_dartVersion;
-
-// key constants for RestChannelOptions
-extern NSString *const TxRestChannelOptions_cipherParams;
 
 // key constants for RealtimeChannelOptions
 extern NSString *const TxRealtimeChannelOptions_params;
@@ -321,23 +303,12 @@ extern NSString *const TxPaginatedResult_items;
 extern NSString *const TxPaginatedResult_type;
 extern NSString *const TxPaginatedResult_hasNext;
 
-// key constants for RestHistoryParams
-extern NSString *const TxRestHistoryParams_start;
-extern NSString *const TxRestHistoryParams_end;
-extern NSString *const TxRestHistoryParams_direction;
-extern NSString *const TxRestHistoryParams_limit;
-
 // key constants for RealtimeHistoryParams
 extern NSString *const TxRealtimeHistoryParams_start;
 extern NSString *const TxRealtimeHistoryParams_end;
 extern NSString *const TxRealtimeHistoryParams_direction;
 extern NSString *const TxRealtimeHistoryParams_limit;
 extern NSString *const TxRealtimeHistoryParams_untilAttach;
-
-// key constants for RestPresenceParams
-extern NSString *const TxRestPresenceParams_limit;
-extern NSString *const TxRestPresenceParams_clientId;
-extern NSString *const TxRestPresenceParams_connectionId;
 
 // key constants for RealtimePresenceParams
 extern NSString *const TxRealtimePresenceParams_waitForSync;

@@ -1,6 +1,6 @@
 import 'package:ably_flutter/ably_flutter.dart';
 
-/// Describes the events emitted by a [RestChannel] or [RealtimeChannel] object.
+/// Describes the events emitted by a [RealtimeChannel] object.
 ///
 /// An event is either an `UPDATE` or a [ChannelState].
 enum ChannelEvent {

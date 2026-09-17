@@ -6,7 +6,7 @@ import 'package:meta/meta.dart';
 @immutable
 class AblyMessage<T> {
   /// @nodoc
-  /// handle of rest/realtime instance
+  /// handle of realtime instance
   final int? handle;
 
   /// @nodoc

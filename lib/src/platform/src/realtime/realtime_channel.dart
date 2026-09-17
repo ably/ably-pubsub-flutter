@@ -24,7 +24,7 @@ class RealtimeChannel extends PlatformObject {
   RealtimePresence get presence => _presence;
 
   /// @nodoc
-  /// instantiates with [Rest], [name] and [RealtimeChannelOptions]
+  /// instantiates with [Realtime], [name] and [RealtimeChannelOptions]
   ///
   /// sets default [state] to [ChannelState.initialized] and start listening
   /// for updates to the channel [state]/

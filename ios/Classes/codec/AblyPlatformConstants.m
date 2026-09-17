@@ -10,19 +10,7 @@
 NSString *const AblyPlatformMethod_getPlatformVersion= @"getPlatformVersion";
 NSString *const AblyPlatformMethod_getVersion= @"getVersion";
 NSString *const AblyPlatformMethod_resetAblyClients= @"resetAblyClients";
-NSString *const AblyPlatformMethod_authCallback= @"authCallback";
 NSString *const AblyPlatformMethod_realtimeAuthCallback= @"realtimeAuthCallback";
-NSString *const AblyPlatformMethod_createRest= @"createRest";
-NSString *const AblyPlatformMethod_setRestChannelOptions= @"setRestChannelOptions";
-NSString *const AblyPlatformMethod_publish= @"publish";
-NSString *const AblyPlatformMethod_restHistory= @"restHistory";
-NSString *const AblyPlatformMethod_restPresenceGet= @"restPresenceGet";
-NSString *const AblyPlatformMethod_restPresenceHistory= @"restPresenceHistory";
-NSString *const AblyPlatformMethod_releaseRestChannel= @"releaseRestChannel";
-NSString *const AblyPlatformMethod_restAuthAuthorize= @"restAuthAuthorize";
-NSString *const AblyPlatformMethod_restAuthCreateTokenRequest= @"restAuthCreateTokenRequest";
-NSString *const AblyPlatformMethod_restAuthRequestToken= @"restAuthRequestToken";
-NSString *const AblyPlatformMethod_restAuthGetClientId= @"restAuthGetClientId";
 NSString *const AblyPlatformMethod_createRealtime= @"createRealtime";
 NSString *const AblyPlatformMethod_connectRealtime= @"connectRealtime";
 NSString *const AblyPlatformMethod_closeRealtime= @"closeRealtime";
@@ -39,14 +27,11 @@ NSString *const AblyPlatformMethod_publishRealtimeChannelMessage= @"publishRealt
 NSString *const AblyPlatformMethod_releaseRealtimeChannel= @"releaseRealtimeChannel";
 NSString *const AblyPlatformMethod_realtimeHistory= @"realtimeHistory";
 NSString *const AblyPlatformMethod_realtimeTime= @"realtimeTime";
-NSString *const AblyPlatformMethod_restTime= @"restTime";
 NSString *const AblyPlatformMethod_realtimeAuthAuthorize= @"realtimeAuthAuthorize";
 NSString *const AblyPlatformMethod_realtimeAuthCreateTokenRequest= @"realtimeAuthCreateTokenRequest";
 NSString *const AblyPlatformMethod_realtimeAuthRequestToken= @"realtimeAuthRequestToken";
 NSString *const AblyPlatformMethod_realtimeAuthGetClientId= @"realtimeAuthGetClientId";
-
-NSString *const AblyPlatformMethod_connectionRecoveryKey = @"connectionRecoveryKey";
-
+NSString *const AblyPlatformMethod_connectionRecoveryKey= @"connectionRecoveryKey";
 NSString *const AblyPlatformMethod_pushActivate= @"pushActivate";
 NSString *const AblyPlatformMethod_pushDeactivate= @"pushDeactivate";
 NSString *const AblyPlatformMethod_pushReset= @"pushReset";
@@ -138,6 +123,9 @@ NSString *const TxClientOptions_echoMessages = @"echoMessages";
 NSString *const TxClientOptions_recover = @"recover";
 NSString *const TxClientOptions_environment = @"environment";
 NSString *const TxClientOptions_idempotentRestPublishing = @"idempotentRestPublishing";
+NSString *const TxClientOptions_disconnectedRetryTimeout = @"disconnectedRetryTimeout";
+NSString *const TxClientOptions_suspendedRetryTimeout = @"suspendedRetryTimeout";
+NSString *const TxClientOptions_httpMaxRetryDuration = @"httpMaxRetryDuration";
 NSString *const TxClientOptions_httpOpenTimeout = @"httpOpenTimeout";
 NSString *const TxClientOptions_httpRequestTimeout = @"httpRequestTimeout";
 NSString *const TxClientOptions_httpMaxRetryCount = @"httpMaxRetryCount";
@@ -149,9 +137,6 @@ NSString *const TxClientOptions_defaultTokenParams = @"defaultTokenParams";
 NSString *const TxClientOptions_channelRetryTimeout = @"channelRetryTimeout";
 NSString *const TxClientOptions_transportParams = @"transportParams";
 NSString *const TxClientOptions_dartVersion = @"dartVersion";
-
-// key constants for RestChannelOptions
-NSString *const TxRestChannelOptions_cipherParams = @"cipherParams";
 
 // key constants for RealtimeChannelOptions
 NSString *const TxRealtimeChannelOptions_params = @"params";
@@ -290,23 +275,12 @@ NSString *const TxPaginatedResult_items = @"items";
 NSString *const TxPaginatedResult_type = @"type";
 NSString *const TxPaginatedResult_hasNext = @"hasNext";
 
-// key constants for RestHistoryParams
-NSString *const TxRestHistoryParams_start = @"start";
-NSString *const TxRestHistoryParams_end = @"end";
-NSString *const TxRestHistoryParams_direction = @"direction";
-NSString *const TxRestHistoryParams_limit = @"limit";
-
 // key constants for RealtimeHistoryParams
 NSString *const TxRealtimeHistoryParams_start = @"start";
 NSString *const TxRealtimeHistoryParams_end = @"end";
 NSString *const TxRealtimeHistoryParams_direction = @"direction";
 NSString *const TxRealtimeHistoryParams_limit = @"limit";
 NSString *const TxRealtimeHistoryParams_untilAttach = @"untilAttach";
-
-// key constants for RestPresenceParams
-NSString *const TxRestPresenceParams_limit = @"limit";
-NSString *const TxRestPresenceParams_clientId = @"clientId";
-NSString *const TxRestPresenceParams_connectionId = @"connectionId";
 
 // key constants for RealtimePresenceParams
 NSString *const TxRealtimePresenceParams_waitForSync = @"waitForSync";

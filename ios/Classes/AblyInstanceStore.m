@@ -5,7 +5,6 @@
 
 @implementation AblyInstanceStore {
     NSMutableDictionary<NSNumber *, ARTRealtime *>* _realtimeInstances;
-    NSMutableDictionary<NSNumber *, ARTRest *>* _restInstances;
     NSMutableDictionary<NSNumber *, ARTPaginatedResult *>* _paginatedResults;
     long long _nextHandle;
 }
@@ -30,19 +29,10 @@
     }
     
     _realtimeInstances = [NSMutableDictionary new];
-    _restInstances = [NSMutableDictionary new];
     _paginatedResults = [NSMutableDictionary new];
     _nextHandle = 1;
     
     return self;
-}
-
--(void)setRest:(ARTRest *const)rest with:(NSNumber *const)handle {
-    _restInstances[handle] = rest;
-}
-
--(ARTRest *)restFrom:(NSNumber *)handle {
-    return _restInstances[handle];
 }
 
 -(void)setRealtime:(ARTRealtime *const)realtime with:(NSNumber *const)handle {
@@ -69,10 +59,6 @@
 -(void) didRegisterForRemoteNotificationsWithDeviceToken:(NSData *const) deviceToken {
     _didRegisterForRemoteNotificationsWithDeviceToken_deviceToken = deviceToken;
     
-    for (id restHandle in _restInstances) {
-        ARTRest *const rest = _restInstances[restHandle];
-        [ARTPush didRegisterForRemoteNotificationsWithDeviceToken:deviceToken rest:rest];
-    }
     for (id realtimeHandle in _realtimeInstances) {
         ARTRealtime *const realtime = _realtimeInstances[realtimeHandle];
         [ARTPush didRegisterForRemoteNotificationsWithDeviceToken:deviceToken realtime:realtime];
@@ -84,7 +70,6 @@
         [r close];
     }
     [_realtimeInstances removeAllObjects];
-    [_restInstances removeAllObjects];
 }
 
 @end

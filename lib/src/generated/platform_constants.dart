@@ -16,43 +16,28 @@ class CodecTypes {
   static const int tokenParams = 135;
   static const int tokenDetails = 136;
   static const int tokenRequest = 137;
-  static const int restChannelOptions = 138;
-  static const int realtimeChannelOptions = 139;
-  static const int paginatedResult = 140;
-  static const int restHistoryParams = 141;
-  static const int realtimeHistoryParams = 142;
-  static const int restPresenceParams = 143;
-  static const int presenceMessage = 144;
-  static const int realtimePresenceParams = 145;
-  static const int deviceDetails = 146;
-  static const int localDevice = 147;
-  static const int pushChannelSubscription = 148;
-  static const int unNotificationSettings = 149;
-  static const int remoteMessage = 150;
-  static const int errorInfo = 151;
-  static const int logLevel = 152;
-  static const int connectionStateChange = 153;
-  static const int channelStateChange = 154;
-  static const int cipherParams = 155;
+  static const int realtimeChannelOptions = 138;
+  static const int paginatedResult = 139;
+  static const int realtimeHistoryParams = 140;
+  static const int presenceMessage = 141;
+  static const int realtimePresenceParams = 142;
+  static const int deviceDetails = 143;
+  static const int localDevice = 144;
+  static const int pushChannelSubscription = 145;
+  static const int unNotificationSettings = 146;
+  static const int remoteMessage = 147;
+  static const int errorInfo = 148;
+  static const int logLevel = 149;
+  static const int connectionStateChange = 150;
+  static const int channelStateChange = 151;
+  static const int cipherParams = 152;
 }
 
 class PlatformMethod {
   static const String getPlatformVersion = 'getPlatformVersion';
   static const String getVersion = 'getVersion';
   static const String resetAblyClients = 'resetAblyClients';
-  static const String authCallback = 'authCallback';
   static const String realtimeAuthCallback = 'realtimeAuthCallback';
-  static const String createRest = 'createRest';
-  static const String setRestChannelOptions = 'setRestChannelOptions';
-  static const String publish = 'publish';
-  static const String restHistory = 'restHistory';
-  static const String restPresenceGet = 'restPresenceGet';
-  static const String restPresenceHistory = 'restPresenceHistory';
-  static const String releaseRestChannel = 'releaseRestChannel';
-  static const String restAuthAuthorize = 'restAuthAuthorize';
-  static const String restAuthCreateTokenRequest = 'restAuthCreateTokenRequest';
-  static const String restAuthRequestToken = 'restAuthRequestToken';
-  static const String restAuthGetClientId = 'restAuthGetClientId';
   static const String createRealtime = 'createRealtime';
   static const String connectRealtime = 'connectRealtime';
   static const String closeRealtime = 'closeRealtime';
@@ -70,15 +55,12 @@ class PlatformMethod {
   static const String releaseRealtimeChannel = 'releaseRealtimeChannel';
   static const String realtimeHistory = 'realtimeHistory';
   static const String realtimeTime = 'realtimeTime';
-  static const String restTime = 'restTime';
   static const String realtimeAuthAuthorize = 'realtimeAuthAuthorize';
   static const String realtimeAuthCreateTokenRequest =
       'realtimeAuthCreateTokenRequest';
   static const String realtimeAuthRequestToken = 'realtimeAuthRequestToken';
   static const String realtimeAuthGetClientId = 'realtimeAuthGetClientId';
-
   static const String connectionRecoveryKey = 'connectionRecoveryKey';
-
   static const String pushActivate = 'pushActivate';
   static const String pushDeactivate = 'pushDeactivate';
   static const String pushReset = 'pushReset';
@@ -184,6 +166,9 @@ class TxClientOptions {
   static const String recover = 'recover';
   static const String environment = 'environment';
   static const String idempotentRestPublishing = 'idempotentRestPublishing';
+  static const String disconnectedRetryTimeout = 'disconnectedRetryTimeout';
+  static const String suspendedRetryTimeout = 'suspendedRetryTimeout';
+  static const String httpMaxRetryDuration = 'httpMaxRetryDuration';
   static const String httpOpenTimeout = 'httpOpenTimeout';
   static const String httpRequestTimeout = 'httpRequestTimeout';
   static const String httpMaxRetryCount = 'httpMaxRetryCount';
@@ -195,10 +180,6 @@ class TxClientOptions {
   static const String channelRetryTimeout = 'channelRetryTimeout';
   static const String transportParams = 'transportParams';
   static const String dartVersion = 'dartVersion';
-}
-
-class TxRestChannelOptions {
-  static const String cipherParams = 'cipherParams';
 }
 
 class TxRealtimeChannelOptions {
@@ -354,25 +335,12 @@ class TxPaginatedResult {
   static const String hasNext = 'hasNext';
 }
 
-class TxRestHistoryParams {
-  static const String start = 'start';
-  static const String end = 'end';
-  static const String direction = 'direction';
-  static const String limit = 'limit';
-}
-
 class TxRealtimeHistoryParams {
   static const String start = 'start';
   static const String end = 'end';
   static const String direction = 'direction';
   static const String limit = 'limit';
   static const String untilAttach = 'untilAttach';
-}
-
-class TxRestPresenceParams {
-  static const String limit = 'limit';
-  static const String clientId = 'clientId';
-  static const String connectionId = 'connectionId';
 }
 
 class TxRealtimePresenceParams {

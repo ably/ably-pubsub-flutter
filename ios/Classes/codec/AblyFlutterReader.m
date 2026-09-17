@@ -32,11 +32,8 @@ NS_ASSUME_NONNULL_END
         [NSString stringWithFormat:@"%d", CodecTypeMessage]: readChannelMessage,
         [NSString stringWithFormat:@"%d", CodecTypeTokenDetails]: readTokenDetails,
         [NSString stringWithFormat:@"%d", CodecTypeTokenRequest]: readTokenRequest,
-        [NSString stringWithFormat:@"%d", CodecTypeRestChannelOptions]: CryptoCodec.readRestChannelOptions,
         [NSString stringWithFormat:@"%d", CodecTypeRealtimeChannelOptions]: CryptoCodec.readRealtimeChannelOptions,
-        [NSString stringWithFormat:@"%d", CodecTypeRestHistoryParams]: readRestHistoryParams,
         [NSString stringWithFormat:@"%d", CodecTypeRealtimeHistoryParams]: readRealtimeHistoryParams,
-        [NSString stringWithFormat:@"%d", CodecTypeRestPresenceParams]: readRestPresenceParams,
         [NSString stringWithFormat:@"%d", CodecTypeRealtimePresenceParams]: readRealtimePresenceParams,
         [NSString stringWithFormat:@"%d", CodecTypeMessageData]: readMessageData,
         [NSString stringWithFormat:@"%d", CodecTypeCipherParams]: CryptoCodec.readCipherParams,
@@ -295,27 +292,6 @@ static AblyCodecDecoder readTokenRequest = ^ARTTokenRequest*(NSDictionary *const
                                                   mac:mac];
 };
 
-static AblyCodecDecoder readRestHistoryParams = ^ARTDataQuery*(NSDictionary *const dictionary) {
-    ARTDataQuery *const query = [ARTDataQuery new];
-    ON_VALUE(^(const id value) {
-        query.start = [NSDate dateWithTimeIntervalSince1970:[value doubleValue]/1000];
-    }, dictionary, TxRestHistoryParams_start);
-    ON_VALUE(^(const id value) {
-        query.end = [NSDate dateWithTimeIntervalSince1970:[value doubleValue]/1000];
-    }, dictionary, TxRestHistoryParams_end);
-    ON_VALUE(^(NSString const *value) {
-        query.limit = [value integerValue];
-    }, dictionary, TxRestHistoryParams_limit);
-    ON_VALUE(^(NSString const *value) {
-        if([@"forwards" isEqual: value]){
-            query.direction = ARTQueryDirectionForwards;
-        } else {
-            query.direction = ARTQueryDirectionBackwards;
-        }
-    }, dictionary, TxRestHistoryParams_direction);
-    return query;
-};
-
 static AblyCodecDecoder readRealtimeHistoryParams = ^ARTRealtimeHistoryQuery*(NSDictionary *const dictionary) {
     ARTRealtimeHistoryQuery *const query = [ARTRealtimeHistoryQuery new];
     ON_VALUE(^(const id value) {
@@ -335,17 +311,6 @@ static AblyCodecDecoder readRealtimeHistoryParams = ^ARTRealtimeHistoryQuery*(NS
         }
     }, dictionary, TxRealtimeHistoryParams_direction);
     READ_VALUE(query, untilAttach, dictionary, TxRealtimeHistoryParams_untilAttach);
-    return query;
-};
-
-static AblyCodecDecoder readRestPresenceParams = ^ARTPresenceQuery*(NSDictionary *const dictionary) {
-    ARTPresenceQuery *const query = [ARTPresenceQuery new];
-    ON_VALUE(^(NSString const *value) {
-        query.limit = [value integerValue];
-    }, dictionary, TxRestPresenceParams_limit);
-    READ_VALUE(query, clientId, dictionary, TxRestPresenceParams_clientId);
-    READ_VALUE(query, connectionId, dictionary, TxRestPresenceParams_connectionId);
-
     return query;
 };
 

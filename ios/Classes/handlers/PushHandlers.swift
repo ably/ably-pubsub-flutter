@@ -85,12 +85,9 @@ public class PushHandlers: NSObject {
     public static let device: FlutterHandler = { ably, call, result in
         let ablyMessage = call.arguments as! AblyFlutterMessage
         let realtime = ably.instanceStore.realtime(from: ablyMessage.handle)
-        let rest = ably.instanceStore.rest(from: ablyMessage.handle)
 
         if let realtime = realtime {
             result(realtime.device)
-        } else if let rest = rest {
-            result(rest.device)
         }
     }
 
@@ -155,28 +152,23 @@ public class PushHandlers: NSObject {
         }
     }
 
-    /// Gets the client.push property from ARTRealtime or ARTRest when the call contains a handle.
+    /// Gets the client.push property from ARTRealtime when the call contains a handle.
     private static func getPush(instanceStore: AblyInstanceStore, call: FlutterMethodCall, result: @escaping FlutterResult) -> ARTPush? {
         let ablyMessage = call.arguments as! AblyFlutterMessage
         let realtime = instanceStore.realtime(from: ablyMessage.handle)
-        let rest = instanceStore.rest(from: ablyMessage.handle)
 
         if let realtime = realtime {
             return realtime.push;
         }
 
-        if let rest = rest {
-            return rest.push;
-        }
-
-        result(FlutterError(code: String(40000), message: "No ably client exists (rest or realtime)", details: nil))
+        result(FlutterError(code: String(40000), message: "No ably client exists", details: nil))
         return nil;
     }
 
-    /// Gets the client.channels.get(channelName).push property from ARTRealtime or ARTRest
+    /// Gets the client.channels.get(channelName).push property from ARTRealtime
     /// when the call contains the clients handle and a channelName.
     ///
-    /// The dart side can provide a handle (Int) which gets a ARTRealtime or ARTRest Ably client.
+    /// The dart side can provide a handle (Int) which gets a ARTRealtime Ably client.
     /// This function will callback the with the push channel for the channelName and client handle you provide.
     private static func getPushChannel(ably: AblyFlutter, call: FlutterMethodCall, result: @escaping FlutterResult) -> ARTPushChannel? {
         let ablyMessage = call.arguments as! AblyFlutterMessage
@@ -200,13 +192,10 @@ public class PushHandlers: NSObject {
         }
 
         let instanceStore = ably.instanceStore
-        let realtime = instanceStore.realtime(from: handle)
-        if let realtime = realtime {
+        if let realtime = instanceStore.realtime(from: handle) {
             return realtime.channels.get(channelName).push
-        } else if let rest = instanceStore.rest(from: handle) {
-            return rest.channels.get(channelName).push
         } else {
-            result(FlutterError(code: "getAblyPushChannel_error", message: "No ably client (rest or realtime) exists for that handle.", details: nil))
+            result(FlutterError(code: "getAblyPushChannel_error", message: "No ably client exists for that handle.", details: nil))
             return nil
         }
     }

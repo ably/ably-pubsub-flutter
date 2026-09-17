@@ -17,10 +17,11 @@ Future<Map<String, dynamic>> testCreateRealtimeWithAuthUrl({
     key: appKey,
     environment: 'sandbox',
     logLevel: LogLevel.error,
+    autoConnect: false,
     fallbackHosts: <String>['a.ably-realtime.com', 'b.ably-realtime.com'],
   );
 
-  final ablyForToken = Rest(
+  final ablyForToken = Realtime(
     options: clientOptionsForToken,
   );
   final tokenDetails = await ablyForToken.auth.requestToken();

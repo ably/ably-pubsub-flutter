@@ -1,6 +1,6 @@
 import 'package:ably_flutter/ably_flutter.dart';
 
-/// Describes the possible states of a [RestChannel] or [RealtimeChannel]
+/// Describes the possible states of a [RealtimeChannel]
 /// object.
 enum ChannelState {
   /// The channel has been initialized but no attach has yet been attempted.

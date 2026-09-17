@@ -8,19 +8,12 @@ import 'package:ably_flutter_example/push_notifications/push_notification_messag
 import 'package:rxdart/rxdart.dart';
 
 class PushNotificationService {
-  final bool useRealtimeClient;
   final ably.Realtime _realtime;
-  final ably.Rest _rest;
   late ably.RealtimeChannel? _realtimeChannel;
   late ably.RealtimeChannel? _pushLogMetaChannel;
-  late ably.RestChannel? _restChannel;
   late ably.PushChannel? _pushChannel;
 
-  PushNotificationService(
-    this._realtime,
-    this._rest, {
-    this.useRealtimeClient = true,
-  }) {
+  PushNotificationService(this._realtime) {
     _getChannels();
     getDevice();
     if (Platform.isIOS) {
@@ -75,29 +68,17 @@ class PushNotificationService {
   Future<void> requestNotificationPermission(
       {bool provisional = false,
       bool providesAppNotificationSettings = true}) async {
-    if (useRealtimeClient) {
-      final granted = await _realtime.push.requestPermission(
-          provisional: provisional,
-          providesAppNotificationSettings: providesAppNotificationSettings);
-      _userNotificationPermissionGrantedSubject.add(granted);
-    } else {
-      final granted = await _rest.push.requestPermission(
-          provisional: provisional,
-          providesAppNotificationSettings: providesAppNotificationSettings);
-      _userNotificationPermissionGrantedSubject.add(granted);
-    }
+    final granted = await _realtime.push.requestPermission(
+        provisional: provisional,
+        providesAppNotificationSettings: providesAppNotificationSettings);
+    _userNotificationPermissionGrantedSubject.add(granted);
     await updateNotificationSettings();
   }
 
   /// Only valid on iOS
   Future<void> updateNotificationSettings() async {
-    if (useRealtimeClient) {
-      final settings = await _realtime.push.getNotificationSettings();
-      _notificationSettingsSubject.add(settings);
-    } else {
-      _notificationSettingsSubject
-          .add(await _rest.push.getNotificationSettings());
-    }
+    final settings = await _realtime.push.getNotificationSettings();
+    _notificationSettingsSubject.add(settings);
   }
 
   Future<void> activateDevice() => getPushFromAblyClient().activate();
@@ -107,22 +88,11 @@ class PushNotificationService {
   Future<void> resetActivation() => getPushFromAblyClient().reset();
 
   Future<void> getDevice() async {
-    if (useRealtimeClient) {
-      final localDevice = await _realtime.device();
-      _localDeviceSubject.add(localDevice);
-    } else {
-      final localDevice = await _rest.device();
-      _localDeviceSubject.add(localDevice);
-    }
+    final localDevice = await _realtime.device();
+    _localDeviceSubject.add(localDevice);
   }
 
-  ably.Push getPushFromAblyClient() {
-    if (useRealtimeClient) {
-      return _realtime.push;
-    } else {
-      return _rest.push;
-    }
-  }
+  ably.Push getPushFromAblyClient() => _realtime.push;
 
   /// Subscribes to the channel (not the push channel) which has a Push channel
   /// rule. This allows the device to receive push notifications when
@@ -161,35 +131,20 @@ class PushNotificationService {
 
   Future<void> publishNotificationMessageToChannel() async {
     await ensureRealtimeClientConnected();
-    if (useRealtimeClient) {
-      await _realtimeChannel!.publish(
-          message: PushNotificationMessageExamples.pushNotificationMessage);
-    } else {
-      await _restChannel!.publish(
-          message: PushNotificationMessageExamples.pushNotificationMessage);
-    }
+    await _realtimeChannel!.publish(
+        message: PushNotificationMessageExamples.pushNotificationMessage);
   }
 
   Future<void> publishDataMessageToChannel() async {
     await ensureRealtimeClientConnected();
-    if (useRealtimeClient) {
-      await _realtimeChannel!
-          .publish(message: PushNotificationMessageExamples.pushDataMessage);
-    } else {
-      await _restChannel!
-          .publish(message: PushNotificationMessageExamples.pushDataMessage);
-    }
+    await _realtimeChannel!
+        .publish(message: PushNotificationMessageExamples.pushDataMessage);
   }
 
   Future<void> publishDataNotificationMessageToChannel() async {
     await ensureRealtimeClientConnected();
-    if (useRealtimeClient) {
-      await _realtimeChannel!.publish(
-          message: PushNotificationMessageExamples.pushDataNotificationMessage);
-    } else {
-      await _restChannel!.publish(
-          message: PushNotificationMessageExamples.pushDataNotificationMessage);
-    }
+    await _realtimeChannel!.publish(
+        message: PushNotificationMessageExamples.pushDataNotificationMessage);
   }
 
   void close() {
@@ -204,19 +159,11 @@ class PushNotificationService {
 
   void _getChannels() {
     _hasPushChannelSubject.add(false);
-    if (useRealtimeClient) {
-      _realtimeChannel =
-          _realtime.channels.get(Constants.channelNameForPushNotifications);
-      _pushChannel = _realtimeChannel!.push;
-      _pushLogMetaChannel =
-          _realtime.channels.get(Constants.pushMetaChannelName);
-      _hasPushChannelSubject.add(true);
-    } else {
-      _restChannel =
-          _rest.channels.get(Constants.channelNameForPushNotifications);
-      _pushChannel = _restChannel!.push;
-      _hasPushChannelSubject.add(true);
-    }
+    _realtimeChannel =
+        _realtime.channels.get(Constants.channelNameForPushNotifications);
+    _pushChannel = _realtimeChannel!.push;
+    _pushLogMetaChannel = _realtime.channels.get(Constants.pushMetaChannelName);
+    _hasPushChannelSubject.add(true);
   }
 
   /// Unfortunately ably-cocoa and ably-java are inconsistent here.

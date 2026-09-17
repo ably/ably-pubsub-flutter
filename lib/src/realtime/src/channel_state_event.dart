@@ -1,8 +1,7 @@
 import 'package:ably_flutter/ably_flutter.dart';
 import 'package:meta/meta.dart';
 
-/// Contains state change information emitted by [RestChannel] and
-/// [RealtimeChannel] objects.
+/// Contains state change information emitted by [RealtimeChannel] objects.
 @immutable
 class ChannelStateChange {
   /// The event that triggered this [ChannelState] change.
