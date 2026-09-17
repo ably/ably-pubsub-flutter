@@ -92,7 +92,7 @@ class PresenceMessage with ObjectHash {
   /// having to parse the encoding string.
   PresenceMessage.fromEncoded(
     Map<String, dynamic> jsonObject, [
-    RestChannelOptions? channelOptions,
+    RealtimeChannelOptions? channelOptions,
   ])  : id = jsonObject['id'] as String?,
         action = PresenceAction.values.firstWhere((e) =>
             e.toString().split('.')[1] == jsonObject['action'] as String?),
@@ -120,7 +120,7 @@ class PresenceMessage with ObjectHash {
   /// having to parse the encoding string.
   static List<PresenceMessage> fromEncodedArray(
     List<Map<String, dynamic>> jsonArray, [
-    RestChannelOptions? channelOptions,
+    RealtimeChannelOptions? channelOptions,
   ]) =>
       jsonArray
           .map((jsonObject) => PresenceMessage.fromEncoded(

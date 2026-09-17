@@ -1,7 +1,7 @@
 import 'package:ably_flutter/ably_flutter.dart';
 import 'package:meta/meta.dart';
 
-/// Creates and destroys [RestChannel] and [RealtimeChannel] objects.
+/// Creates and destroys [RealtimeChannel] objects.
 abstract class Channels<ChannelType> extends Iterable<ChannelType> {
   /// @nodoc
   /// stores channel name vs instance of [ChannelType]
@@ -14,7 +14,7 @@ abstract class Channels<ChannelType> extends Iterable<ChannelType> {
   @protected
   ChannelType createChannel(String name);
 
-  /// Creates a new [RestChannel] or [RealtimeChannel] object, or returns the
+  /// Creates a new [RealtimeChannel] object, or returns the
   /// existing channel object, using the channel [name] parameter.
   ChannelType get(String name) {
     if (_channels[name] == null) {
@@ -37,7 +37,7 @@ abstract class Channels<ChannelType> extends Iterable<ChannelType> {
   Iterator<ChannelType> get iterator =>
       _ChannelIterator<ChannelType>(_channels.values.toList());
 
-  /// Releases a [RestChannel] or [RealtimeChannel] object with a specified
+  /// Releases a [RealtimeChannel] object with a specified
   /// [name], deleting it.
   ///
   /// It also removes any listeners associated with the channel. To release a

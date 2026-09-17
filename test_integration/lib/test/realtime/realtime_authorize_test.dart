@@ -14,9 +14,10 @@ Future<Map<String, dynamic>> testRealtimeAuthroize({
     key: appKey,
     environment: 'sandbox',
     logLevel: LogLevel.error,
+    autoConnect: false,
   );
 
-  final ablyForToken = Rest(
+  final ablyForToken = Realtime(
     options: clientOptionsForToken,
   );
   /* get first token */

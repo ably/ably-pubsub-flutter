@@ -16,8 +16,6 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 
 class AuthMethodHandler {
-    enum Type{Realtime,Rest}
-
     private final AblyInstanceStore instanceStore;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
@@ -26,7 +24,7 @@ class AuthMethodHandler {
 
     }
 
-    void authorize(@NonNull MethodCall methodCall, @NonNull MethodChannel.Result result, Type type) {
+    void authorize(@NonNull MethodCall methodCall, @NonNull MethodChannel.Result result) {
         final AblyFlutterMessage<Map<String, Object>> ablyMessage = (AblyFlutterMessage) methodCall.arguments;
         final Auth.TokenParams tokenParams =
                 (Auth.TokenParams) ablyMessage.message.get(PlatformConstants.TxTransportKeys.params);
@@ -36,7 +34,7 @@ class AuthMethodHandler {
 
         executor.execute(() -> {
             try {
-                final Auth.TokenDetails tokenDetails = getAuth(ablyMessage, type)
+                final Auth.TokenDetails tokenDetails = getAuth(ablyMessage)
                         .authorize(tokenParams, options);
                 result.success(tokenDetails);
             } catch (AblyException e) {
@@ -46,14 +44,11 @@ class AuthMethodHandler {
 
     }
 
-    private Auth getAuth(AblyFlutterMessage<Map<String, Object>> ablyMessage, Type type) {
-        if (type == Type.Realtime) {
-            return instanceStore.getRealtime(ablyMessage.handle).auth;
-        }
-        return instanceStore.getRest(ablyMessage.handle).auth;
+    private Auth getAuth(AblyFlutterMessage<Map<String, Object>> ablyMessage) {
+        return instanceStore.getRealtime(ablyMessage.handle).auth;
     }
 
-    void requestToken(@NonNull MethodCall methodCall, @NonNull MethodChannel.Result result, Type type) {
+    void requestToken(@NonNull MethodCall methodCall, @NonNull MethodChannel.Result result) {
         final AblyFlutterMessage<Map<String, Object>> ablyMessage = (AblyFlutterMessage) methodCall.arguments;
         final Auth.TokenParams tokenParams =
                 (Auth.TokenParams) ablyMessage.message.get(PlatformConstants.TxTransportKeys.params);
@@ -63,7 +58,7 @@ class AuthMethodHandler {
 
         executor.execute(() -> {
             try {
-                final Auth.TokenDetails tokenDetails = getAuth(ablyMessage, type)
+                final Auth.TokenDetails tokenDetails = getAuth(ablyMessage)
                         .requestToken(tokenParams, options);
                 result.success(tokenDetails);
             } catch (AblyException e) {
@@ -72,7 +67,7 @@ class AuthMethodHandler {
         });
     }
 
-    void createTokenRequest(@NonNull MethodCall methodCall, @NonNull MethodChannel.Result result, Type type) {
+    void createTokenRequest(@NonNull MethodCall methodCall, @NonNull MethodChannel.Result result) {
         final AblyFlutterMessage<Map<String, Object>> ablyMessage = (AblyFlutterMessage) methodCall.arguments;
         final Auth.TokenParams tokenParams =
                 (Auth.TokenParams) ablyMessage.message.get(PlatformConstants.TxTransportKeys.params);
@@ -82,7 +77,7 @@ class AuthMethodHandler {
 
         executor.execute(() -> {
             try {
-                final Auth.TokenRequest tokenRequest = getAuth(ablyMessage, type)
+                final Auth.TokenRequest tokenRequest = getAuth(ablyMessage)
                         .createTokenRequest(tokenParams, options);
                  result.success(tokenRequest);
             } catch (AblyException e) {
@@ -91,8 +86,8 @@ class AuthMethodHandler {
         });
     }
 
-    public void clientId(MethodCall methodCall, MethodChannel.Result result, Type type) {
-        String clientId = getAuth((AblyFlutterMessage) methodCall.arguments, type).clientId;
+    public void clientId(MethodCall methodCall, MethodChannel.Result result) {
+        String clientId = getAuth((AblyFlutterMessage) methodCall.arguments).clientId;
         result.success(clientId);
     }
 }

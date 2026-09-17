@@ -1,8 +1,7 @@
 import 'package:ably_flutter/src/realtime/realtime.dart';
-import 'package:ably_flutter/src/rest/rest.dart';
 
 /// Describes the possible flags used to configure client capabilities, using
-/// [RestChannelOptions] or [RealtimeChannelOptions].
+/// [RealtimeChannelOptions].
 enum ChannelMode {
   /// The client can enter the presence set.
   presence,

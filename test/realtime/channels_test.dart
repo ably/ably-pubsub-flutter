@@ -7,19 +7,19 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   late MockMethodCallManager manager;
-  late RestChannels channels;
+  late RealtimeChannels channels;
 
   setUp(() {
     manager = MockMethodCallManager();
-    final rest = Rest.fromKey('TEST-KEY');
-    channels = rest.channels;
+    final realtime = Realtime.fromKey('TEST-KEY');
+    channels = realtime.channels;
   });
 
   tearDown(() {
     manager.reset();
   });
 
-  group('rest#channels', () {
+  group('realtime#channels', () {
     test('creates channel with #get', () {
       final channel = channels.get('channel-1');
       expect(channel.name, 'channel-1');

@@ -4,16 +4,16 @@ String $(Map<String, dynamic> c) => '''
 // ignore_for_file: public_member_api_docs
 
 class CodecTypes {
-${c['types'].map((_) => "  static const int ${_['name']} ="
-        " ${_['value']};").join('\n')}
+${c['types'].map((e) => "  static const int ${e['name']} ="
+        " ${e['value']};").join('\n')}
 }
 
 class PlatformMethod {
-${c['methods'].map((_) => "  static const String ${_['name']} =${getPrefix(_['value'] as String)}'${_['value']}';").join('\n')}
+${c['methods'].map((e) => "  static const String ${e['name']} =${getPrefix(e['value'] as String)}'${e['value']}';").join('\n')}
 }
 
-${c['objects'].map((_) => '''
-class Tx${_['name']} {
-${_['properties'].map((_p) => "  static const String $_p = '$_p';").join('\n')}
+${c['objects'].map((e) => '''
+class Tx${e['name']} {
+${e['properties'].map((_p) => "  static const String $_p = '$_p';").join('\n')}
 }
 ''').join('\n')}''';

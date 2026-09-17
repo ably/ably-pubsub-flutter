@@ -6,29 +6,16 @@ class PushChannel extends PlatformObject {
   final String _name;
 
   /// @nodoc
-  /// A rest client used platform side to invoke push notification methods
-  final Rest? rest;
-
-  /// @nodoc
   /// A realtime client used platform side to invoke push notification methods
-  final Realtime? realtime;
+  final Realtime realtime;
 
   /// @nodoc
-  /// Pass the channel name and an Ably realtime or rest client.
-  PushChannel(this._name, {this.rest, this.realtime}) {
-    final ablyClientNotPresent = rest == null && realtime == null;
-    final moreThanOneAblyClientPresent = rest != null && realtime != null;
-    if (ablyClientNotPresent || moreThanOneAblyClientPresent) {
-      throw Exception(
-          'Specify one Ably client when creating ${(Push).toString()}.');
-    }
-  }
+  /// Pass the channel name and an Ably realtime client.
+  PushChannel(this._name, {required this.realtime});
 
   /// @nodoc
   @override
-  Future<int?> createPlatformInstance() => (realtime != null)
-      ? (realtime as Realtime).handle
-      : (rest as Rest).handle;
+  Future<int?> createPlatformInstance() => realtime.handle;
 
   /// Subscribes the device to push notifications for the channel.
   Future<void> subscribeDevice() => invoke(

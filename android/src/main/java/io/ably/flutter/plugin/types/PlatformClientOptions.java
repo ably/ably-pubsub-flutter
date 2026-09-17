@@ -7,7 +7,7 @@ public class PlatformClientOptions {
     /**
      * Whether dart side has authCallback.
      * If true, autCallback proxy will be added in methodCallHandler
-     * while creating rest/realtime instances
+     * while creating realtime instances
      */
     public final boolean hasAuthCallback;
     public final ClientOptions options;

@@ -1,7 +1,7 @@
 import 'package:ably_flutter/ably_flutter.dart';
 
-/// Passes additional client-specific properties to the REST
-/// [Rest.new] or the Realtime [Realtime.new]
+/// Passes additional client-specific properties to the Realtime
+/// [Realtime.new]
 class ClientOptions extends AuthOptions {
   /// A client ID, used for identifying this client when publishing messages or
   /// for presence purposes.

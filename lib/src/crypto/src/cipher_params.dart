@@ -2,7 +2,7 @@ import 'package:ably_flutter/ably_flutter.dart';
 
 /// Params to configure encryption for a channel.
 ///
-/// Pass this as the cipher constructor argument of [RestChannelOptions.new] or
+/// Pass this as the cipher constructor argument of
 /// [RealtimeChannelOptions.new]. Do not construct [CipherParams] yourself, as
 /// it internally refers to an instance of [CipherParams] on the platform side
 /// (Android / iOS).
