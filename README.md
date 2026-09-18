@@ -1,5 +1,5 @@
 ![Ably Pub/Sub Flutter Header](images/flutter-github.png)
-[![Pub Version](https://img.shields.io/pub/v/ably_flutter)](https://pub.dev/packages/ably_flutter)
+[![Pub Version](https://img.shields.io/pub/v/ably_pubsub_device_flutter)](https://pub.dev/packages/ably_pubsub_device_flutter)
 [![License](https://badgen.net/github/license/ably/ably-pubsub-flutter)](https://github.com/ably/ably-pubsub-flutter/blob/main/LICENSE)
 
 ---
@@ -54,17 +54,17 @@ Add the Ably Flutter package to your project by including it in your `pubspec.ya
 
 ```yaml
 dependencies:
-  ably_flutter: ^1.2.44
+  ably_pubsub_device_flutter: ^1.2.44
 ```
 
 Once added to your dependencies, import it in your Dart code:
 
 ```dart
-import 'package:ably_flutter/ably_flutter.dart' as ably;
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart' as ably;
 ```
 
 > [!NOTE]
-> When increasing the version of `ably_flutter` in your `pubspec.yaml`, if there are breaking changes, follow the [updating / migration guide](UPDATING.md).
+> When increasing the version of `ably_pubsub_device_flutter` in your `pubspec.yaml`, if there are breaking changes, follow the [updating / migration guide](UPDATING.md).
 
 ---
 

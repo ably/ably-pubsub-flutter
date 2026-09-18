@@ -1,7 +1,7 @@
 import 'dart:io' as io show Platform;
 import 'dart:typed_data';
 
-import 'package:ably_flutter/ably_flutter.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 
 /// @nodoc
 /// The internal (non-public) representation of CipherParams.

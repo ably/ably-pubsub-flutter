@@ -1,7 +1,7 @@
 @import Ably;
 
 #import "AblyInstanceStore.h"
-#import <ably_flutter/ably_flutter-Swift.h>
+#import <ably_pubsub_device_flutter/ably_pubsub_device_flutter-Swift.h>
 
 @implementation AblyInstanceStore {
     NSMutableDictionary<NSNumber *, ARTRealtime *>* _realtimeInstances;

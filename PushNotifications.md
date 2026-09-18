@@ -93,7 +93,7 @@ The example app contains an example of how to use the Push Notification function
 
 ### Ensure `WidgetsBinding` is initialized
 
-If you invoke any methods from the `ably_flutter` package before calling `runApp()`, you must call `WidgetsFlutterBinding.ensureInitialized();`. This is done to ensure all platform methods will be successfully received by the native Ably plugin on the host platform.
+If you invoke any methods from the `ably_pubsub_device_flutter` package before calling `runApp()`, you must call `WidgetsFlutterBinding.ensureInitialized();`. This is done to ensure all platform methods will be successfully received by the native Ably plugin on the host platform.
 
 ### Device activation
 
@@ -162,7 +162,7 @@ If you're working in Objective-C then this will look something like this in `App
 If you're working in Swift then this will look something like this in `AppDelegate.swift`:
 
 ```swift
-import ably_flutter
+import ably_pubsub_device_flutter
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
@@ -601,6 +601,6 @@ ActivationContext.getActivationContext(this).onNewRegistrationToken(Registration
 
 **iOS:** Ensure you set the `sound` key in the `push.notification` object when sending the Ably message.
 
-### When building my application, I get the following error: `Manifest merger failed : uses-sdk:minSdkVersion 16 cannot be smaller than version 19 declared in library [:ably_flutter]`
+### When building my application, I get the following error: `Manifest merger failed : uses-sdk:minSdkVersion 16 cannot be smaller than version 19 declared in library [:ably_pubsub_device_flutter]`
 
 A fresh Flutter project generates an Android project with a `minSdkVersion` of 16, but Ably-flutter only supports API level 19 (Android Kitkat 4.4, which was released in 2013) and above. In `android/app/build.gradle`, change `minSdkVersion 16` to `minSdkVersion 19`.

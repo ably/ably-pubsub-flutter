@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:ably_flutter/ably_flutter.dart' as ably;
 import 'package:ably_flutter_example/constants.dart';
 import 'package:ably_flutter_example/push_notifications/android_push_notification_configuration.dart';
 import 'package:ably_flutter_example/push_notifications/push_notification_message_examples.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart'
+    as ably;
 import 'package:rxdart/rxdart.dart';
 
 class PushNotificationService {

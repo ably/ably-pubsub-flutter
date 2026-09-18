@@ -1,5 +1,6 @@
-import 'package:ably_flutter/ably_flutter.dart' as ably;
 import 'package:ably_flutter_example/ui/utilities.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart'
+    as ably;
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 

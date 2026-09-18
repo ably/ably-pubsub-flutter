@@ -1,5 +1,5 @@
-import 'package:ably_flutter/ably_flutter.dart';
-import 'package:ably_flutter/src/common/src/object_hash.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
+import 'package:ably_pubsub_device_flutter/src/common/src/object_hash.dart';
 import 'package:meta/meta.dart';
 
 /// Contains an individual message that is sent to, or received from, Ably.

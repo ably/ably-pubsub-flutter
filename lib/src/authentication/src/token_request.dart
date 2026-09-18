@@ -1,4 +1,4 @@
-import 'package:ably_flutter/ably_flutter.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 import 'package:flutter/foundation.dart';
 
 /// Contains the properties of a request for a token to Ably. Tokens are

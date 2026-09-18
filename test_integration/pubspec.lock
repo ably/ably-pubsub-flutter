@@ -9,7 +9,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "67.0.0"
-  ably_flutter:
+  ably_pubsub_device_flutter:
     dependency: "direct main"
     description:
       path: ".."

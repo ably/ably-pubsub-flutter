@@ -10,7 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  ably_flutter:
+  ably_pubsub_device_flutter:
     path: ".."
 
   args: ^2.3.1

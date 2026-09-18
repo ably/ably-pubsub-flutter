@@ -1,4 +1,4 @@
-import 'package:ably_flutter/src/realtime/realtime.dart';
+import 'package:ably_pubsub_device_flutter/src/realtime/realtime.dart';
 
 /// Describes the possible flags used to configure client capabilities, using
 /// [RealtimeChannelOptions].

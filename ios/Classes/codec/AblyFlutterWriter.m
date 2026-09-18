@@ -1,6 +1,6 @@
 @import Ably;
 @import UserNotifications;
-#import <ably_flutter/ably_flutter-Swift.h>
+#import <ably_pubsub_device_flutter/ably_pubsub_device_flutter-Swift.h>
 #import "AblyFlutterWriter.h"
 #import "AblyFlutterMessage.h"
 #import "AblyFlutterReader.h"

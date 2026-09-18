@@ -21,10 +21,10 @@ jobs:
           flutter-version: '3.29'
           cache: true
 
-      # test_integration package depends on ably_flutter, so before we run integration
+      # test_integration package depends on ably_pubsub_device_flutter, so before we run integration
       # tests it's best to perform dependency update in both packages, to make sure that
       # integration tests are run with exactly the same dependencies as specified in
-      # current version of ably_flutter package
+      # current version of ably_pubsub_device_flutter package
       - name: Update dependencies
         run: |
           flutter pub get

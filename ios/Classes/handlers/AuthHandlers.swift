@@ -1,6 +1,6 @@
 //
 //  AuthHandlers.swift
-//  ably_flutter
+//  ably_pubsub_device_flutter
 //
 //  Created by Ikbal Kaya on 17/03/2023.
 //
