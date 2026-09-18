@@ -136,7 +136,6 @@ static AblyCodecDecoder readClientOptions = ^AblyFlutterClientOptions*(NSDiction
     READ_VALUE(clientOptions, environment, dictionary, TxClientOptions_environment);
     READ_VALUE(clientOptions, idempotentRestPublishing, dictionary, TxClientOptions_idempotentRestPublishing);
     READ_VALUE(clientOptions, fallbackHosts, dictionary, TxClientOptions_fallbackHosts);
-    READ_VALUE(clientOptions, fallbackHostsUseDefault, dictionary, TxClientOptions_fallbackHostsUseDefault);
     ON_VALUE(^(const id value) {
         clientOptions.transportParams = [AblyFlutterReader transportParamsFromDictionary: value];
     }, dictionary, TxClientOptions_transportParams);

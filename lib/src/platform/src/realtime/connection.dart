@@ -48,21 +48,14 @@ class Connection extends PlatformObject {
   /// A unique private connection key used to recover or resume a connection,
   /// assigned by Ably.
   ///
-  /// When recovering a connection explicitly, the `recoveryKey` is used in the
-  /// recover client options as it contains both the key and the last message
-  /// serial. This private connection key can also be used by other REST clients
-  /// to publish on behalf of this client. See the
+  /// When recovering a connection explicitly, the recovery key returned by
+  /// [createRecoveryKey] is used in the recover client options, as it contains
+  /// both the key and the last message serial. This private connection key can
+  /// also be used by other REST clients to publish on behalf of this client.
+  /// See the
   /// [publishing over REST on behalf of a realtime client docs](https://ably.com/docs/rest/channels#publish-on-behalf)
   /// for more info.
   String? get key => _key;
-
-  /// The recovery key string can be used by another client to recover this
-  /// connection's state in the recover client options property.
-  ///
-  /// See [connection state recover options](https://ably.com/docs/realtime/connection#connection-state-recover-options)
-  /// for more information.
-  @Deprecated('Use createRecoveryKey instead')
-  String? recoveryKey;
 
   /// The createRecoveryKey returns key string can be used by another client to
   /// recover this connection's state in the recover client options property.
@@ -76,9 +69,9 @@ class Connection extends PlatformObject {
   /// used automatically by the library when recovering or resuming a
   /// connection.
   ///
-  /// When recovering a connection explicitly, the `recoveryKey` is
-  /// used in the recover client options as it contains both the key and the
-  /// last message serial.
+  /// When recovering a connection explicitly, the recovery key returned by
+  /// [createRecoveryKey] is used in the recover client options, as it contains
+  /// both the key and the last message serial.
   int? serial;
 
   /// The current [ConnectionState] of the connection.

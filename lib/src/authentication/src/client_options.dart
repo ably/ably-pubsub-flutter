@@ -13,15 +13,6 @@ class ClientOptions extends AuthOptions {
   /// with the `clientId` implicit in the token.
   String? clientId;
 
-  /// Controls the log output of the library. This is a function to handle each
-  /// line of log output.
-  @Deprecated(
-    'Not used, as log messages are handled by the default mechanism '
-    'in the underlying SDK. This instance variable will be removed '
-    'in a future release.',
-  )
-  LogHandler? logHandler;
-
   /// Controls the verbosity of the logs output from the library. Levels include
   /// `verbose`, `debug`, `info`, `warn` and `error`.
   LogLevel logLevel = LogLevel.info;
@@ -91,11 +82,6 @@ class ClientOptions extends AuthOptions {
   /// If you have been provided a set of custom fallback hosts by Ably, please
   /// specify them here.
   List<String>? fallbackHosts;
-
-  /// DEPRECATED: this property is deprecated and will be removed in a future
-  /// version. Enables default fallback hosts to be used.
-  @Deprecated('no alternative to this')
-  bool? fallbackHostsUseDefault;
 
   /// When a [TokenParams] object is provided, it overrides the client library
   /// defaults when issuing new Ably Tokens or Ably [TokenRequest]s.
@@ -175,13 +161,11 @@ class ClientOptions extends AuthOptions {
     this.environment,
     this.fallbackHosts,
     int? fallbackRetryTimeout,
-    this.fallbackHostsUseDefault,
     int? httpMaxRetryCount,
     int? httpOpenTimeout,
     int? httpRequestTimeout,
     this.idempotentRestPublishing,
     String? key,
-    this.logHandler,
     LogLevel? logLevel,
     this.port,
     bool? queryTime,
@@ -208,10 +192,6 @@ class ClientOptions extends AuthOptions {
           queryTime: queryTime,
           useTokenAuth: useTokenAuth,
         ) {
-    /// @nodoc
-    /// These default value assignments are only required until
-    /// [ClientOptions.fromKey] is removed, because then defaults can be set
-    /// directly in the constructor invocation
     this.autoConnect = autoConnect ?? this.autoConnect;
     this.channelRetryTimeout = channelRetryTimeout ?? this.channelRetryTimeout;
     this.disconnectedRetryTimeout =
@@ -229,14 +209,6 @@ class ClientOptions extends AuthOptions {
     this.tls = tls ?? this.tls;
     this.useBinaryProtocol = useBinaryProtocol ?? this.useBinaryProtocol;
   }
-
-  /// @nodoc
-  /// initializes [ClientOptions] with a key and log level set to info
-  ///
-  /// See [AuthOptions.fromKey] for more details
-  @Deprecated(
-      "Use ClientOptions constructor with named 'key' parameter instead")
-  ClientOptions.fromKey(String key) : super.fromKey(key);
 
 // TODO(tiholic) unimplemented:
 //

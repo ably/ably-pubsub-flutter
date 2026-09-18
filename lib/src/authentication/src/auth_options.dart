@@ -103,19 +103,6 @@ class AuthOptions {
       key = null;
     }
   }
-
-  /// @nodoc
-  /// Convenience constructor used to create an AuthOptions object based
-  /// on the key string obtained from the application dashboard.
-  /// param [key] - the full key string as obtained from the dashboard
-  @Deprecated("Use AuthOptions constructor with named 'key' parameter instead")
-  AuthOptions.fromKey(String key) {
-    if (key.contains(':')) {
-      this.key = key;
-    } else {
-      tokenDetails = TokenDetails(key);
-    }
-  }
 }
 
 /// @nodoc
