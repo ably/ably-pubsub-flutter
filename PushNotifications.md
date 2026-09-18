@@ -97,7 +97,7 @@ If you invoke any methods from the `ably_pubsub_device_flutter` package before c
 
 ### Device activation
 
-- Create a realtime client: e.g. `final realtime = ably.PubSubClient(options: clientOptions);`
+- Create a realtime client: e.g. `final realtime = ably.createClient(options: clientOptions);`
 - Activate the device for push notifications with Ably: `ablyClient.push.activate();`. This only
   needs to be done once, and will be used across all future app launches, as long as the app is not deactivated. This method will throw an AblyException if it fails.
 - The `Future` returned by `activate` is not guaranteed to complete quickly. For example, if there is no internet connection, `activate` will wait until it is available. Therefore, there is no guarantee any code awaiting the completion of the `Future` will run.
@@ -238,7 +238,7 @@ Requesting permissions:
 
 ```dart
 // Create an Ably client to access the push field
-final realtime = ably.PubSubClient(options: clientOptions);
+final realtime = ably.createClient(options: clientOptions);
 final push = realtime.push;
 // Request permission from user on iOS
 bool permissionGranted = await push.requestPermission();

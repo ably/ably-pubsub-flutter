@@ -8,7 +8,7 @@ Future<Map<String, dynamic>> testRealtimePublishWithAuthCallback({
   Map<String, dynamic>? payload,
 }) async {
   var authCallbackInvoked = false;
-  final realtime = PubSubClient(
+  final realtime = createClient(
     options: ClientOptions(
       logLevel: LogLevel.error,
       authCallback: (params) async {

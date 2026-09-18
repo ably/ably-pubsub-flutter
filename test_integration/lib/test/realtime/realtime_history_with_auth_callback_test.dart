@@ -10,7 +10,7 @@ Future<Map<String, dynamic>> testRealtimeHistoryWithAuthCallback({
 }) async {
   var authCallbackInvoked = false;
 
-  final realtime = PubSubClient(
+  final realtime = createClient(
     options: ClientOptions(
       clientId: 'someClientId',
       logLevel: LogLevel.error,

@@ -79,7 +79,7 @@ The following code connects to Ably's realtime messaging service, subscribes to 
     clientId: 'me',
   );
   
-  final pubSubClient = ably.PubSubClient(options: clientOptions);
+  final pubSubClient = ably.createClient(options: clientOptions);
   
   // Wait for connection to be established
   await pubSubClient.connection

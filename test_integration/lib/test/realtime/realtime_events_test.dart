@@ -18,7 +18,7 @@ Future<Map<String, dynamic>> testRealtimeEvents({
   final channelStateChanges = <Map<String, dynamic>>[];
   final filteredChannelStateChanges = <Map<String, dynamic>>[];
 
-  final realtime = PubSubClient(
+  final realtime = createClient(
     options: ClientOptions(
       key: appKey,
       environment: 'sandbox',

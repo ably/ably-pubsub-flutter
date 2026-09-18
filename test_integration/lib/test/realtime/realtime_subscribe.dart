@@ -6,7 +6,7 @@ import 'package:ably_flutter_integration_test/utils/realtime.dart';
 import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 
 Future<PubSubClient> _createRealtime(String apiKey) async {
-  final realtime = PubSubClient(
+  final realtime = createClient(
     options: ClientOptions(
       key: apiKey,
       environment: 'sandbox',
