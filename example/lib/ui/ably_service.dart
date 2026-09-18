@@ -10,7 +10,7 @@ class AblyService {
   late final ApiKeyProvision apiKeyProvision;
 
   AblyService({required this.apiKeyProvision}) {
-    realtime = ably.PubSubClient(
+    realtime = ably.createClient(
       options: ably.ClientOptions(
         key: apiKeyProvision.key,
         clientId: Constants.clientId,

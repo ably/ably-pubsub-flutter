@@ -56,27 +56,27 @@ void main() {
     final o = ClientOptions(
       realtimeHost: host,
     );
-    final realtime = PubSubClient(options: o);
+    final realtime = createClient(options: o);
     expect(await realtime.handle, counter);
     expect(realtime.options.realtimeHost, host);
   });
 
   test('createRealtimeWithToken', () async {
     const key = 'TEST-KEY';
-    final realtime = PubSubClient.fromKey(key);
+    final realtime = createClient(options: ClientOptions(key: key));
     expect(await realtime.handle, counter);
     expect(realtime.options.tokenDetails!.token, key);
   });
 
   test('createRealtimeWithKey', () async {
     const key = 'TEST:KEY';
-    final realtime = PubSubClient.fromKey(key);
+    final realtime = createClient(options: ClientOptions(key: key));
     expect(await realtime.handle, counter);
     expect(realtime.options.key, key);
   });
 
   test('publishMessage', () async {
-    final realtime = PubSubClient.fromKey('TEST-KEY');
+    final realtime = createClient(options: ClientOptions(key: 'TEST-KEY'));
     await realtime.channels.get('test').publish(name: 'name', data: 'data');
     expect(1, 1);
   });

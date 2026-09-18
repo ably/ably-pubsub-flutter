@@ -9,7 +9,7 @@ Future<Map<String, dynamic>> testRealtimeTime({
   reporter.reportLog('init start');
   final appKey = await AppProvisioning().provisionApp();
 
-  final realtime = PubSubClient(
+  final realtime = createClient(
     options: ClientOptions(
       key: appKey,
       environment: 'sandbox',

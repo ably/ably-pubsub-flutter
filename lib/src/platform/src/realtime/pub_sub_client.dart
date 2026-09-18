@@ -7,25 +7,16 @@ import 'package:ably_pubsub_device_flutter/src/platform/platform_internal.dart';
 import 'package:ably_pubsub_device_flutter/src/realtime/src/realtime_auth.dart';
 
 /// A client that offers a realtime API to interact with Ably.
+///
+/// Use [createClient] to obtain an instance; this class has no public
+/// constructor.
 class PubSubClient extends PlatformObject {
-  /// Constructs a `PubSubClient` object using an Ably [options] object or
-  /// the Ably API [key] or token string used to validate the client.
-  PubSubClient({
-    ClientOptions? options,
-    final String? key,
-  })  : assert(options != null || key != null),
-        options = options ?? ClientOptions(key: key),
-        super() {
+  PubSubClient._({required this.options}) : super() {
     _connection = Connection(this);
     _channels = RealtimeChannels(this);
     push = Push(realtime: this);
     auth = RealtimeAuth(this);
   }
-
-  /// Constructs a `PubSubClient` object using an Ably API [key] or token string
-  /// used to validate the client.
-  factory PubSubClient.fromKey(String key) =>
-      PubSubClient(options: ClientOptions(key: key));
 
   ///@nodoc
   @override
@@ -64,7 +55,7 @@ class PubSubClient extends PlatformObject {
 
   /// @nodoc
   /// A [ClientOptions] object used to configure the client connection to Ably.
-  late ClientOptions options;
+  final ClientOptions options;
 
   /// A [Push] object.
   late Push push;
@@ -103,6 +94,13 @@ class PubSubClient extends PlatformObject {
   Future<LocalDevice> device() async =>
       invokeRequest<LocalDevice>(PlatformMethod.pushDevice);
 }
+
+/// Creates a [PubSubClient] configured with the given [options].
+///
+/// The API key or token string used to validate the client is provided
+/// through [options].
+PubSubClient createClient({required ClientOptions options}) =>
+    PubSubClient._(options: options);
 
 Map<int?, PubSubClient> _realtimeInstances = {};
 

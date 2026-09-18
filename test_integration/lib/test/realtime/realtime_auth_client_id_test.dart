@@ -17,7 +17,7 @@ Future<Map<String, dynamic>> testRealtimeAuthClientId({
     autoConnect: false,
   );
 
-  final ablyForToken = PubSubClient(
+  final ablyForToken = createClient(
     options: clientOptionsForToken,
   );
   /* get first token */
@@ -30,7 +30,7 @@ Future<Map<String, dynamic>> testRealtimeAuthClientId({
       autoConnect: false,
       clientId: 'testClientId',
       tokenDetails: firstToken);
-  final realtime = PubSubClient(options: clientOptions);
+  final realtime = createClient(options: clientOptions);
   await realtime.connect();
 
   final clientId = await realtime.auth.clientId;
