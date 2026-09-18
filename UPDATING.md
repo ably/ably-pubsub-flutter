@@ -8,8 +8,9 @@ This guide lists the changes needed to upgrade from one version of Ably to a new
   - `ably_flutter: ^1.2.x` becomes `ably_pubsub_device_flutter: ^2.0.0`.
   - `import 'package:ably_flutter/ably_flutter.dart' as ably;` becomes `import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart' as ably;`.
   - On iOS, the pod and Swift module are renamed too, so an AppDelegate that did `import ably_flutter` now needs `import ably_pubsub_device_flutter`.
-- The REST client has been removed. Use the realtime client instead:
-  - Replace `ably.Rest(options: clientOptions)` / `ably.Rest.fromKey(key)` with `ably.Realtime(options: clientOptions)` / `ably.Realtime.fromKey(key)`, and use `realtime.channels`, `realtime.auth`, `realtime.push` and `realtime.time()` in place of their `Rest` equivalents.
+- The `Realtime` client has been renamed to `PubSubClient`. Replace `ably.Realtime(options: clientOptions)` / `ably.Realtime.fromKey(key)` with `ably.PubSubClient(options: clientOptions)` / `ably.PubSubClient.fromKey(key)`.
+- The REST client has been removed. Use `PubSubClient` instead:
+  - Replace `ably.Rest(options: clientOptions)` / `ably.Rest.fromKey(key)` with `ably.PubSubClient(options: clientOptions)` / `ably.PubSubClient.fromKey(key)`, and use `channels`, `auth`, `push` and `time()` on the `PubSubClient` in place of their `Rest` equivalents.
   - `RestChannel`, `RestChannels`, `RestPresence`, `RestChannelOptions`, `RestHistoryParams` and `RestPresenceParams` have been removed. Use `RealtimeChannel`, `RealtimeChannels`, `RealtimePresence`, `RealtimeChannelOptions`, `RealtimeHistoryParams` and `RealtimePresenceParams`.
   - `Message.fromEncoded`, `Message.fromEncodedArray`, `PresenceMessage.fromEncoded` and `PresenceMessage.fromEncodedArray` now take a `RealtimeChannelOptions` instead of a `RestChannelOptions`.
   - `Push` and `PushChannel` no longer accept a `rest` client; they now require a `realtime` client.

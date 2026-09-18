@@ -3,7 +3,7 @@ import 'package:ably_pubsub_device_flutter/src/platform/platform_internal.dart';
 
 /// See [Auth] for more information.
 class RealtimeAuth extends Auth {
-  final Realtime _realtime;
+  final PubSubClient _realtime;
 
   /// Constructor for RealtimeAuth
   RealtimeAuth(this._realtime);

@@ -11,7 +11,7 @@ import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart'
 ///
 /// It aims to demonstrate the working of nested listeners
 /// and cancelling listeners on specific events
-void listenRealtimeConnection(ably.Realtime realtime) {
+void listenRealtimeConnection(ably.PubSubClient realtime) {
   //One can listen from multiple listeners on the same event,
   // and must cancel each subscription one by one
   //RETAINING LISTENER - α

@@ -17,7 +17,7 @@ Future<Map<String, dynamic>> testRealtimeEncryptedPublish({
 
   final channelOptions = RealtimeChannelOptions(cipherParams: cipherParams);
 
-  final realtime = Realtime(
+  final realtime = PubSubClient(
     options: ClientOptions(
       key: appKey,
       environment: 'sandbox',
@@ -46,8 +46,8 @@ Future<Map<String, dynamic>> testRealtimeEncryptedPublishSpec({
 
   final channelOptions = RealtimeChannelOptions(cipherParams: cipherParams);
 
-  // Realtime instance where client id is specified in the instance itself
-  final realtimeWithClientId = Realtime(
+  // PubSubClient instance where client id is specified in the instance itself
+  final realtimeWithClientId = PubSubClient(
     options: ClientOptions(
       key: appKey,
       environment: 'sandbox',

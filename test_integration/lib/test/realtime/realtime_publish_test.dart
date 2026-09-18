@@ -13,7 +13,7 @@ Future<Map<String, dynamic>> testRealtimePublish({
   final appKey = await AppProvisioning().provisionApp();
   final logMessages = <List<String?>>[];
 
-  final realtime = Realtime(
+  final realtime = PubSubClient(
     options: ClientOptions(
       key: appKey,
       environment: 'sandbox',
@@ -35,7 +35,7 @@ Future<Map<String, dynamic>> testRealtimePublishSpec({
 }) async {
   final appKey = await AppProvisioning().provisionApp();
 
-  final realtime = Realtime(
+  final realtime = PubSubClient(
     options: ClientOptions(
       key: appKey,
       environment: 'sandbox',
@@ -81,7 +81,7 @@ Future<Map<String, dynamic>> testRealtimePublishSpec({
   );
 
   // client options - no client id, message has client id
-  final realtime2 = Realtime(
+  final realtime2 = PubSubClient(
     options: ClientOptions(
       key: appKey,
       environment: 'sandbox',

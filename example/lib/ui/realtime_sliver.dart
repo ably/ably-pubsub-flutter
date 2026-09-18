@@ -14,7 +14,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 // ignore: must_be_immutable
 class RealtimeSliver extends HookWidget {
   final AblyService ablyService;
-  final ably.Realtime realtime;
+  final ably.PubSubClient realtime;
   late ably.RealtimeChannel channel;
   List<StreamSubscription<dynamic>> _subscriptions = [];
 

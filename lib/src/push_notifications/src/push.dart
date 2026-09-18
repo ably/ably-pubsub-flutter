@@ -17,7 +17,7 @@ class Push extends PlatformObject {
 
   /// @nodoc
   /// A realtime client used platform side to invoke push notification methods
-  final Realtime realtime;
+  final PubSubClient realtime;
 
   /// @nodoc
   /// Pass an Ably realtime client.

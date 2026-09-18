@@ -6,8 +6,8 @@ import 'package:ably_pubsub_device_flutter/src/platform/platform_internal.dart';
 /// Enables the management of a connection to Ably.
 class Connection extends PlatformObject {
   /// @nodoc
-  /// Realtime client instance
-  final Realtime realtime;
+  /// The Pub/Sub client instance
+  final PubSubClient realtime;
 
   ConnectionState _state;
 

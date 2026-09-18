@@ -8,7 +8,7 @@ export 'src/platform.dart';
 export 'src/platform_object.dart';
 export 'src/realtime/connection.dart';
 export 'src/realtime/presence.dart';
-export 'src/realtime/realtime.dart';
+export 'src/realtime/pub_sub_client.dart';
 export 'src/realtime/realtime_channel.dart';
 export 'src/realtime/realtime_channels.dart';
 export 'src/streams_channel.dart';
