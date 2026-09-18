@@ -131,7 +131,6 @@ NSString *const TxClientOptions_httpRequestTimeout = @"httpRequestTimeout";
 NSString *const TxClientOptions_httpMaxRetryCount = @"httpMaxRetryCount";
 NSString *const TxClientOptions_realtimeRequestTimeout = @"realtimeRequestTimeout";
 NSString *const TxClientOptions_fallbackHosts = @"fallbackHosts";
-NSString *const TxClientOptions_fallbackHostsUseDefault = @"fallbackHostsUseDefault";
 NSString *const TxClientOptions_fallbackRetryTimeout = @"fallbackRetryTimeout";
 NSString *const TxClientOptions_defaultTokenParams = @"defaultTokenParams";
 NSString *const TxClientOptions_channelRetryTimeout = @"channelRetryTimeout";

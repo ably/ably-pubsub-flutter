@@ -169,7 +169,6 @@ final public class PlatformConstants {
         public static final String httpMaxRetryCount = "httpMaxRetryCount";
         public static final String realtimeRequestTimeout = "realtimeRequestTimeout";
         public static final String fallbackHosts = "fallbackHosts";
-        public static final String fallbackHostsUseDefault = "fallbackHostsUseDefault";
         public static final String fallbackRetryTimeout = "fallbackRetryTimeout";
         public static final String defaultTokenParams = "defaultTokenParams";
         public static final String channelRetryTimeout = "channelRetryTimeout";

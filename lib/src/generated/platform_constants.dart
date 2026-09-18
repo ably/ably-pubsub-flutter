@@ -174,7 +174,6 @@ class TxClientOptions {
   static const String httpMaxRetryCount = 'httpMaxRetryCount';
   static const String realtimeRequestTimeout = 'realtimeRequestTimeout';
   static const String fallbackHosts = 'fallbackHosts';
-  static const String fallbackHostsUseDefault = 'fallbackHostsUseDefault';
   static const String fallbackRetryTimeout = 'fallbackRetryTimeout';
   static const String defaultTokenParams = 'defaultTokenParams';
   static const String channelRetryTimeout = 'channelRetryTimeout';

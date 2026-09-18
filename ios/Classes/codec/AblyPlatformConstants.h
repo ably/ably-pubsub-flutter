@@ -159,7 +159,6 @@ extern NSString *const TxClientOptions_httpRequestTimeout;
 extern NSString *const TxClientOptions_httpMaxRetryCount;
 extern NSString *const TxClientOptions_realtimeRequestTimeout;
 extern NSString *const TxClientOptions_fallbackHosts;
-extern NSString *const TxClientOptions_fallbackHostsUseDefault;
 extern NSString *const TxClientOptions_fallbackRetryTimeout;
 extern NSString *const TxClientOptions_defaultTokenParams;
 extern NSString *const TxClientOptions_channelRetryTimeout;
