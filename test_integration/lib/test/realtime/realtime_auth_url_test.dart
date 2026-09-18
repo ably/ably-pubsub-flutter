@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:ffi';
 
-import 'package:ably_flutter/ably_flutter.dart';
 import 'package:ably_flutter_integration_test/app_provisioning.dart';
 import 'package:ably_flutter_integration_test/factory/reporter.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 
 //Make sure that creating realtime with authUrk connects without a problem
 Future<Map<String, dynamic>> testCreateRealtimeWithAuthUrl({

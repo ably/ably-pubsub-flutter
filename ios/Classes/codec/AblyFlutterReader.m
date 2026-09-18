@@ -3,7 +3,7 @@
 #import "AblyFlutterClientOptions.h"
 #import "AblyFlutterMessage.h"
 #import "AblyPlatformConstants.h"
-#import <ably_flutter/ably_flutter-Swift.h>
+#import <ably_pubsub_device_flutter/ably_pubsub_device_flutter-Swift.h>
 
 static ARTLogLevel _logLevel(NSString *const logLevelString) {
     if ([logLevelString isEqualToString:TxLogLevelEnum_none]) return ARTLogLevelNone;

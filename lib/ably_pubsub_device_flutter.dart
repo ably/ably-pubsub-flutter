@@ -1,4 +1,4 @@
-library ably_flutter;
+library ably_pubsub_device_flutter;
 
 export 'src/authentication/authentication.dart';
 export 'src/common/common.dart';

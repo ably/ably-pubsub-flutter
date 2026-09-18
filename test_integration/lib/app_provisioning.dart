@@ -2,13 +2,13 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:ably_flutter/ably_flutter.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/retry.dart';
 
 /// Used to provision the app with Ably sandbox environment
 /// A copy of this class is also present in example app, to avoid putting
-/// it in the base ably_flutter package
+/// it in the base ably_pubsub_device_flutter package
 class AppProvisioning {
   /// Prefix of REST environment used to provision the app. For example,
   /// with prefix `sandbox-` URL `sandbox-rest.ably.io` will be used

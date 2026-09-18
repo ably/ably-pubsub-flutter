@@ -1,6 +1,6 @@
 #
 # To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html.
-# Run `pod lib lint ably_flutter.podspec` to validate before publishing.
+# Run `pod lib lint ably_pubsub_device_flutter.podspec` to validate before publishing.
 #
 require 'yaml'
 
@@ -8,7 +8,7 @@ pubspec = YAML.load_file(File.join('..', 'pubspec.yaml'))
 flutter_package_plugin_version = pubspec['version'].gsub('+', '-')
 
 Pod::Spec.new do |s|
-  s.name             = 'ably_flutter'
+  s.name             = 'ably_pubsub_device_flutter'
   s.version          = flutter_package_plugin_version
   s.summary          = 'Ably Cocoa platform support for our Flutter plugin.'
   s.homepage         = 'https://www.ably.com/'
@@ -27,7 +27,7 @@ Pod::Spec.new do |s|
     'DEFINES_MODULE' => 'YES',
     'GCC_PREPROCESSOR_DEFINITIONS' => "FLUTTER_PACKAGE_PLUGIN_VERSION=\\@\\\"#{flutter_package_plugin_version}\\\""
   }
-  s.resource_bundles = {'ably_flutter' => ['Resources/PrivacyInfo.xcprivacy']}
+  s.resource_bundles = {'ably_pubsub_device_flutter' => ['Resources/PrivacyInfo.xcprivacy']}
   s.swift_version = '5.0'
 
   s.test_spec 'Tests' do |ts|

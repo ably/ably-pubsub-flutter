@@ -1,7 +1,7 @@
 @import Ably;
 
 #import "AblyFlutter.h"
-#import <ably_flutter/ably_flutter-Swift.h>
+#import <ably_pubsub_device_flutter/ably_pubsub_device_flutter-Swift.h>
 
 #import "codec/AblyFlutterReaderWriter.h"
 #import "AblyFlutterMessage.h"

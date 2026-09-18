@@ -79,8 +79,9 @@ void testCryptoGetDefaultParams(FlutterDriver Function() getDriver) {
   late TestControlResponseMessage response;
   Map<String, dynamic>? keyWith127BitLengthException;
 
-  // Can't use [CipherParams] as a type here because import from
-  // ably_flutter package in this file breaks integration test suite
+  // Can't use [CipherParams] as a type here because import from the
+  // ably_pubsub_device_flutter package in this file breaks the integration
+  // test suite
   // So we can only pass a value to determine if params were fetched
   late bool? didFetchDefaultParams;
 

@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:ably_flutter/ably_flutter.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 
 /// Type definition for a callback invoked when background push message
 /// is received.

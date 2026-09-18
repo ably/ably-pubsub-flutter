@@ -1,7 +1,8 @@
-import 'package:ably_flutter/ably_flutter.dart' as ably;
 import 'package:ably_flutter_example/constants.dart';
 import 'package:ably_flutter_example/push_notifications/push_notification_service.dart';
 import 'package:ably_flutter_example/ui/api_key_service.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart'
+    as ably;
 
 class AblyService {
   late final ably.Realtime realtime;

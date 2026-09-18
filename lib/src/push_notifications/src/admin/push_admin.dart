@@ -1,4 +1,4 @@
-import 'package:ably_flutter/ably_flutter.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 
 /// Enables the management of device registrations and push notification
 /// subscriptions. Also enables the publishing of push notifications to devices.

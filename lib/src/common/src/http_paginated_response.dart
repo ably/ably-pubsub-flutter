@@ -1,4 +1,4 @@
-import 'package:ably_flutter/ably_flutter.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 
 /// A superset of [PaginatedResult] which represents a page of results plus
 /// metadata indicating the relative queries available to it.
