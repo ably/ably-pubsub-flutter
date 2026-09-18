@@ -1,7 +1,6 @@
 import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 
-/// Passes additional client-specific properties to the Realtime
-/// [Realtime.new]
+/// Passes additional client-specific properties to [PubSubClient.new]
 class ClientOptions extends AuthOptions {
   /// A client ID, used for identifying this client when publishing messages or
   /// for presence purposes.

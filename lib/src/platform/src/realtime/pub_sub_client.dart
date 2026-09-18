@@ -7,10 +7,10 @@ import 'package:ably_pubsub_device_flutter/src/platform/platform_internal.dart';
 import 'package:ably_pubsub_device_flutter/src/realtime/src/realtime_auth.dart';
 
 /// A client that offers a realtime API to interact with Ably.
-class Realtime extends PlatformObject {
-  /// Constructs a `Realtime` object using an Ably [options] object or
+class PubSubClient extends PlatformObject {
+  /// Constructs a `PubSubClient` object using an Ably [options] object or
   /// the Ably API [key] or token string used to validate the client.
-  Realtime({
+  PubSubClient({
     ClientOptions? options,
     final String? key,
   })  : assert(options != null || key != null),
@@ -22,10 +22,10 @@ class Realtime extends PlatformObject {
     auth = RealtimeAuth(this);
   }
 
-  /// Constructs a `Realtime` object using an Ably API [key] or token string
+  /// Constructs a `PubSubClient` object using an Ably API [key] or token string
   /// used to validate the client.
-  factory Realtime.fromKey(String key) =>
-      Realtime(options: ClientOptions(key: key));
+  factory PubSubClient.fromKey(String key) =>
+      PubSubClient(options: ClientOptions(key: key));
 
   ///@nodoc
   @override
@@ -104,9 +104,9 @@ class Realtime extends PlatformObject {
       invokeRequest<LocalDevice>(PlatformMethod.pushDevice);
 }
 
-Map<int?, Realtime> _realtimeInstances = {};
+Map<int?, PubSubClient> _realtimeInstances = {};
 
 /// @nodoc
-/// Returns readonly copy of instances of all [Realtime] clients created.
-Map<int?, Realtime> get realtimeInstances =>
+/// Returns readonly copy of all [PubSubClient] instances created.
+Map<int?, PubSubClient> get realtimeInstances =>
     UnmodifiableMapView(_realtimeInstances);

@@ -11,7 +11,7 @@ void main() {
 
   setUp(() {
     manager = MockMethodCallManager();
-    final realtime = Realtime.fromKey('TEST-KEY');
+    final realtime = PubSubClient.fromKey('TEST-KEY');
     channels = realtime.channels;
   });
 

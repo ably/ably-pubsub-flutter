@@ -21,7 +21,7 @@ Future<Map<String, dynamic>> testCreateRealtimeWithAuthUrl({
     fallbackHosts: <String>['a.ably-realtime.com', 'b.ably-realtime.com'],
   );
 
-  final ablyForToken = Realtime(
+  final ablyForToken = PubSubClient(
     options: clientOptionsForToken,
   );
   final tokenDetails = await ablyForToken.auth.requestToken();
@@ -34,7 +34,7 @@ Future<Map<String, dynamic>> testCreateRealtimeWithAuthUrl({
       useTokenAuth: true,
       autoConnect: false,
       logLevel: LogLevel.error);
-  final realtime = Realtime(options: options);
+  final realtime = PubSubClient(options: options);
   final completer = Completer<void>();
   realtime.connection.on().listen((stateChange) {
     if (stateChange.current == ConnectionState.connected) {

@@ -9,7 +9,7 @@ import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart'
 import 'package:rxdart/rxdart.dart';
 
 class PushNotificationService {
-  final ably.Realtime _realtime;
+  final ably.PubSubClient _realtime;
   late ably.RealtimeChannel? _realtimeChannel;
   late ably.RealtimeChannel? _pushLogMetaChannel;
   late ably.PushChannel? _pushChannel;

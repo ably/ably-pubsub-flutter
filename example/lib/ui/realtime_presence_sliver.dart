@@ -10,7 +10,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
 // ignore: must_be_immutable
 class RealtimePresenceSliver extends HookWidget {
-  final ably.Realtime realtime;
+  final ably.PubSubClient realtime;
   final ably.RealtimeChannel channel;
   final List<StreamSubscription<ably.PresenceMessage?>> _subscriptions = [];
 
