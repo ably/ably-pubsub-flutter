@@ -3,7 +3,8 @@
 
 import 'dart:async';
 
-import 'package:ably_flutter/ably_flutter.dart' as ably;
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart'
+    as ably;
 
 /// This method is a demonstration on how to use multiple listeners
 /// with realtime connection state change listeners as an example

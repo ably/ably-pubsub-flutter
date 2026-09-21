@@ -38,26 +38,6 @@ class TestName {
   static const String realtimeAuthClientId = 'realtimeAuthClientId';
   static const String realtimeWithAuthUrl = 'realtimeWithAuthUrl';
 
-  // rest
-  static const String restCapabilities = 'restCapabilities';
-  static const String restEncryptedPublish = 'restEncryptedPublish';
-  static const String restEncryptedPublishSpec = 'restEncryptedPublishSpec';
-  static const String restHistory = 'restHistory';
-  static const String restHistoryWithAuthCallback =
-      'restHistoryWithAuthCallback';
-  static const String restPresenceGet = 'restPresenceGet';
-  static const String restPresenceHistory = 'restPresenceHistory';
-  static const String restPublish = 'restPublish';
-  static const String restPublishSpec = 'restPublishSpec';
-  static const String restPublishWithAuthCallback =
-      'restPublishWithAuthCallback';
-  static const String restTime = 'restTime';
-
-  static const String restAuthAuthorize = 'restAuthorize';
-  static const String restCreateTokenRequest = 'restCreateTokenRequest';
-  static const String restRequestToken = 'restRequestToken';
-  static const String restAuthClientId = 'restAuthClientId';
-
   // helpers
   static const String testHelperFlutterErrorTest = 'testHelperFlutterErrorTest';
   static const String testHelperUnhandledExceptionTest =

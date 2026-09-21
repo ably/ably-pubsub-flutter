@@ -1,6 +1,6 @@
 @import Ably;
 @import UserNotifications;
-#import <ably_flutter/ably_flutter-Swift.h>
+#import <ably_pubsub_device_flutter/ably_pubsub_device_flutter-Swift.h>
 #import "AblyFlutterWriter.h"
 #import "AblyFlutterMessage.h"
 #import "AblyFlutterReader.h"
@@ -48,10 +48,8 @@ NS_ASSUME_NONNULL_END
         return CodecTypeUnNotificationSettings;
     } else if ([value isKindOfClass:[RemoteMessage class]]) {
         return CodecTypeRemoteMessage;
-    } else if ([value isKindOfClass:[ARTRealtimeChannelOptions class]]) {
-        return CodecTypeRealtimeChannelOptions;
     } else if ([value isKindOfClass:[ARTChannelOptions class]]) {
-        return CodecTypeRestChannelOptions;
+        return CodecTypeRealtimeChannelOptions;
     } else if ([value isKindOfClass:[ARTCipherParams class]]) {
         return CodecTypeCipherParams;
     } else if ([value isKindOfClass:[ARTTokenDetails class]]) {

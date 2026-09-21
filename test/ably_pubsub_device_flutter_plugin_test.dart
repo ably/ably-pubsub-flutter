@@ -1,5 +1,5 @@
-import 'package:ably_flutter/ably_flutter.dart';
-import 'package:ably_flutter/src/platform/platform_internal.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
+import 'package:ably_pubsub_device_flutter/src/platform/platform_internal.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -26,11 +26,10 @@ void main() {
         case PlatformMethod.getVersion:
           return _nativeLibraryVersion;
 
-        case PlatformMethod.createRest:
         case PlatformMethod.createRealtime:
           return ++counter;
 
-        case PlatformMethod.publish:
+        case PlatformMethod.publishRealtimeChannelMessage:
         case PlatformMethod.connectRealtime:
         default:
           return null;
@@ -52,33 +51,33 @@ void main() {
     expect(await version(), _nativeLibraryVersion);
   });
 
-  test(PlatformMethod.createRest, () async {
-    const host = 'http://rest.ably.io/';
+  test(PlatformMethod.createRealtime, () async {
+    const host = 'http://realtime.ably.io/';
     final o = ClientOptions(
-      restHost: host,
+      realtimeHost: host,
     );
-    final rest = Rest(options: o);
-    expect(await rest.handle, counter);
-    expect(rest.options.restHost, host);
+    final realtime = Realtime(options: o);
+    expect(await realtime.handle, counter);
+    expect(realtime.options.realtimeHost, host);
   });
 
-  test('createRestWithToken', () async {
+  test('createRealtimeWithToken', () async {
     const key = 'TEST-KEY';
-    final rest = Rest.fromKey(key);
-    expect(await rest.handle, counter);
-    expect(rest.options.tokenDetails!.token, key);
+    final realtime = Realtime.fromKey(key);
+    expect(await realtime.handle, counter);
+    expect(realtime.options.tokenDetails!.token, key);
   });
 
-  test('createRestWithKey', () async {
+  test('createRealtimeWithKey', () async {
     const key = 'TEST:KEY';
-    final rest = Rest.fromKey(key);
-    expect(await rest.handle, counter);
-    expect(rest.options.key, key);
+    final realtime = Realtime.fromKey(key);
+    expect(await realtime.handle, counter);
+    expect(realtime.options.key, key);
   });
 
   test('publishMessage', () async {
-    final rest = Rest.fromKey('TEST-KEY');
-    await rest.channels.get('test').publish(name: 'name', data: 'data');
+    final realtime = Realtime.fromKey('TEST-KEY');
+    await realtime.channels.get('test').publish(name: 'name', data: 'data');
     expect(1, 1);
   });
 }

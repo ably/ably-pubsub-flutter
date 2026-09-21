@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:ably_flutter/ably_flutter.dart';
-import 'package:ably_flutter/src/platform/platform_internal.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
+import 'package:ably_pubsub_device_flutter/src/platform/platform_internal.dart';
 
 /// Enables messages to be published and subscribed to.
 ///
@@ -24,7 +24,7 @@ class RealtimeChannel extends PlatformObject {
   RealtimePresence get presence => _presence;
 
   /// @nodoc
-  /// instantiates with [Rest], [name] and [RealtimeChannelOptions]
+  /// instantiates with [Realtime], [name] and [RealtimeChannelOptions]
   ///
   /// sets default [state] to [ChannelState.initialized] and start listening
   /// for updates to the channel [state]/

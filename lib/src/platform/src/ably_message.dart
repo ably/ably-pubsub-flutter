@@ -1,4 +1,4 @@
-import 'package:ably_flutter/src/platform/platform_internal.dart';
+import 'package:ably_pubsub_device_flutter/src/platform/platform_internal.dart';
 import 'package:meta/meta.dart';
 
 /// @nodoc
@@ -6,7 +6,7 @@ import 'package:meta/meta.dart';
 @immutable
 class AblyMessage<T> {
   /// @nodoc
-  /// handle of rest/realtime instance
+  /// handle of realtime instance
   final int? handle;
 
   /// @nodoc

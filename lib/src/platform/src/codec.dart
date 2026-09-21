@@ -1,6 +1,6 @@
 import 'dart:io' as io show Platform;
-import 'package:ably_flutter/ably_flutter.dart';
-import 'package:ably_flutter/src/platform/platform_internal.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
+import 'package:ably_pubsub_device_flutter/src/platform/platform_internal.dart';
 import 'package:flutter/services.dart';
 
 /// @nodoc
@@ -79,8 +79,6 @@ class Codec extends StandardMessageCodec {
           _CodecPair<TokenDetails>(_encodeTokenDetails, _decodeTokenDetails),
       CodecTypes.tokenRequest:
           _CodecPair<TokenRequest>(_encodeTokenRequest, _decodeTokenRequest),
-      CodecTypes.restChannelOptions:
-          _CodecPair<RestChannelOptions>(_encodeRestChannelOptions, null),
       CodecTypes.realtimeChannelOptions: _CodecPair<RealtimeChannelOptions>(
         _encodeRealtimeChannelOptions,
         null,
@@ -90,10 +88,6 @@ class Codec extends StandardMessageCodec {
           _CodecPair<PaginatedResult<dynamic>>(null, _decodePaginatedResult),
       CodecTypes.realtimeHistoryParams:
           _CodecPair<RealtimeHistoryParams>(_encodeRealtimeHistoryParams, null),
-      CodecTypes.restHistoryParams:
-          _CodecPair<RestHistoryParams>(_encodeRestHistoryParams, null),
-      CodecTypes.restPresenceParams:
-          _CodecPair<RestPresenceParams>(_encodeRestPresenceParams, null),
       CodecTypes.realtimePresenceParams: _CodecPair<RealtimePresenceParams>(
         _encodeRealtimePresenceParams,
         null,
@@ -173,18 +167,12 @@ class Codec extends StandardMessageCodec {
       return CodecTypes.messageData;
     } else if (value is RealtimeChannelOptions) {
       return CodecTypes.realtimeChannelOptions;
-    } else if (value is RestChannelOptions) {
-      return CodecTypes.restChannelOptions;
     } else if (value is MessageExtras) {
       return CodecTypes.messageExtras;
     } else if (value is Message) {
       return CodecTypes.message;
     } else if (value is RealtimeHistoryParams) {
       return CodecTypes.realtimeHistoryParams;
-    } else if (value is RestHistoryParams) {
-      return CodecTypes.restHistoryParams;
-    } else if (value is RestPresenceParams) {
-      return CodecTypes.restPresenceParams;
     } else if (value is RealtimePresenceParams) {
       return CodecTypes.realtimePresenceParams;
     } else if (value is ErrorInfo) {
@@ -344,16 +332,6 @@ class Codec extends StandardMessageCodec {
   }
 
   /// @nodoc
-  /// Encodes [RestChannelOptions] to a Map
-  /// returns null if [v] is null
-  Map<String, dynamic> _encodeRestChannelOptions(final RestChannelOptions v) {
-    final jsonMap = <String, dynamic>{};
-    jsonMap[TxRestChannelOptions.cipherParams] =
-        _encodeCipherParams(v.cipherParams);
-    return jsonMap;
-  }
-
-  /// @nodoc
   /// Encodes [ChannelMode] to a string constant
   String _encodeChannelMode(ChannelMode mode) {
     switch (mode) {
@@ -433,31 +411,6 @@ class Codec extends StandardMessageCodec {
         message: 'Unsupported platform',
       );
     }
-  }
-
-  /// @nodoc
-  /// Encodes [RestHistoryParams] to a Map
-  /// returns null if [v] is null
-  Map<String, dynamic> _encodeRestHistoryParams(final RestHistoryParams v) {
-    final jsonMap = <String, dynamic>{};
-    _writeToJson(
-        jsonMap, TxRestHistoryParams.start, v.start.millisecondsSinceEpoch);
-    _writeToJson(
-        jsonMap, TxRestHistoryParams.end, v.end.millisecondsSinceEpoch);
-    _writeToJson(jsonMap, TxRestHistoryParams.direction, v.direction);
-    _writeToJson(jsonMap, TxRestHistoryParams.limit, v.limit);
-    return jsonMap;
-  }
-
-  /// @nodoc
-  /// Encodes [RestPresenceParams] to a Map
-  /// returns null if [v] is null
-  Map<String, dynamic> _encodeRestPresenceParams(final RestPresenceParams v) {
-    final jsonMap = <String, dynamic>{};
-    _writeToJson(jsonMap, TxRestPresenceParams.limit, v.limit);
-    _writeToJson(jsonMap, TxRestPresenceParams.clientId, v.clientId);
-    _writeToJson(jsonMap, TxRestPresenceParams.connectionId, v.connectionId);
-    return jsonMap;
   }
 
   Map<String, dynamic> _encodeRealtimePresenceParams(

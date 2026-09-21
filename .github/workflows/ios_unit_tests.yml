@@ -23,10 +23,10 @@ jobs:
 
       - name: Set up iOS test project
         # --skip-tests sets up the CocoaPods workspace (downloads all deps, generates
-        # the ably_flutter-Unit-Tests scheme) without booting a simulator
+        # the ably_pubsub_device_flutter-Unit-Tests scheme) without booting a simulator
         run: |
           cd ios
-          pod lib lint ably_flutter.podspec \
+          pod lib lint ably_pubsub_device_flutter.podspec \
             --allow-warnings \
             --skip-tests \
             --validation-dir=/tmp/ably_test_build \
@@ -45,6 +45,6 @@ jobs:
         run: |
           xcodebuild test \
             -workspace /tmp/ably_test_build/App.xcworkspace \
-            -scheme ably_flutter-Unit-Tests \
+            -scheme ably_pubsub_device_flutter-Unit-Tests \
             -destination "id=$SIMULATOR_ID,arch=arm64" \
             CODE_SIGNING_ALLOWED=NO

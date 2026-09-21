@@ -1,7 +1,7 @@
 @import Ably;
 
 #import "AblyFlutter.h"
-#import <ably_flutter/ably_flutter-Swift.h>
+#import <ably_pubsub_device_flutter/ably_pubsub_device_flutter-Swift.h>
 
 #import "codec/AblyFlutterReaderWriter.h"
 #import "AblyFlutterMessage.h"
@@ -38,192 +38,6 @@ static const FlutterHandler _getVersion = ^void(AblyFlutter *const ably, Flutter
 
 static const FlutterHandler _resetAblyClients = ^void(AblyFlutter *const ably, FlutterMethodCall *const call, const FlutterResult result) {
     [ably reset];
-    result(nil);
-};
-
-static const FlutterHandler _createRest = ^void(AblyFlutter *const ably, FlutterMethodCall *const call, const FlutterResult result) {
-    AblyFlutterMessage *const ablyMessage = call.arguments;
-    NSMutableDictionary<NSString *, NSObject *> *const message = ablyMessage.message;
-    AblyFlutterClientOptions *const options = (AblyFlutterClientOptions*) message[TxTransportKeys_options];
-    
-    options.clientOptions.pushRegistererDelegate = [PushActivationEventHandlers getInstanceWithMethodChannel: ably.channel];
-    ARTLog *const logger = [[ARTLog alloc] init];
-    logger.logLevel = options.clientOptions.logLevel;
-
-    AblyInstanceStore *const instanceStore = [ably instanceStore];
-    NSNumber *const handle = [instanceStore getNextHandle];
-    
-    if(options.hasAuthCallback){
-        options.clientOptions.authCallback =
-        ^(ARTTokenParams *tokenParams, void(^callback)(id<ARTTokenDetailsCompatible>, NSError *)){
-            AblyFlutterMessage *const message = [[AblyFlutterMessage alloc] initWithMessage:tokenParams handle: handle];
-            [ably.channel invokeMethod:AblyPlatformMethod_authCallback
-                             arguments:message
-                                result:^(id tokenData){
-                if (!tokenData) {
-                    [logger log:[NSString stringWithFormat:@"No token data received %@", tokenData] withLevel: ARTLogLevelWarn];
-                    callback(nil, [NSError errorWithDomain:ARTAblyErrorDomain
-                                                      code:ARTErrorAuthConfiguredProviderFailure userInfo:nil]);
-                } if ([tokenData isKindOfClass:[FlutterError class]]) {
-                    [logger log:[NSString stringWithFormat:@"Error getting token data %@", tokenData] withLevel: ARTLogLevelError];
-                    callback(nil, tokenData);
-                } else {
-                    callback(tokenData, nil);
-                }
-            }];
-        };
-    }
-    ARTRest *const rest = [[ARTRest alloc] initWithOptions:options.clientOptions];
-    [instanceStore setRest:rest with: handle];
-
-    NSData *const apnsDeviceToken = ably.instanceStore.didRegisterForRemoteNotificationsWithDeviceToken_deviceToken;
-    NSError *const error = ably.instanceStore.didFailToRegisterForRemoteNotificationsWithError_error;
-    if (apnsDeviceToken != nil) {
-        [ARTPush didRegisterForRemoteNotificationsWithDeviceToken:apnsDeviceToken rest:rest];
-    } else if (error != nil) {
-        [ARTPush didFailToRegisterForRemoteNotificationsWithError:error rest:rest];
-    }
-
-    result(handle);
-};
-
-static const FlutterHandler _setRestChannelOptions = ^void(AblyFlutter *const ably, FlutterMethodCall *const call, const FlutterResult result) {
-    AblyFlutterMessage *const ablyMessage = call.arguments;
-    NSMutableDictionary<NSString *, NSObject *> *const message = ablyMessage.message;
-    NSString *const channelName = (NSString*) message[TxTransportKeys_channelName];
-    ARTChannelOptions *const channelOptions = (ARTChannelOptions*) message[TxTransportKeys_options];
-
-    AblyInstanceStore *const instanceStore = [ably instanceStore];
-    ARTRest *const rest = [instanceStore restFrom:ablyMessage.handle];
-    ARTRestChannel *const channel = [rest.channels get:channelName];
-    
-    [channel setOptions:channelOptions];
-    result(nil);
-};
-
-static const FlutterHandler _publishRestMessage = ^void(AblyFlutter *const ably, FlutterMethodCall *const call, const FlutterResult result) {
-    AblyFlutterMessage *const ablyMessage = call.arguments;
-    NSMutableDictionary<NSString *, NSObject *> *const message = ablyMessage.message;
-    NSString *const channelName = (NSString*) message[TxTransportKeys_channelName];
-    NSArray<ARTMessage *> *const messages = (NSArray<ARTMessage *>*) message[TxTransportKeys_messages];
-
-    AblyInstanceStore *const instanceStore = [ably instanceStore];
-    ARTRest *const rest = [instanceStore restFrom:ablyMessage.handle];
-    ARTRestChannel *const channel = [rest.channels get:channelName];
-
-    [channel publish:messages callback:^(ARTErrorInfo *_Nullable error){
-        if(error){
-            result([
-                    FlutterError
-                    errorWithCode:[NSString stringWithFormat: @"%ld", (long)error.code]
-                    message:[NSString stringWithFormat:@"Error publishing rest message; err = %@", [error message]]
-                    details:error
-                    ]);
-        }else{
-            result(nil);
-        }
-    }];
-};
-
-static const FlutterHandler _getRestHistory = ^void(AblyFlutter *const ably, FlutterMethodCall *const call, const FlutterResult result) {
-    AblyFlutterMessage *const ablyMessage = call.arguments;
-    NSMutableDictionary<NSString *, NSObject *> *const message = ablyMessage.message;
-    NSString *const channelName = (NSString*) message[TxTransportKeys_channelName];
-    ARTDataQuery *const dataQuery = (ARTDataQuery*) message[TxTransportKeys_params];
-    
-    AblyInstanceStore *const instanceStore = [ably instanceStore];
-    ARTRest *const rest = [instanceStore restFrom:ablyMessage.handle];
-    ARTRestChannel *const channel = [rest.channels get:channelName];
-    
-    const id callback = ^(ARTPaginatedResult<ARTMessage *> * _Nullable paginatedResult, ARTErrorInfo * _Nullable error) {
-        if(error){
-            result([
-                    FlutterError
-                    errorWithCode:[NSString stringWithFormat: @"%ld", (long)error.code]
-                    message:[NSString stringWithFormat:@"Error getting rest channel history; err = %@", [error message]]
-                    details:error
-                    ]);
-        }else{
-            NSNumber *const paginatedResultHandle = [instanceStore setPaginatedResult:paginatedResult handle:nil];
-            result([[AblyFlutterMessage alloc] initWithMessage:paginatedResult handle: paginatedResultHandle]);
-        }
-    };
-    if (dataQuery) {
-        [channel history:dataQuery callback:callback error: nil];
-    } else {
-        [channel history:callback];
-    }
-};
-
-static const FlutterHandler _getRestPresence = ^void(AblyFlutter *const ably, FlutterMethodCall *const call, const FlutterResult result) {
-    AblyFlutterMessage *const ablyMessage = call.arguments;
-    NSMutableDictionary<NSString *, NSObject *> *const message = ablyMessage.message;
-    NSString *const channelName = (NSString*) message[TxTransportKeys_channelName];
-    ARTPresenceQuery *const dataQuery = (ARTPresenceQuery*) message[TxTransportKeys_params];
-    
-    AblyInstanceStore *const instanceStore = [ably instanceStore];
-    ARTRest *const rest = [instanceStore restFrom:ablyMessage.handle];
-    ARTRestChannel *const channel = [rest.channels get:channelName];
-    
-    const id callback = ^(ARTPaginatedResult<ARTMessage *> * _Nullable paginatedResult, ARTErrorInfo * _Nullable error) {
-        if(error){
-            result([
-                    FlutterError
-                    errorWithCode:[NSString stringWithFormat: @"%ld", (long)error.code]
-                    message:[NSString stringWithFormat:@"Error getting rest channel presence; err = %@", [error message]]
-                    details:error
-                    ]);
-        }else{
-            NSNumber *const paginatedResultHandle = [instanceStore setPaginatedResult:paginatedResult handle:nil];
-            result([[AblyFlutterMessage alloc] initWithMessage:paginatedResult handle: paginatedResultHandle]);
-        }
-    };
-    if (dataQuery) {
-        [[channel presence] get:dataQuery callback:callback error:nil];
-    } else {
-        [[channel presence] get:callback];
-    }
-};
-
-static const FlutterHandler _getRestPresenceHistory = ^void(AblyFlutter *const ably, FlutterMethodCall *const call, const FlutterResult result) {
-    AblyFlutterMessage *const ablyMessage = call.arguments;
-    NSMutableDictionary<NSString *, NSObject *> *const message = ablyMessage.message;
-    NSString *const channelName = (NSString*) message[TxTransportKeys_channelName];
-    ARTPresenceQuery *const dataQuery = (ARTPresenceQuery*) message[TxTransportKeys_params];
-    
-    AblyInstanceStore *const instanceStore = [ably instanceStore];
-    ARTRest *const rest = [instanceStore restFrom:ablyMessage.handle];
-    ARTRestChannel *const channel = [rest.channels get:channelName];
-    
-    const id callback = ^(ARTPaginatedResult<ARTMessage *> * _Nullable paginatedResult, ARTErrorInfo * _Nullable error) {
-        if(error){
-            result([
-                    FlutterError
-                    errorWithCode:[NSString stringWithFormat: @"%ld", (long)error.code]
-                    message:[NSString stringWithFormat:@"Error getting rest channel presence; err = %@", [error message]]
-                    details:error
-                    ]);
-        }else{
-            NSNumber *const paginatedResultHandle = [instanceStore setPaginatedResult:paginatedResult handle:nil];
-            result([[AblyFlutterMessage alloc] initWithMessage:paginatedResult handle: paginatedResultHandle]);
-        }
-    };
-    if (dataQuery) {
-        [[channel presence] history:dataQuery callback:callback error:nil];
-    } else {
-        [[channel presence] history:callback];
-    }
-};
-
-static const FlutterHandler _releaseRestChannel = ^void(AblyFlutter *const ably, FlutterMethodCall *const call, const FlutterResult result) {
-    AblyFlutterMessage *const ablyMessage = call.arguments;
-    NSDictionary *const message = ablyMessage.message;
-    NSString *const channelName = (NSString*) message[TxTransportKeys_channelName];
-    
-    AblyInstanceStore *const instanceStore = [ably instanceStore];
-    ARTRest *const rest = [instanceStore restFrom:ablyMessage.handle];
-    
-    [rest.channels release:channelName];
     result(nil);
 };
 
@@ -267,7 +81,6 @@ static const FlutterHandler _createRealtime = ^void(AblyFlutter *const ably, Flu
     // This is not an ideal solution. We save the deviceToken given in didRegisterForRemoteNotificationsWithDeviceToken and the
     // error in didFailToRegisterForRemoteNotificationsWithError and pass it to Ably in the first client that is first created.
     // Ideally, the Ably client doesn't need to be created, and we can pass the deviceToken to Ably like in Ably Java.
-    // This is similarly repeated for in _createRest
     NSData *const apnsDeviceToken = ably.instanceStore.didRegisterForRemoteNotificationsWithDeviceToken_deviceToken;
     NSError *const error = ably.instanceStore.didFailToRegisterForRemoteNotificationsWithError_error;
     if (apnsDeviceToken != nil) {
@@ -584,21 +397,6 @@ static const FlutterHandler _realtimeTime = ^void(AblyFlutter *const ably, Flutt
     }];
 };
 
-static const FlutterHandler _restTime = ^void(AblyFlutter *const ably, FlutterMethodCall *const call, const FlutterResult result) {
-    AblyFlutterMessage *const ablyMessage = call.arguments;
-    
-    AblyInstanceStore *const instanceStore = [ably instanceStore];
-    ARTRest *const rest = [instanceStore restFrom:ablyMessage.handle];
-    
-    [rest time:^(NSDate * _Nullable dateTimeResult, NSError * _Nullable error) {
-        if(error){
-            result(error);
-        }else{
-            result(@([@(dateTimeResult.timeIntervalSince1970 *1000) longValue]));
-        }
-    }];
-};
-
 static const FlutterHandler _connectionRecoveryKey = ^void(AblyFlutter *const ably, FlutterMethodCall *const call, const FlutterResult result) {
     AblyFlutterMessage *const ablyMessage = call.arguments;
     AblyInstanceStore *const instanceStore = [ably instanceStore];
@@ -732,13 +530,6 @@ static const FlutterHandler _realtimeAuthCreateTokenRequest = ^void(AblyFlutter 
         AblyPlatformMethod_getPlatformVersion: _getPlatformVersion,
         AblyPlatformMethod_getVersion: _getVersion,
         AblyPlatformMethod_resetAblyClients: _resetAblyClients,
-        AblyPlatformMethod_createRest: _createRest,
-        AblyPlatformMethod_setRestChannelOptions: _setRestChannelOptions,
-        AblyPlatformMethod_publish: _publishRestMessage,
-        AblyPlatformMethod_restHistory: _getRestHistory,
-        AblyPlatformMethod_restPresenceGet: _getRestPresence,
-        AblyPlatformMethod_restPresenceHistory: _getRestPresenceHistory,
-        AblyPlatformMethod_releaseRestChannel: _releaseRestChannel,
         AblyPlatformMethod_createRealtime: _createRealtime,
         AblyPlatformMethod_setRealtimeChannelOptions: _setRealtimeChannelOptions,
         AblyPlatformMethod_connectRealtime: _connectRealtime,
@@ -756,7 +547,6 @@ static const FlutterHandler _realtimeAuthCreateTokenRequest = ^void(AblyFlutter 
         AblyPlatformMethod_realtimePresenceLeave: _leaveRealtimePresence,
         AblyPlatformMethod_releaseRealtimeChannel: _releaseRealtimeChannel,
         AblyPlatformMethod_realtimeTime:_realtimeTime,
-        AblyPlatformMethod_restTime:_restTime,
         // Connection fields
         AblyPlatformMethod_connectionRecoveryKey:_connectionRecoveryKey,
         // Push Notifications
@@ -779,10 +569,6 @@ static const FlutterHandler _realtimeAuthCreateTokenRequest = ^void(AblyFlutter 
         AblyPlatformMethod_realtimeAuthCreateTokenRequest: AuthHandlers.realtimeCreateTokenRequest,
         AblyPlatformMethod_realtimeAuthRequestToken: AuthHandlers.realtimeRequestToken,
         AblyPlatformMethod_realtimeAuthGetClientId: AuthHandlers.realtimeAuthClientId,
-        AblyPlatformMethod_restAuthAuthorize: AuthHandlers.restAuthorize,
-        AblyPlatformMethod_restAuthCreateTokenRequest: AuthHandlers.restCreateTokenRequest,
-        AblyPlatformMethod_restAuthRequestToken: AuthHandlers.restRequestToken,
-        AblyPlatformMethod_restAuthGetClientId: AuthHandlers.restAuthClientId
     };
 
     [registrar addApplicationDelegate:self];
@@ -822,13 +608,13 @@ static const FlutterHandler _realtimeAuthCreateTokenRequest = ^void(AblyFlutter 
 }
 
 #pragma mark - Push Notifications Registration - UIApplicationDelegate
-/// Save the deviceToken provided so we can pass it to the first Ably client which gets created, in createRealtime or createRest.
+/// Save the deviceToken provided so we can pass it to the first Ably client which gets created, in createRealtime.
 -(void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     // Set deviceToken on all existing Ably clients, and a property which used for all future Ably clients.
     [_instanceStore didRegisterForRemoteNotificationsWithDeviceToken: deviceToken];
 }
 
-/// Save the error if it occurred during APNs device registration provided so we can pass it to the first Ably client which gets created, in createRealtime or createRest.
+/// Save the error if it occurred during APNs device registration provided so we can pass it to the first Ably client which gets created, in createRealtime.
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
     // This error will be used when the first Ably client is made.
     _instanceStore.didFailToRegisterForRemoteNotificationsWithError_error = error;

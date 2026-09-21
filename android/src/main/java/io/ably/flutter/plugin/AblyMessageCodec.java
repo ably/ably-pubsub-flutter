@@ -110,18 +110,12 @@ public class AblyMessageCodec extends StandardMessageCodec {
                         new CodecPair<>(self::encodeTokenDetails, self::decodeTokenDetails));
                 put(PlatformConstants.CodecTypes.tokenRequest,
                         new CodecPair<>(self::encodeTokenRequest, self::decodeTokenRequest));
-                put(PlatformConstants.CodecTypes.restChannelOptions,
-                        new CodecPair<>(null, self::decodeRestChannelOptions));
                 put(PlatformConstants.CodecTypes.realtimeChannelOptions,
                         new CodecPair<>(null, self::decodeRealtimeChannelOptions));
                 put(PlatformConstants.CodecTypes.paginatedResult,
                         new CodecPair<>(self::encodePaginatedResult, null));
-                put(PlatformConstants.CodecTypes.restHistoryParams,
-                        new CodecPair<>(null, self::decodeRestHistoryParams));
                 put(PlatformConstants.CodecTypes.realtimeHistoryParams,
                         new CodecPair<>(null, self::decodeRealtimeHistoryParams));
-                put(PlatformConstants.CodecTypes.restPresenceParams,
-                        new CodecPair<>(null, self::decodeRestPresenceParams));
                 put(PlatformConstants.CodecTypes.realtimePresenceParams,
                         new CodecPair<>(null, self::decodeRealtimePresenceParams));
                 put(PlatformConstants.CodecTypes.errorInfo,
@@ -207,7 +201,6 @@ public class AblyMessageCodec extends StandardMessageCodec {
         } else if (value instanceof Crypto.CipherParams) {
             return PlatformConstants.CodecTypes.cipherParams;
         } else if (value instanceof ChannelOptions) {
-            // Encoding it into a RealtimeChannelOptions instance, because it extends RestChannelOptions
             return PlatformConstants.CodecTypes.realtimeChannelOptions;
         } else if (value instanceof TokenDetails) {
             return PlatformConstants.CodecTypes.tokenDetails;
@@ -454,16 +447,6 @@ public class AblyMessageCodec extends StandardMessageCodec {
         return o;
     }
 
-    private ChannelOptions decodeRestChannelOptions(Map<String, Object> jsonMap) {
-        if (jsonMap == null) return null;
-        ChannelOptions options = new ChannelOptions();
-        options.cipherParams = decodeCipherParams((Map<String, Object>) jsonMap.get(PlatformConstants.TxRestChannelOptions.cipherParams));
-        if (options.cipherParams != null) {
-            options.encrypted = true;
-        }
-        return options;
-    }
-
     private ChannelOptions decodeRealtimeChannelOptions(Map<String, Object> jsonMap) {
         if (jsonMap == null) return null;
         ChannelOptions options = new ChannelOptions();
@@ -520,29 +503,6 @@ public class AblyMessageCodec extends StandardMessageCodec {
         }
     }
 
-    private Param[] decodeRestHistoryParams(Map<String, Object> jsonMap) {
-        if (jsonMap == null) return null;
-        Param[] params = new Param[jsonMap.size()];
-        int index = 0;
-        final Object start = jsonMap.get(PlatformConstants.TxRestHistoryParams.start);
-        final Object end = jsonMap.get(PlatformConstants.TxRestHistoryParams.end);
-        final Object limit = jsonMap.get(PlatformConstants.TxRestHistoryParams.limit);
-        final Object direction = jsonMap.get(PlatformConstants.TxRestHistoryParams.direction);
-        if (start != null) {
-            params[index++] = new Param(PlatformConstants.TxRestHistoryParams.start, readValueAsLong(start));
-        }
-        if (end != null) {
-            params[index++] = new Param(PlatformConstants.TxRestHistoryParams.end, readValueAsLong(end));
-        }
-        if (limit != null) {
-            params[index++] = new Param(PlatformConstants.TxRestHistoryParams.limit, (Integer) limit);
-        }
-        if (direction != null) {
-            params[index] = new Param(PlatformConstants.TxRestHistoryParams.direction, (String) direction);
-        }
-        return params;
-    }
-
     private Param[] decodeRealtimeHistoryParams(Map<String, Object> jsonMap) {
         if (jsonMap == null) return null;
         Param[] params = new Param[jsonMap.size()];
@@ -566,25 +526,6 @@ public class AblyMessageCodec extends StandardMessageCodec {
         }
         if (untilAttach != null) {
             params[index] = new Param(PlatformConstants.TxRealtimeHistoryParams.untilAttach, (boolean) untilAttach);
-        }
-        return params;
-    }
-
-    private Param[] decodeRestPresenceParams(Map<String, Object> jsonMap) {
-        if (jsonMap == null) return null;
-        Param[] params = new Param[jsonMap.size()];
-        int index = 0;
-        final Object limit = jsonMap.get(PlatformConstants.TxRestPresenceParams.limit);
-        final Object clientId = jsonMap.get(PlatformConstants.TxRestPresenceParams.clientId);
-        final Object connectionId = jsonMap.get(PlatformConstants.TxRestPresenceParams.connectionId);
-        if (limit != null) {
-            params[index++] = new Param(PlatformConstants.TxRestPresenceParams.limit, (Integer) limit);
-        }
-        if (clientId != null) {
-            params[index++] = new Param(PlatformConstants.TxRestPresenceParams.clientId, (String) clientId);
-        }
-        if (connectionId != null) {
-            params[index] = new Param(PlatformConstants.TxRestPresenceParams.connectionId, (String) connectionId);
         }
         return params;
     }

@@ -1,6 +1,6 @@
 import 'dart:io' as io show Platform;
-import 'package:ably_flutter/ably_flutter.dart';
-import 'package:ably_flutter/src/platform/platform_internal.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
+import 'package:ably_pubsub_device_flutter/src/platform/platform_internal.dart';
 import 'package:meta/meta.dart';
 
 /// Enables a device to be registered and deregistered from receiving push
@@ -16,26 +16,12 @@ class Push extends PlatformObject {
       PushNotificationEventsInternal();
 
   /// @nodoc
-  /// A rest client used platform side to invoke push notification methods
-  final Rest? rest;
-
-  /// @nodoc
   /// A realtime client used platform side to invoke push notification methods
-  final Realtime? realtime;
+  final Realtime realtime;
 
   /// @nodoc
-  /// Pass an Ably realtime or rest client.
-  Push({
-    this.realtime,
-    this.rest,
-  }) : super() {
-    final ablyClientNotPresent = rest == null && realtime == null;
-    final moreThanOneAblyClientPresent = rest != null && realtime != null;
-    if (ablyClientNotPresent || moreThanOneAblyClientPresent) {
-      throw Exception(
-          'Specify one Ably client when creating ${(Push).toString()}.');
-    }
-  }
+  /// Pass an Ably realtime client.
+  Push({required this.realtime}) : super();
 
   /// Activates the device for push notifications with FCM or APNS, obtaining a
   /// unique identifier from them.
@@ -134,7 +120,5 @@ class Push extends PlatformObject {
 
   /// @nodoc
   @override
-  Future<int?> createPlatformInstance() => (realtime != null)
-      ? (realtime as Realtime).handle
-      : (rest as Rest).handle;
+  Future<int?> createPlatformInstance() => realtime.handle;
 }

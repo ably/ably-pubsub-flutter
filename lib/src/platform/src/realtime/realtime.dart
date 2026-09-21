@@ -2,12 +2,11 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:io' as io show Platform;
 
-import 'package:ably_flutter/ably_flutter.dart';
-import 'package:ably_flutter/src/platform/platform_internal.dart';
-import 'package:ably_flutter/src/realtime/src/realtime_auth.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
+import 'package:ably_pubsub_device_flutter/src/platform/platform_internal.dart';
+import 'package:ably_pubsub_device_flutter/src/realtime/src/realtime_auth.dart';
 
-/// A client that extends functionality of the [Rest] and provides
-/// additional realtime-specific features.
+/// A client that offers a realtime API to interact with Ably.
 class Realtime extends PlatformObject {
   /// Constructs a `Realtime` object using an Ably [options] object or
   /// the Ably API [key] or token string used to validate the client.

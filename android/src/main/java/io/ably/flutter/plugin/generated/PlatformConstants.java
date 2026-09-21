@@ -19,43 +19,28 @@ final public class PlatformConstants {
         public static final byte tokenParams = (byte) 135;
         public static final byte tokenDetails = (byte) 136;
         public static final byte tokenRequest = (byte) 137;
-        public static final byte restChannelOptions = (byte) 138;
-        public static final byte realtimeChannelOptions = (byte) 139;
-        public static final byte paginatedResult = (byte) 140;
-        public static final byte restHistoryParams = (byte) 141;
-        public static final byte realtimeHistoryParams = (byte) 142;
-        public static final byte restPresenceParams = (byte) 143;
-        public static final byte presenceMessage = (byte) 144;
-        public static final byte realtimePresenceParams = (byte) 145;
-        public static final byte deviceDetails = (byte) 146;
-        public static final byte localDevice = (byte) 147;
-        public static final byte pushChannelSubscription = (byte) 148;
-        public static final byte unNotificationSettings = (byte) 149;
-        public static final byte remoteMessage = (byte) 150;
-        public static final byte errorInfo = (byte) 151;
-        public static final byte logLevel = (byte) 152;
-        public static final byte connectionStateChange = (byte) 153;
-        public static final byte channelStateChange = (byte) 154;
-        public static final byte cipherParams = (byte) 155;
+        public static final byte realtimeChannelOptions = (byte) 138;
+        public static final byte paginatedResult = (byte) 139;
+        public static final byte realtimeHistoryParams = (byte) 140;
+        public static final byte presenceMessage = (byte) 141;
+        public static final byte realtimePresenceParams = (byte) 142;
+        public static final byte deviceDetails = (byte) 143;
+        public static final byte localDevice = (byte) 144;
+        public static final byte pushChannelSubscription = (byte) 145;
+        public static final byte unNotificationSettings = (byte) 146;
+        public static final byte remoteMessage = (byte) 147;
+        public static final byte errorInfo = (byte) 148;
+        public static final byte logLevel = (byte) 149;
+        public static final byte connectionStateChange = (byte) 150;
+        public static final byte channelStateChange = (byte) 151;
+        public static final byte cipherParams = (byte) 152;
     }
 
     static final public class PlatformMethod {
         public static final String getPlatformVersion = "getPlatformVersion";
         public static final String getVersion = "getVersion";
         public static final String resetAblyClients = "resetAblyClients";
-        public static final String authCallback = "authCallback";
         public static final String realtimeAuthCallback = "realtimeAuthCallback";
-        public static final String createRest = "createRest";
-        public static final String setRestChannelOptions = "setRestChannelOptions";
-        public static final String publish = "publish";
-        public static final String restHistory = "restHistory";
-        public static final String restPresenceGet = "restPresenceGet";
-        public static final String restPresenceHistory = "restPresenceHistory";
-        public static final String releaseRestChannel = "releaseRestChannel";
-        public static final String restAuthAuthorize = "restAuthAuthorize";
-        public static final String restAuthCreateTokenRequest = "restAuthCreateTokenRequest";
-        public static final String restAuthRequestToken = "restAuthRequestToken";
-        public static final String restAuthGetClientId = "restAuthGetClientId";
         public static final String createRealtime = "createRealtime";
         public static final String connectRealtime = "connectRealtime";
         public static final String closeRealtime = "closeRealtime";
@@ -72,14 +57,11 @@ final public class PlatformConstants {
         public static final String releaseRealtimeChannel = "releaseRealtimeChannel";
         public static final String realtimeHistory = "realtimeHistory";
         public static final String realtimeTime = "realtimeTime";
-        public static final String restTime = "restTime";
         public static final String realtimeAuthAuthorize = "realtimeAuthAuthorize";
         public static final String realtimeAuthCreateTokenRequest = "realtimeAuthCreateTokenRequest";
         public static final String realtimeAuthRequestToken = "realtimeAuthRequestToken";
         public static final String realtimeAuthGetClientId = "realtimeAuthGetClientId";
-
         public static final String connectionRecoveryKey = "connectionRecoveryKey";
-
         public static final String pushActivate = "pushActivate";
         public static final String pushDeactivate = "pushDeactivate";
         public static final String pushReset = "pushReset";
@@ -193,10 +175,6 @@ final public class PlatformConstants {
         public static final String channelRetryTimeout = "channelRetryTimeout";
         public static final String transportParams = "transportParams";
         public static final String dartVersion = "dartVersion";
-    }
-
-    static final public class TxRestChannelOptions {
-        public static final String cipherParams = "cipherParams";
     }
 
     static final public class TxRealtimeChannelOptions {
@@ -352,25 +330,12 @@ final public class PlatformConstants {
         public static final String hasNext = "hasNext";
     }
 
-    static final public class TxRestHistoryParams {
-        public static final String start = "start";
-        public static final String end = "end";
-        public static final String direction = "direction";
-        public static final String limit = "limit";
-    }
-
     static final public class TxRealtimeHistoryParams {
         public static final String start = "start";
         public static final String end = "end";
         public static final String direction = "direction";
         public static final String limit = "limit";
         public static final String untilAttach = "untilAttach";
-    }
-
-    static final public class TxRestPresenceParams {
-        public static final String limit = "limit";
-        public static final String clientId = "clientId";
-        public static final String connectionId = "connectionId";
     }
 
     static final public class TxRealtimePresenceParams {

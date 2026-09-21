@@ -3,9 +3,8 @@ import 'test_implementation/basic_platform_tests.dart';
 import 'test_implementation/crypto_tests.dart';
 import 'test_implementation/helper_tests.dart';
 import 'test_implementation/realtime_tests.dart';
-import 'test_implementation/rest_tests.dart';
 
-enum TestModules { basicTests, helperTests, rest, realtime, crypto }
+enum TestModules { basicTests, helperTests, realtime, crypto }
 
 final _tests =
     <TestModules, Map<String, void Function(FlutterDriver Function())>>{
@@ -15,21 +14,6 @@ final _tests =
   },
   TestModules.helperTests: {
     'should report unhandled exception': testShouldReportUnhandledException,
-  },
-  TestModules.rest: {
-    'should publish': testRestPublish,
-    'should publish with tokenRequest': testRestRequestTokenPublish,
-    'should publish encrypted': testRestEncryptedPublish,
-    'should retrieve history': testRestHistory,
-    'should retrieve history with auth callback':
-        testRestHistoryWithAuthCallback,
-    'should retrieve time': testRestTime,
-    'conforms to publish spec': testRestPublishSpec,
-    'conforms to publish spec when encrypted': testRestEncryptedPublishSpec,
-    'should publish with AuthCallback': testRestPublishWithAuthCallback,
-    'should get Presence Members': testRestPresenceGet,
-    'should get Presence History': testRestPresenceHistory,
-    'conforms to capabilitySpec': testCapabilityMatrix,
   },
   TestModules.realtime: {
     'should publish': testRealtimePublish,

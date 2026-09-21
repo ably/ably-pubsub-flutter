@@ -93,11 +93,11 @@ The example app contains an example of how to use the Push Notification function
 
 ### Ensure `WidgetsBinding` is initialized
 
-If you invoke any methods from the `ably_flutter` package before calling `runApp()`, you must call `WidgetsFlutterBinding.ensureInitialized();`. This is done to ensure all platform methods will be successfully received by the native Ably plugin on the host platform.
+If you invoke any methods from the `ably_pubsub_device_flutter` package before calling `runApp()`, you must call `WidgetsFlutterBinding.ensureInitialized();`. This is done to ensure all platform methods will be successfully received by the native Ably plugin on the host platform.
 
 ### Device activation
 
-- Create a rest or realtime client: e.g. `final realtime = ably.Realtime(options: clientOptions);`
+- Create a realtime client: e.g. `final realtime = ably.Realtime(options: clientOptions);`
 - Activate the device for push notifications with Ably: `ablyClient.push.activate();`. This only
   needs to be done once, and will be used across all future app launches, as long as the app is not deactivated. This method will throw an AblyException if it fails.
 - The `Future` returned by `activate` is not guaranteed to complete quickly. For example, if there is no internet connection, `activate` will wait until it is available. Therefore, there is no guarantee any code awaiting the completion of the `Future` will run.
@@ -162,7 +162,7 @@ If you're working in Objective-C then this will look something like this in `App
 If you're working in Swift then this will look something like this in `AppDelegate.swift`:
 
 ```swift
-import ably_flutter
+import ably_pubsub_device_flutter
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
@@ -178,7 +178,7 @@ import ably_flutter
 
 ### Subscribing to channels for push notifications
 
-- Get the Realtime/ Rest channel: `final channel = realtime!.channels.get(Constants.channelNameForPushNotifications)`
+- Get the realtime channel: `final channel = realtime!.channels.get(Constants.channelNameForPushNotifications)`
 - Subscribe the device to the **push channel**, by either using the device ID or client ID:
     - `channel.push.subscribeClient()` or `channel.push.subscribeDevice()`
     - This is different to subscribing to a channel for messages.
@@ -601,6 +601,6 @@ ActivationContext.getActivationContext(this).onNewRegistrationToken(Registration
 
 **iOS:** Ensure you set the `sound` key in the `push.notification` object when sending the Ably message.
 
-### When building my application, I get the following error: `Manifest merger failed : uses-sdk:minSdkVersion 16 cannot be smaller than version 19 declared in library [:ably_flutter]`
+### When building my application, I get the following error: `Manifest merger failed : uses-sdk:minSdkVersion 16 cannot be smaller than version 19 declared in library [:ably_pubsub_device_flutter]`
 
 A fresh Flutter project generates an Android project with a `minSdkVersion` of 16, but Ably-flutter only supports API level 19 (Android Kitkat 4.4, which was released in 2013) and above. In `android/app/build.gradle`, change `minSdkVersion 16` to `minSdkVersion 19`.
