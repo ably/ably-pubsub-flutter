@@ -5,8 +5,8 @@ import 'package:ably_flutter_integration_test/utils/encoders.dart';
 import 'package:ably_flutter_integration_test/utils/realtime.dart';
 import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 
-Future<Realtime> _createRealtime(String apiKey) async {
-  final realtime = Realtime(
+Future<PubSubClient> _createRealtime(String apiKey) async {
+  final realtime = createClient(
     options: ClientOptions(
       key: apiKey,
       environment: 'sandbox',

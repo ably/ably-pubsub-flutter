@@ -25,13 +25,13 @@ Future<Map<String, dynamic>> testRealtimePresenceGet({
   reporter.reportLog('init start');
   final appKey = await AppProvisioning().provisionApp();
 
-  final realtime = Realtime(options: getClientOptions(appKey));
+  final realtime = createClient(options: getClientOptions(appKey));
   final channel = realtime.channels.get('test');
   final membersInitial = await getPresenceMembers(channel);
 
   // enter multiple clients
   for (var i = 0; i < messagesToPublish.length; i++) {
-    await Realtime(
+    await createClient(
       options: getClientOptions(appKey, 'client-$i'),
     ).channels.get('test').presence.enter(messagesToPublish[i][1]);
   }

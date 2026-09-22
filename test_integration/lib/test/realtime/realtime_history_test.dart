@@ -12,7 +12,7 @@ Future<Map<String, dynamic>> testRealtimeHistory({
   reporter.reportLog('init start');
   final appKey = await AppProvisioning().provisionApp();
 
-  final realtime = Realtime(
+  final realtime = createClient(
     options: ClientOptions(
       key: appKey,
       environment: 'sandbox',

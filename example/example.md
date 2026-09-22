@@ -9,7 +9,7 @@
 final clientOptions = ably.ClientOptions(key: '<KEY>');
 
 // Use ClientOptions to create Realtime or REST instance
-ably.Realtime realtime = ably.Realtime(options: clientOptions);
+ably.PubSubClient realtime = ably.createClient(options: clientOptions);
 ably.Rest rest = ably.Rest(options: clientOptions);
 ```
 
@@ -34,7 +34,7 @@ ably.ClientOptions clientOptions = ably.ClientOptions(
 );
 
 // Use ClientOptions to create Realtime or REST instance
-ably.Realtime realtime = ably.Realtime(options: clientOptions);
+ably.PubSubClient realtime = ably.createClient(options: clientOptions);
 ably.Rest rest = ably.Rest(options: clientOptions);
 ```
 
@@ -48,7 +48,7 @@ Also see docs:
 #### Create an instance of the Realtime Client
 
 ```dart
-ably.Realtime realtime = ably.Realtime(options: clientOptions);
+ably.PubSubClient realtime = ably.createClient(options: clientOptions);
 ```
 
 #### Read Realtime time

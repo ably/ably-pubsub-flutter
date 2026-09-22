@@ -7,25 +7,16 @@ import 'package:ably_pubsub_device_flutter/src/platform/platform_internal.dart';
 import 'package:ably_pubsub_device_flutter/src/realtime/src/realtime_auth.dart';
 
 /// A client that offers a realtime API to interact with Ably.
-class Realtime extends PlatformObject {
-  /// Constructs a `Realtime` object using an Ably [options] object or
-  /// the Ably API [key] or token string used to validate the client.
-  Realtime({
-    ClientOptions? options,
-    final String? key,
-  })  : assert(options != null || key != null),
-        options = options ?? ClientOptions(key: key),
-        super() {
+///
+/// Use [createClient] to obtain an instance; this class has no public
+/// constructor.
+class PubSubClient extends PlatformObject {
+  PubSubClient._({required this.options}) : super() {
     _connection = Connection(this);
     _channels = RealtimeChannels(this);
     push = Push(realtime: this);
     auth = RealtimeAuth(this);
   }
-
-  /// Constructs a `Realtime` object using an Ably API [key] or token string
-  /// used to validate the client.
-  factory Realtime.fromKey(String key) =>
-      Realtime(options: ClientOptions(key: key));
 
   ///@nodoc
   @override
@@ -64,7 +55,7 @@ class Realtime extends PlatformObject {
 
   /// @nodoc
   /// A [ClientOptions] object used to configure the client connection to Ably.
-  late ClientOptions options;
+  final ClientOptions options;
 
   /// A [Push] object.
   late Push push;
@@ -104,9 +95,16 @@ class Realtime extends PlatformObject {
       invokeRequest<LocalDevice>(PlatformMethod.pushDevice);
 }
 
-Map<int?, Realtime> _realtimeInstances = {};
+/// Creates a [PubSubClient] configured with the given [options].
+///
+/// The API key or token string used to validate the client is provided
+/// through [options].
+PubSubClient createClient({required ClientOptions options}) =>
+    PubSubClient._(options: options);
+
+Map<int?, PubSubClient> _realtimeInstances = {};
 
 /// @nodoc
-/// Returns readonly copy of instances of all [Realtime] clients created.
-Map<int?, Realtime> get realtimeInstances =>
+/// Returns readonly copy of all [PubSubClient] instances created.
+Map<int?, PubSubClient> get realtimeInstances =>
     UnmodifiableMapView(_realtimeInstances);

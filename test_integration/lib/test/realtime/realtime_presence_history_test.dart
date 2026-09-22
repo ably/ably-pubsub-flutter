@@ -20,7 +20,7 @@ Future<Map<String, dynamic>> testRealtimePresenceHistory({
     logLevel: LogLevel.error,
   );
 
-  final realtime = Realtime(options: options);
+  final realtime = createClient(options: options);
   final channel = realtime.channels.get('test');
 
   final historyInitial = await getPresenceHistory(channel);

@@ -6,10 +6,10 @@ import 'package:meta/meta.dart';
 class RealtimeChannels extends Channels<RealtimeChannel> {
   /// @nodoc
   /// instance of ably realtime client
-  Realtime realtime;
+  PubSubClient realtime;
 
   /// @nodoc
-  /// instantiates with the ably [Realtime] instance
+  /// instantiates with the ably [PubSubClient] instance
   RealtimeChannels(this.realtime);
 
   /// @nodoc
