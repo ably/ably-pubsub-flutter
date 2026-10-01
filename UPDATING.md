@@ -8,6 +8,10 @@ This guide lists the changes needed to upgrade from one version of Ably to a new
   - `ably_flutter: ^1.2.x` becomes `ably_pubsub_device_flutter: ^2.0.0`.
   - `import 'package:ably_flutter/ably_flutter.dart' as ably;` becomes `import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart' as ably;`.
   - On iOS, the pod and Swift module are renamed too, so an AppDelegate that did `import ably_flutter` now needs `import ably_pubsub_device_flutter`.
+- On iOS, the plugin is now distributed as a Swift package rather than a CocoaPod, and requires Flutter 3.44 or later, where Swift Package Manager is enabled by default.
+  - If your app has turned Swift Package Manager off (`enable-swift-package-manager: false` in `pubspec.yaml`, or `flutter config --no-enable-swift-package-manager`), turn it back on: the plugin no longer ships a podspec, so CocoaPods cannot install it. Other plugins that only support CocoaPods keep working alongside it.
+  - The first iOS build after upgrading migrates your Xcode project to Swift Package Manager automatically. Afterwards, `pod install` no longer installs `ably_pubsub_device_flutter` or `Ably`, and if no other plugin needs CocoaPods you can remove your `Podfile`.
+  - If you pinned `Ably` in your `Podfile`, remove that pin: the plugin now resolves `ably-cocoa` through Swift Package Manager, and a second copy from CocoaPods would conflict with it.
 - The `Realtime` client has been renamed to `PubSubClient`, and it is now created with the top-level `ably.createClient()` function rather than a constructor. `PubSubClient` no longer has a public constructor, and `Realtime.fromKey(key)` and the `key` parameter have both been removed; pass the key through `ClientOptions` instead.
   - Replace `ably.Realtime(options: clientOptions)` with `ably.createClient(options: clientOptions)`.
   - Replace `ably.Realtime.fromKey(key)` / `ably.Realtime(key: key)` with `ably.createClient(options: ably.ClientOptions(key: key))`.

@@ -21,30 +21,6 @@ jobs:
           flutter-version: '3.47.3'
           cache: true
 
-      - name: Set up iOS test project
-        # --skip-tests sets up the CocoaPods workspace (downloads all deps, generates
-        # the ably_pubsub_device_flutter-Unit-Tests scheme) without booting a simulator
-        run: |
-          cd ios
-          pod lib lint ably_pubsub_device_flutter.podspec \
-            --allow-warnings \
-            --skip-tests \
-            --validation-dir=/tmp/ably_test_build \
-            --no-clean 
-
-      - name: Pick simulator
-        run: |
-          UDID=$(xcrun simctl list devices available | \
-            grep -E "iPhone" | head -n 1 | \
-            sed -E 's/.*\(([A-F0-9-]+)\).*/\1/')
-          echo "SIMULATOR_ID=$UDID" >> $GITHUB_ENV
-
-
       - name: Run iOS unit tests
         timeout-minutes: 30
-        run: |
-          xcodebuild test \
-            -workspace /tmp/ably_test_build/App.xcworkspace \
-            -scheme ably_pubsub_device_flutter-Unit-Tests \
-            -destination "id=$SIMULATOR_ID,arch=arm64" \
-            CODE_SIGNING_ALLOWED=NO
+        run: ios/run_unit_tests.sh

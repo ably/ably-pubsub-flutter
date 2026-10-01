@@ -16,9 +16,9 @@ Map<Template, String> toGenerate = {
   java_template.$:
       '${projectRoot}android/src/main/java/io/ably/flutter/plugin/generated/PlatformConstants.java',
   objc_header_template.$:
-      '${projectRoot}ios/Classes/codec/AblyPlatformConstants.h',
+      '${projectRoot}ios/ably_pubsub_device_flutter/Sources/AblyFlutterCommon/include/AblyFlutterCommon/AblyPlatformConstants.h',
   objc_impl_template.$:
-      '${projectRoot}ios/Classes/codec/AblyPlatformConstants.m',
+      '${projectRoot}ios/ably_pubsub_device_flutter/Sources/AblyFlutterCommon/AblyPlatformConstants.m',
 };
 
 void main() {

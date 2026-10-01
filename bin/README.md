@@ -29,8 +29,8 @@ These files are generated/modified upon code generation
 
 1. `lib/src/generated/platformconstants.dart` for use in Flutter/Dart
 2. `android/src/main/java/io/ably/flutter/plugin/generated/PlatformConstants.java` for use in Android/Java
-3. `ios/Classes/codec/AblyPlatformConstants.h` for use in iOS/Objective-C
-4. `ios/Classes/codec/AblyPlatformConstants.m` for use in iOS/Objective-C
+3. `ios/ably_pubsub_device_flutter/Sources/AblyFlutterCommon/include/AblyFlutterCommon/AblyPlatformConstants.h` for use in iOS/Objective-C
+4. `ios/ably_pubsub_device_flutter/Sources/AblyFlutterCommon/AblyPlatformConstants.m` for use in iOS/Objective-C
 
 #### When would I need to run code generation?
 

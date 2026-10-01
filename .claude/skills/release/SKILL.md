@@ -19,25 +19,17 @@ Then perform these steps in order:
 2. Update the version in these files:
    - `pubspec.yaml` — the `version` property
    - `README.md` — the `ably_pubsub_device_flutter: ^OLD_VERSION` line in the Installation section (update to `^NEW_VERSION`)
+   - `ios/ably_pubsub_device_flutter/Sources/ably_pubsub_device_flutter/codec/AblyFlutterVersion.h` — the `FLUTTER_PACKAGE_PLUGIN_VERSION` string (the iOS plugin reports it to Ably; `test/ios_plugin_version_test.dart` checks it matches `pubspec.yaml`)
 
-3. Regenerate lock files:
-
-   a. Run `flutter pub get` in `example/` and `test_integration/` to update their `pubspec.lock` files:
+3. Regenerate lock files. Run `flutter pub get` in `example/` and `test_integration/` to update their `pubspec.lock` files:
       ```
       cd example && flutter pub get && cd ..
       cd test_integration && flutter pub get && cd ..
       ```
       If either directory doesn't exist, skip it and note it in the summary.
 
-   b. Regenerate iOS Podfile.lock files by running:
-      ```
-      pod install --project-directory=example/ios
-      pod install --project-directory=test_integration/ios
-      ```
-      If CocoaPods is not installed or either directory doesn't exist, skip that directory and note it in the summary.
-
 4. Commit all changed files together with message: `chore: bump version to NEW_VERSION`
-   Stage: `pubspec.yaml`, `README.md`, `example/pubspec.lock`, `example/ios/Podfile.lock`, `test_integration/pubspec.lock`, `test_integration/ios/Podfile.lock` (only include files that actually changed).
+   Stage: `pubspec.yaml`, `README.md`, `ios/ably_pubsub_device_flutter/Sources/ably_pubsub_device_flutter/codec/AblyFlutterVersion.h`, `example/pubspec.lock`, `test_integration/pubspec.lock` (only include files that actually changed).
 
 5. Fetch merged PRs since the last release tag:
    ```

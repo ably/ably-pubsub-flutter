@@ -49,6 +49,7 @@ The code in this repository has been constructed to be
 [built as a Flutter Plugin](https://flutter.dev/docs/development/packages-and-plugins/developing-packages#plugin). In this repository the main branch contains the latest development version of the Ably SDK. All development (bug fixing, feature implementation, etc.) is done against the main branch, which you should branch from whenever you'd like to make modifications. Here's the steps to follow when contributing to this repository.
 
 - Fork it
+- Clone it into a directory named `ably_pubsub_device_flutter` (see [iOS: clone directory name](#ios-clone-directory-name))
 - Install and update dependencies (`flutter pub get`)
 - Create your feature branch from `main`
 - Run static analysis on your changes and make sure there are no issues (`flutter analyze`)
@@ -56,6 +57,22 @@ The code in this repository has been constructed to be
 - Ensure you have added suitable tests and the test suite is passing
 - Push to the branch
 - Create a new Pull Request
+
+### iOS: clone directory name
+
+The iOS plugin is a Swift package, at [ios/ably_pubsub_device_flutter](ios/ably_pubsub_device_flutter). When Flutter builds the example app, it references that package twice: directly, which gives it the identity `ably_pubsub_device_flutter`, and through a symlink named after the directory the repository is cloned into. Swift Package Manager rejects the build if the two identities differ, with an error like:
+
+```
+unable to override package 'ably_pubsub_device_flutter' because its identity 'ably-pubsub-flutter' doesn't match override's identity (directory name) 'ably_pubsub_device_flutter'
+```
+
+So clone the repository into a directory named `ably_pubsub_device_flutter`:
+
+```bash
+git clone https://github.com/ably/ably-pubsub-flutter.git ably_pubsub_device_flutter
+```
+
+If you've already cloned it under another name, rename the directory, then delete `example/build` and `example/ios/Flutter/ephemeral`, which cache the old name. Apps that depend on this plugin from pub.dev, and the `test_integration` app, are not affected.
 
 ### Hot restart
 
@@ -89,10 +106,10 @@ After the app is launched, it can be re-launched from XCode/Android Studio with 
 
 After making changes to `ably-java` or `ably-cocoa`, you can test changes without releasing those dependencies to users. To do this, you need a local copy of the repo with the changes you want to test.
 
-To test `ably-cocoa` changes, in `Podfile`, below `target 'Runner' do`, add:
+To test `ably-cocoa` changes, in [ios/ably_pubsub_device_flutter/Package.swift](ios/ably_pubsub_device_flutter/Package.swift), temporarily replace the `ably-cocoa` dependency with a local one:
 
-```ruby
-    pod 'Ably', :path => 'local/path/to/ably-cocoa'
+```swift
+.package(name: "ably-cocoa", path: "local/path/to/ably-cocoa"),
 ```
 
 To test `ably-java` changes, see [Using ably-java / ably-android locally in other projects](https://github.com/ably/ably-java/blob/main/CONTRIBUTING.md#using-ably-java--ably-android-locally-in-other-projects).
@@ -120,9 +137,9 @@ dart codegen.dart
  so new codec type is obtained from runtime type
 7. Update `codecMap` in [android.src.main.java.io.ably.flutter.plugin.AblyMessageCodec](android/src/main/java/io/ably/flutter/plugin/AblyMessageCodec.java)
  so new encoder/decoder is assigned for new type
-8. Add new codec encoder method in [ios.Classes.codec.AblyFlutterWriter](ios/Classes/codec/AblyFlutterWriter.m)
+8. Add new codec encoder method in [AblyFlutterWriter](ios/ably_pubsub_device_flutter/Sources/ably_pubsub_device_flutter/codec/AblyFlutterWriter.m)
  and update `getType` and `getEncoder` so that new codec encoder is called
-9. Add new codec encoder method in [ios.classes.codec.AblyFlutterReader](ios/Classes/codec/AblyFlutterReader.m)
+9. Add new codec encoder method in [AblyFlutterReader](ios/ably_pubsub_device_flutter/Sources/ably_pubsub_device_flutter/codec/AblyFlutterReader.m)
  and update `getDecoder` so that new codec decoder is called
 
 ### Implementing new platform methods
@@ -131,7 +148,7 @@ dart codegen.dart
 2. Generate platform constants
 3. Add new method in [android.src.main.java.io.ably.flutter.plugin.AblyMethodCallHandler.java](android/src/main/java/io/ably/flutter/plugin/AblyMethodCallHandler.java)
  and update `_map` so that new method name is assigned to a method call
-4. Add new method in [ios.classes.AblyFlutter](ios/Classes/AblyFlutter.m)
+4. Add new method in [AblyFlutter](ios/ably_pubsub_device_flutter/Sources/ably_pubsub_device_flutter/AblyFlutter.m)
  and update `initWithChannel` so that new method name is assigned to a method call
 
 ## Running Tests
@@ -143,6 +160,16 @@ Unit tests are located in [test](test/) directory and built on top of `flutter_t
 ```bash
 flutter test
 ```
+
+### iOS unit tests
+
+The iOS plugin's XCTest suite lives in [ios/ably_pubsub_device_flutter/Tests](ios/ably_pubsub_device_flutter/Tests). Run it on a simulator with:
+
+```bash
+ios/run_unit_tests.sh
+```
+
+The script generates the `FlutterFramework` package the plugin's `Package.swift` expects alongside it (at `ios/FlutterFramework`, gitignored), wrapping the active Flutter SDK's engine, which a Flutter app build would otherwise provide.
 
 ### Integration tests
 
@@ -196,8 +223,7 @@ The release process must include the following steps:
 3. Add a commit to bump the version number
    - Update the version in `pubspec.yaml`
    - Update the version in the 'Installation' section of `README.md`
-   - Update the version of ably-flutter used in the example app and test integration app `podfile.lock` files:
-   - Run `pod install` in `example/ios` and `test_integration/ios`, or run `pod install --project-directory=example/ios` and `pod install --project-directory=test_integration/ios`
+   - Update `FLUTTER_PACKAGE_PLUGIN_VERSION` in [AblyFlutterVersion.h](ios/ably_pubsub_device_flutter/Sources/ably_pubsub_device_flutter/codec/AblyFlutterVersion.h) to match; `test/ios_plugin_version_test.dart` fails if they differ
    - Commit this
 4. Run [`github_changelog_generator`](https://github.com/github-changelog-generator/github-changelog-generator) to automate the update of the [CHANGELOG](./CHANGELOG.md). This may require some manual intervention, both in terms of how the command is run and how the change log file is modified. Your mileage may vary:
     - The command you will need to run will look something like this: `github_changelog_generator -u ably -p ably-flutter --since-tag v1.2.2 --output delta.md --token $GITHUB_TOKEN_WITH_REPO_ACCESS`. Generate token [here](https://github.com/settings/tokens/new?description=GitHub%20Changelog%20Generator%20token).
