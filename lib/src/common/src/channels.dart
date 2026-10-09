@@ -40,9 +40,9 @@ abstract class Channels<ChannelType> extends Iterable<ChannelType> {
   /// Releases a [RealtimeChannel] object with a specified
   /// [name], deleting it.
   ///
-  /// It also removes any listeners associated with the channel. To release a
-  /// channel, the [ChannelState] must be `INITIALIZED`, `DETACHED`, or
-  /// `FAILED`.
+  /// It also removes any listeners associated with the channel. A realtime
+  /// channel can only be released when it is in the `INITIALIZED`,
+  /// `DETACHED`, or `FAILED` state.
   void release(String name) {
     _channels.remove(name);
   }
