@@ -10,6 +10,7 @@ class MockMethodCallManager {
   bool isAuthenticated = false;
   final channels = <int, ClientOptions?>{};
   final publishedMessages = <AblyMessage<dynamic>>[];
+  PlatformException? releaseRealtimeChannelError;
 
   MockMethodCallManager() {
     final channel =
@@ -22,6 +23,7 @@ class MockMethodCallManager {
   void reset() {
     channels.clear();
     publishedMessages.clear();
+    releaseRealtimeChannelError = null;
     handleCounter = 0;
     final channel =
         MethodChannel('io.ably.flutter.plugin', StandardMethodCodec(Codec()));
@@ -69,6 +71,9 @@ class MockMethodCallManager {
         return null;
 
       case PlatformMethod.releaseRealtimeChannel:
+        if (releaseRealtimeChannelError != null) {
+          throw releaseRealtimeChannelError!;
+        }
         return null;
 
       default:

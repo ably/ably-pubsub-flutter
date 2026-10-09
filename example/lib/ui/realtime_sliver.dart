@@ -142,7 +142,7 @@ class RealtimeSliver extends HookWidget {
       TextButton(
         onPressed: () async {
           await channel.detach();
-          realtime.channels.release(Constants.channelName);
+          await realtime.channels.release(Constants.channelName);
           channel = realtime.channels.get(Constants.channelName);
           setupListeners(
               connectionState, channelState, connectionId, recoveryKey);
