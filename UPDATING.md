@@ -13,6 +13,7 @@ This guide lists the changes needed to upgrade from one version of Ably to a new
   - `RestChannel`, `RestChannels`, `RestPresence`, `RestChannelOptions`, `RestHistoryParams` and `RestPresenceParams` have been removed. Use `RealtimeChannel`, `RealtimeChannels`, `RealtimePresence`, `RealtimeChannelOptions`, `RealtimeHistoryParams` and `RealtimePresenceParams`.
   - `Message.fromEncoded`, `Message.fromEncodedArray`, `PresenceMessage.fromEncoded` and `PresenceMessage.fromEncodedArray` now take a `RealtimeChannelOptions` instead of a `RestChannelOptions`.
   - `Push` and `PushChannel` no longer accept a `rest` client; they now require a `realtime` client.
+- `RealtimeChannels.release()` now returns a `Future<void>`, which completes once the channel has been released. A realtime channel can only be released when it is in the `INITIALIZED`, `DETACHED`, or `FAILED` state. Releasing a channel in any other state no longer detaches it implicitly. Instead, the future completes with an `AblyException` with code 90011 and the channel is not released. To release an attached channel, `await channel.detach()` first and then `await realtime.channels.release(name)`.
 
 ## [Upgrading from v1.2.13]
 
