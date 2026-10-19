@@ -1,4 +1,4 @@
-import 'package:ably_flutter/ably_flutter.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -27,8 +27,6 @@ void main() {
     expect(clientOptions.httpMaxRetryCount, isNull);
     expect(clientOptions.realtimeRequestTimeout, isNull);
     expect(clientOptions.fallbackHosts, isNull);
-    // ignore: deprecated_member_use_from_same_package
-    expect(clientOptions.fallbackHostsUseDefault, isNull);
     expect(clientOptions.fallbackRetryTimeout, isNull);
     expect(clientOptions.defaultTokenParams, isNull);
     expect(clientOptions.channelRetryTimeout, isNull);

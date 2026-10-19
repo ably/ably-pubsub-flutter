@@ -1,15 +1,15 @@
-import 'package:ably_flutter/ably_flutter.dart';
-import 'package:ably_flutter/src/platform/platform_internal.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
+import 'package:ably_pubsub_device_flutter/src/platform/platform_internal.dart';
 import 'package:meta/meta.dart';
 
 /// Creates and destroys [RealtimeChannel] objects.
 class RealtimeChannels extends Channels<RealtimeChannel> {
   /// @nodoc
   /// instance of ably realtime client
-  Realtime realtime;
+  PubSubClient realtime;
 
   /// @nodoc
-  /// instantiates with the ably [Realtime] instance
+  /// instantiates with the ably [PubSubClient] instance
   RealtimeChannels(this.realtime);
 
   /// @nodoc

@@ -1,5 +1,5 @@
-import 'package:ably_flutter/src/common/src/object_hash.dart';
-import 'package:ably_flutter/src/generated/platform_constants.dart';
+import 'package:ably_pubsub_device_flutter/src/common/src/object_hash.dart';
+import 'package:ably_pubsub_device_flutter/src/generated/platform_constants.dart';
 import 'package:meta/meta.dart';
 
 /// Contains any arbitrary key-value pairs, which may also contain other

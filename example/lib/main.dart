@@ -3,7 +3,6 @@ import 'package:ably_flutter_example/ui/ably_service.dart';
 import 'package:ably_flutter_example/ui/api_key_service.dart';
 import 'package:ably_flutter_example/ui/push_notifications/push_notifications_sliver.dart';
 import 'package:ably_flutter_example/ui/realtime_sliver.dart';
-import 'package:ably_flutter_example/ui/rest_sliver.dart';
 import 'package:ably_flutter_example/ui/system_details_sliver.dart';
 import 'package:flutter/material.dart';
 
@@ -43,8 +42,6 @@ class AblyFlutterExampleApp extends StatelessWidget {
                   ),
                   const Divider(),
                   RealtimeSliver(ablyService),
-                  const Divider(),
-                  RestSliver(ablyService.rest),
                   const Divider(),
                   PushNotificationsSliver(ablyService.pushNotificationService)
                 ]),

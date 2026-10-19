@@ -1,6 +1,7 @@
 import 'dart:io' as io show Platform;
 
-import 'package:ably_flutter/ably_flutter.dart' as ably;
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart'
+    as ably;
 import 'package:flutter_test/flutter_test.dart';
 
 import '../test_constants.dart';

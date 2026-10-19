@@ -2,6 +2,26 @@
 
 This guide lists the changes needed to upgrade from one version of Ably to a newer one when there are breaking changes.
 
+## [Upgrading from v1.2.x]
+
+- The package has been renamed from `ably_flutter` to `ably_pubsub_device_flutter`. Update the dependency in your `pubspec.yaml` and every import:
+  - `ably_flutter: ^1.2.x` becomes `ably_pubsub_device_flutter: ^2.0.0`.
+  - `import 'package:ably_flutter/ably_flutter.dart' as ably;` becomes `import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart' as ably;`.
+  - On iOS, the pod and Swift module are renamed too, so an AppDelegate that did `import ably_flutter` now needs `import ably_pubsub_device_flutter`.
+- The `Realtime` client has been renamed to `PubSubClient`, and it is now created with the top-level `ably.createClient()` function rather than a constructor. `PubSubClient` no longer has a public constructor, and `Realtime.fromKey(key)` and the `key` parameter have both been removed; pass the key through `ClientOptions` instead.
+  - Replace `ably.Realtime(options: clientOptions)` with `ably.createClient(options: clientOptions)`.
+  - Replace `ably.Realtime.fromKey(key)` / `ably.Realtime(key: key)` with `ably.createClient(options: ably.ClientOptions(key: key))`.
+- All previously deprecated API has been removed:
+  - `Connection.recoveryKey`. Use `Connection.createRecoveryKey()`.
+  - `ClientOptions.logHandler` and the `LogHandler` typedef. Log output is handled by the underlying native SDK; use `ClientOptions.logLevel` to control verbosity.
+  - `ClientOptions.fallbackHostsUseDefault`. There is no replacement; default fallback hosts are used automatically unless `ClientOptions.fallbackHosts` is set.
+  - `ClientOptions.fromKey(key)` and `AuthOptions.fromKey(key)`. Use the constructors' named `key` parameter instead.
+- The REST client has been removed. Use `PubSubClient` instead:
+  - Replace `ably.Rest(options: clientOptions)` / `ably.Rest.fromKey(key)` with `ably.createClient(options: clientOptions)` / `ably.createClient(options: ably.ClientOptions(key: key))`, and use `channels`, `auth`, `push` and `time()` on the `PubSubClient` in place of their `Rest` equivalents.
+  - `RestChannel`, `RestChannels`, `RestPresence`, `RestChannelOptions`, `RestHistoryParams` and `RestPresenceParams` have been removed. Use `RealtimeChannel`, `RealtimeChannels`, `RealtimePresence`, `RealtimeChannelOptions`, `RealtimeHistoryParams` and `RealtimePresenceParams`.
+  - `Message.fromEncoded`, `Message.fromEncodedArray`, `PresenceMessage.fromEncoded` and `PresenceMessage.fromEncodedArray` now take a `RealtimeChannelOptions` instead of a `RestChannelOptions`.
+  - `Push` and `PushChannel` no longer accept a `rest` client; they now require a `realtime` client.
+
 ## [Upgrading from v1.2.13]
 
 - Updated SDK constraint to `>=2.14.0 <3.0.0`

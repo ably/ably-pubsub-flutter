@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:ably_flutter/ably_flutter.dart' as ably;
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart'
+    as ably;
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';

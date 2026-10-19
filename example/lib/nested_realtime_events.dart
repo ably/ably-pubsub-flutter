@@ -3,14 +3,15 @@
 
 import 'dart:async';
 
-import 'package:ably_flutter/ably_flutter.dart' as ably;
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart'
+    as ably;
 
 /// This method is a demonstration on how to use multiple listeners
 /// with realtime connection state change listeners as an example
 ///
 /// It aims to demonstrate the working of nested listeners
 /// and cancelling listeners on specific events
-void listenRealtimeConnection(ably.Realtime realtime) {
+void listenRealtimeConnection(ably.PubSubClient realtime) {
   //One can listen from multiple listeners on the same event,
   // and must cancel each subscription one by one
   //RETAINING LISTENER - α

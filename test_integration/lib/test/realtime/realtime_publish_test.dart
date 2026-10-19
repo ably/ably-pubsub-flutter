@@ -1,10 +1,10 @@
-import 'package:ably_flutter/ably_flutter.dart';
 import 'package:ably_flutter_integration_test/app_provisioning.dart';
 import 'package:ably_flutter_integration_test/config/test_constants.dart';
 import 'package:ably_flutter_integration_test/factory/reporter.dart';
 import 'package:ably_flutter_integration_test/utils/data.dart';
 import 'package:ably_flutter_integration_test/utils/encoders.dart';
 import 'package:ably_flutter_integration_test/utils/realtime.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 
 Future<Map<String, dynamic>> testRealtimePublish({
   Reporter? reporter,
@@ -13,7 +13,7 @@ Future<Map<String, dynamic>> testRealtimePublish({
   final appKey = await AppProvisioning().provisionApp();
   final logMessages = <List<String?>>[];
 
-  final realtime = Realtime(
+  final realtime = createClient(
     options: ClientOptions(
       key: appKey,
       environment: 'sandbox',
@@ -35,7 +35,7 @@ Future<Map<String, dynamic>> testRealtimePublishSpec({
 }) async {
   final appKey = await AppProvisioning().provisionApp();
 
-  final realtime = Realtime(
+  final realtime = createClient(
     options: ClientOptions(
       key: appKey,
       environment: 'sandbox',
@@ -81,7 +81,7 @@ Future<Map<String, dynamic>> testRealtimePublishSpec({
   );
 
   // client options - no client id, message has client id
-  final realtime2 = Realtime(
+  final realtime2 = createClient(
     options: ClientOptions(
       key: appKey,
       environment: 'sandbox',

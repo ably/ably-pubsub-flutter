@@ -1,4 +1,5 @@
-import 'package:ably_flutter/ably_flutter.dart' as ably;
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart'
+    as ably;
 
 class PushNotificationMessageExamples {
   static final ably.Message pushNotificationMessage = ably.Message(

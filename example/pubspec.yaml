@@ -23,7 +23,7 @@ dependencies:
   flutter_hooks: ^0.18.2
 
 dev_dependencies:
-  ably_flutter:
+  ably_pubsub_device_flutter:
     path: ../
   flutter_lints: ^1.0.4
 

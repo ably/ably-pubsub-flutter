@@ -37,15 +37,6 @@ public class CryptoCodec: NSObject {
         }
         return channelOptions
     }
-    
-    @objc
-    public static let readRestChannelOptions: (Dictionary<String, Any>) -> ARTChannelOptions = { dictionary in
-        if let cipherParamsDictionary = dictionary[TxRestChannelOptions_cipherParams] as? Dictionary<String, Any> {
-            return ARTChannelOptions(cipher: readCipherParams(cipherParamsDictionary))
-        } else {
-            return ARTChannelOptions()
-        }
-    }
 }
 
 extension ARTChannelMode {

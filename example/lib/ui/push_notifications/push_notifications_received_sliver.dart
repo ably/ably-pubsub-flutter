@@ -1,6 +1,7 @@
-import 'package:ably_flutter/ably_flutter.dart' as ably;
 import 'package:ably_flutter_example/push_notifications/push_notification_handlers.dart';
 import 'package:ably_flutter_example/ui/text_row.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart'
+    as ably;
 import 'package:flutter/material.dart';
 
 class PushNotificationsReceivedSliver extends StatelessWidget {

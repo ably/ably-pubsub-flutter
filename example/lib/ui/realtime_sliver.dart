@@ -1,19 +1,20 @@
 import 'dart:async';
 
-import 'package:ably_flutter/ably_flutter.dart' as ably;
 import 'package:ably_flutter_example/constants.dart';
 import 'package:ably_flutter_example/ui/ably_service.dart';
 import 'package:ably_flutter_example/ui/paginated_result_viewer.dart';
 import 'package:ably_flutter_example/ui/realtime_presence_sliver.dart';
 import 'package:ably_flutter_example/ui/text_row.dart';
 import 'package:ably_flutter_example/ui/utilities.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart'
+    as ably;
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 // ignore: must_be_immutable
 class RealtimeSliver extends HookWidget {
   final AblyService ablyService;
-  final ably.Realtime realtime;
+  final ably.PubSubClient realtime;
   late ably.RealtimeChannel channel;
   List<StreamSubscription<dynamic>> _subscriptions = [];
 
@@ -272,9 +273,7 @@ class RealtimeSliver extends HookWidget {
                     'Warning',
                     'If you are already attached to the channel, you must'
                         ' detach and re-attach to get the latest messages '
-                        'published on the channel to get history whilst '
-                        'connected to a realtime channel, use '
-                        'RestChannel.history instead.'),
+                        'published on the channel.'),
               ],
             ),
             query: () => channel.history(

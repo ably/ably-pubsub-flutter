@@ -31,9 +31,9 @@ class _TestDispatcherState extends State<TestDispatcher> {
   late Map<String, String> _testResults;
 
   /// stores whether a test is success/failed/pending
-  /// {'restPublish': true} => basic test passed,
-  /// {'restPublish': false} => failed
-  /// {} i.e., missing 'restPublish' key => test is still pending
+  /// {'realtimePublish': true} => basic test passed,
+  /// {'realtimePublish': false} => failed
+  /// {} i.e., missing 'realtimePublish' key => test is still pending
   final _testStatuses = <String, _TestStatus>{};
 
   @override

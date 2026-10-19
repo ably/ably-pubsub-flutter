@@ -1,4 +1,4 @@
-name: ably_flutter
+name: ably_pubsub_device_flutter
 description: A wrapper around Ably's Cocoa and Java client library SDKs, providing iOS and Android support.
 version: 1.2.44
 repository: https://github.com/ably/ably-pubsub-flutter

@@ -1,9 +1,9 @@
-import 'package:ably_flutter/ably_flutter.dart';
 import 'package:ably_flutter_integration_test/app_provisioning.dart';
 import 'package:ably_flutter_integration_test/config/test_constants.dart';
 import 'package:ably_flutter_integration_test/factory/reporter.dart';
 import 'package:ably_flutter_integration_test/utils/data.dart';
 import 'package:ably_flutter_integration_test/utils/realtime.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 
 Future<Map<String, dynamic>> testRealtimeEncryptedPublish({
   required Reporter reporter,
@@ -17,7 +17,7 @@ Future<Map<String, dynamic>> testRealtimeEncryptedPublish({
 
   final channelOptions = RealtimeChannelOptions(cipherParams: cipherParams);
 
-  final realtime = Realtime(
+  final realtime = createClient(
     options: ClientOptions(
       key: appKey,
       environment: 'sandbox',
@@ -46,8 +46,8 @@ Future<Map<String, dynamic>> testRealtimeEncryptedPublishSpec({
 
   final channelOptions = RealtimeChannelOptions(cipherParams: cipherParams);
 
-  // Realtime instance where client id is specified in the instance itself
-  final realtimeWithClientId = Realtime(
+  // PubSubClient instance where client id is specified in the instance itself
+  final realtimeWithClientId = createClient(
     options: ClientOptions(
       key: appKey,
       environment: 'sandbox',

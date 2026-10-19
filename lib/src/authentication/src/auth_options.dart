@@ -1,4 +1,4 @@
-import 'package:ably_flutter/ably_flutter.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 
 /// Passes authentication-specific properties in authentication requests to
 /// Ably.
@@ -101,19 +101,6 @@ class AuthOptions {
     if (key != null && !key!.contains(':')) {
       tokenDetails = TokenDetails(key);
       key = null;
-    }
-  }
-
-  /// @nodoc
-  /// Convenience constructor used to create an AuthOptions object based
-  /// on the key string obtained from the application dashboard.
-  /// param [key] - the full key string as obtained from the dashboard
-  @Deprecated("Use AuthOptions constructor with named 'key' parameter instead")
-  AuthOptions.fromKey(String key) {
-    if (key.contains(':')) {
-      this.key = key;
-    } else {
-      tokenDetails = TokenDetails(key);
     }
   }
 }

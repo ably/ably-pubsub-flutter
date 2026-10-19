@@ -1,21 +1,21 @@
 import 'dart:async';
 
-import 'package:ably_flutter/ably_flutter.dart';
-import 'package:ably_flutter/src/platform/platform_internal.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
+import 'package:ably_pubsub_device_flutter/src/platform/platform_internal.dart';
 
 /// Enables messages to be published and subscribed to.
 ///
 /// Also enables historic messages to be retrieved and provides access to the
 /// [RealtimePresence] object of a channel.
 class RealtimeChannel extends PlatformObject {
-  final Realtime _realtime;
+  final PubSubClient _realtime;
 
   final String _channelName;
 
   late RealtimePresence _presence;
 
   /// A [RealtimePresence] object.
-  Realtime get realtime => _realtime;
+  PubSubClient get realtime => _realtime;
 
   /// The channel name.
   String get name => _channelName;
@@ -24,11 +24,11 @@ class RealtimeChannel extends PlatformObject {
   RealtimePresence get presence => _presence;
 
   /// @nodoc
-  /// instantiates with [Rest], [name] and [RealtimeChannelOptions]
+  /// instantiates with [PubSubClient], [name] and [RealtimeChannelOptions]
   ///
   /// sets default [state] to [ChannelState.initialized] and start listening
   /// for updates to the channel [state]/
-  RealtimeChannel(Realtime realtime, String channelName)
+  RealtimeChannel(PubSubClient realtime, String channelName)
       : _realtime = realtime,
         _channelName = channelName,
         state = ChannelState.initialized,

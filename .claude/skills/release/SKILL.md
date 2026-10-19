@@ -18,7 +18,7 @@ Then perform these steps in order:
 
 2. Update the version in these files:
    - `pubspec.yaml` — the `version` property
-   - `README.md` — the `ably_flutter: ^OLD_VERSION` line in the Installation section (update to `^NEW_VERSION`)
+   - `README.md` — the `ably_pubsub_device_flutter: ^OLD_VERSION` line in the Installation section (update to `^NEW_VERSION`)
 
 3. Regenerate lock files:
 

@@ -1,7 +1,6 @@
 @import Foundation;
 @import Flutter;
 
-@class ARTRest;
 @class ARTRealtime;
 #import "AblyFlutterClientOptions.h"
 
@@ -12,10 +11,6 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)sharedInstance;
 
 -(NSNumber *) getNextHandle;
-
--(void)setRest:(ARTRest *const)rest with:(NSNumber *const)handle;
-
--(nullable ARTRest *)restFrom:(NSNumber *)handle;
 
 -(void)setRealtime:(ARTRealtime *const)realtime with:(NSNumber *const)handle;
 

@@ -1,16 +1,16 @@
-import 'package:ably_flutter/ably_flutter.dart' as ably;
 import 'package:ably_flutter_example/constants.dart';
 import 'package:ably_flutter_example/push_notifications/push_notification_service.dart';
 import 'package:ably_flutter_example/ui/api_key_service.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart'
+    as ably;
 
 class AblyService {
-  late final ably.Realtime realtime;
-  late final ably.Rest rest;
+  late final ably.PubSubClient realtime;
   late final PushNotificationService pushNotificationService;
   late final ApiKeyProvision apiKeyProvision;
 
   AblyService({required this.apiKeyProvision}) {
-    realtime = ably.Realtime(
+    realtime = ably.createClient(
       options: ably.ClientOptions(
         key: apiKeyProvision.key,
         clientId: Constants.clientId,
@@ -21,17 +21,7 @@ class AblyService {
         autoConnect: false,
       ),
     );
-    rest = ably.Rest(
-      options: ably.ClientOptions(
-        key: apiKeyProvision.key,
-        clientId: Constants.clientId,
-        logLevel: ably.LogLevel.verbose,
-        environment: apiKeyProvision.source == ApiKeySource.env
-            ? null
-            : Constants.sandboxEnvironment,
-      ),
-    );
-    pushNotificationService = PushNotificationService(realtime, rest);
+    pushNotificationService = PushNotificationService(realtime);
   }
 }
 

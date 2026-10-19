@@ -1,5 +1,5 @@
-import 'package:ably_flutter/ably_flutter.dart';
-import 'package:ably_flutter/src/common/src/object_hash.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
+import 'package:ably_pubsub_device_flutter/src/common/src/object_hash.dart';
 import 'package:meta/meta.dart';
 
 /// Contains an individual message that is sent to, or received from, Ably.
@@ -83,7 +83,7 @@ class Message with ObjectHash {
   /// data if you have an encrypted channel.
   Message.fromEncoded(
     Map<String, dynamic> jsonObject, [
-    RestChannelOptions? channelOptions,
+    RealtimeChannelOptions? channelOptions,
   ])  : clientId = jsonObject['clientId'] as String?,
         connectionId = jsonObject['connectionId'] as String?,
         _data = MessageData.fromValue(jsonObject['data']),
@@ -107,7 +107,7 @@ class Message with ObjectHash {
   /// allow the library to decrypt the data if you have an encrypted channel.
   static List<Message> fromEncodedArray(
     List<Map<String, dynamic>> jsonArray, [
-    RestChannelOptions? channelOptions,
+    RealtimeChannelOptions? channelOptions,
   ]) =>
       jsonArray.map((e) => Message.fromEncoded(e, channelOptions)).toList();
 

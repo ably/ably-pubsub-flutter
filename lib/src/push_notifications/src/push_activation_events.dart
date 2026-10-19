@@ -1,4 +1,4 @@
-import 'package:ably_flutter/ably_flutter.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 
 /// Contains streams that will emit a message whenever events related to push
 /// notifications occur, such as device activation, deactivation, or update

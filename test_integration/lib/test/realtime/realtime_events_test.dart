@@ -1,8 +1,8 @@
-import 'package:ably_flutter/ably_flutter.dart';
 import 'package:ably_flutter_integration_test/app_provisioning.dart';
 import 'package:ably_flutter_integration_test/config/test_constants.dart';
 import 'package:ably_flutter_integration_test/factory/reporter.dart';
 import 'package:ably_flutter_integration_test/utils/encoders.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 
 Future<Map<String, dynamic>> testRealtimeEvents({
   required Reporter reporter,
@@ -18,7 +18,7 @@ Future<Map<String, dynamic>> testRealtimeEvents({
   final channelStateChanges = <Map<String, dynamic>>[];
   final filteredChannelStateChanges = <Map<String, dynamic>>[];
 
-  final realtime = Realtime(
+  final realtime = createClient(
     options: ClientOptions(
       key: appKey,
       environment: 'sandbox',
