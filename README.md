@@ -73,16 +73,16 @@ import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart' as a
 The following code connects to Ably's realtime messaging service, subscribes to a channel to receive messages, and publishes a test message to that same channel:
 
 ```dart
-  // Initialize Ably Realtime client
+  // Initialize Ably Pub/Sub client
   final clientOptions = ably.ClientOptions(
     key: 'your-ably-api-key',
     clientId: 'me',
   );
   
-  final realtimeClient = ably.Realtime(options: clientOptions);
+  final pubSubClient = ably.createClient(options: clientOptions);
   
   // Wait for connection to be established
-  await realtimeClient.connection
+  await pubSubClient.connection
       .on(ably.ConnectionEvent.connected)
       .first
       .then((stateChange) {
@@ -90,7 +90,7 @@ The following code connects to Ably's realtime messaging service, subscribes to 
   });
   
   // Get a reference to the 'test-channel' channel
-  final channel = realtimeClient.channels.get('test-channel');
+  final channel = pubSubClient.channels.get('test-channel');
   
   // Subscribe to all messages published to this channel
   channel.subscribe().listen((ably.Message message) {

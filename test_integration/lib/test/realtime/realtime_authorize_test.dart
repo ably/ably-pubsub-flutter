@@ -17,7 +17,7 @@ Future<Map<String, dynamic>> testRealtimeAuthroize({
     autoConnect: false,
   );
 
-  final ablyForToken = Realtime(
+  final ablyForToken = createClient(
     options: clientOptionsForToken,
   );
   /* get first token */
@@ -29,7 +29,7 @@ Future<Map<String, dynamic>> testRealtimeAuthroize({
       useTokenAuth: true,
       autoConnect: false,
       tokenDetails: firstToken);
-  final realtime = Realtime(options: clientOptions);
+  final realtime = createClient(options: clientOptions);
   await realtime.connect();
 
   const tokenParams = TokenParams(ttl: 20000);

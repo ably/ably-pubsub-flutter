@@ -20,7 +20,7 @@ void main() {
   group('realtime#channels#channel', () {
     test('publish realtime message without authCallback', () async {
       // setup
-      final realtime = Realtime(key: 'TEST-KEY');
+      final realtime = createClient(options: ClientOptions(key: 'TEST-KEY'));
       final channel = realtime.channels.get('test');
 
       // exercise
@@ -48,7 +48,7 @@ void main() {
         authCallback: authCallback,
         authUrl: 'hasAuthCallback',
       );
-      final realtime = Realtime(options: options, key: 'TEST-KEY');
+      final realtime = createClient(options: options);
 
       final channel = realtime.channels.get('test');
 
@@ -74,7 +74,7 @@ void main() {
         authCallback: (tokenParams) async => 'token',
         authUrl: 'hasAuthCallback',
       );
-      final realtime = Realtime(options: options, key: 'TEST-KEY');
+      final realtime = createClient(options: options);
       final channel = realtime.channels.get('test');
 
       // exercise
@@ -111,7 +111,7 @@ void main() {
         authCallback: authCallback,
         authUrl: 'hasAuthCallback',
       );
-      final realtime = Realtime(options: options, key: 'TEST-KEY');
+      final realtime = createClient(options: options);
       final channel = realtime.channels.get('test');
 
       // exercise

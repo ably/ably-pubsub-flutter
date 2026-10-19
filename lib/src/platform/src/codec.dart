@@ -248,7 +248,6 @@ class Codec extends StandardMessageCodec {
     _writeToJson(jsonMap, TxClientOptions.clientId, v.clientId);
     _writeToJson(
         jsonMap, TxClientOptions.logLevel, _encodeLogLevel(v.logLevel));
-    //TODO handle logHandler
     _writeToJson(jsonMap, TxClientOptions.tls, v.tls);
     _writeToJson(jsonMap, TxClientOptions.restHost, v.restHost);
     _writeToJson(jsonMap, TxClientOptions.realtimeHost, v.realtimeHost);
@@ -271,11 +270,6 @@ class Codec extends StandardMessageCodec {
     _writeToJson(jsonMap, TxClientOptions.realtimeRequestTimeout,
         v.realtimeRequestTimeout);
     _writeToJson(jsonMap, TxClientOptions.fallbackHosts, v.fallbackHosts);
-    _writeToJson(
-        jsonMap,
-        TxClientOptions.fallbackHostsUseDefault,
-        // ignore: deprecated_member_use_from_same_package
-        v.fallbackHostsUseDefault);
     _writeToJson(
         jsonMap, TxClientOptions.fallbackRetryTimeout, v.fallbackRetryTimeout);
     _writeToJson(jsonMap, TxClientOptions.defaultTokenParams,
@@ -592,7 +586,6 @@ class Codec extends StandardMessageCodec {
         TxClientOptions.clientId,
       ),
       logLevel: _decodeLogLevel(jsonMap[TxClientOptions.logLevel] as String?),
-      //TODO handle logHandler
       tls: jsonMap[TxClientOptions.tls] as bool,
       restHost: _readFromJson<String>(
         jsonMap,
@@ -634,10 +627,6 @@ class Codec extends StandardMessageCodec {
       fallbackHosts: _readFromJson<List<String>>(
         jsonMap,
         TxClientOptions.fallbackHosts,
-      ),
-      fallbackHostsUseDefault: _readFromJson<bool>(
-        jsonMap,
-        TxClientOptions.fallbackHostsUseDefault,
       ),
       fallbackRetryTimeout:
           jsonMap[TxClientOptions.fallbackRetryTimeout] as int,

@@ -235,7 +235,6 @@ const List<Map<String, dynamic>> _objects = [
       'httpMaxRetryCount',
       'realtimeRequestTimeout',
       'fallbackHosts',
-      'fallbackHostsUseDefault',
       'fallbackRetryTimeout',
       'defaultTokenParams',
       'channelRetryTimeout',

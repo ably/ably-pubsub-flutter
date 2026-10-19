@@ -5,12 +5,12 @@ import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart'
     as ably;
 
 class AblyService {
-  late final ably.Realtime realtime;
+  late final ably.PubSubClient realtime;
   late final PushNotificationService pushNotificationService;
   late final ApiKeyProvision apiKeyProvision;
 
   AblyService({required this.apiKeyProvision}) {
-    realtime = ably.Realtime(
+    realtime = ably.createClient(
       options: ably.ClientOptions(
         key: apiKeyProvision.key,
         clientId: Constants.clientId,

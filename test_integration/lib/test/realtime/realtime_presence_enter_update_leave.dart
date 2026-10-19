@@ -27,7 +27,7 @@ Future<Map<String, dynamic>> testRealtimePresenceEnterUpdateLeave({
   final clientIds = [null, 'client-1', 'client-2'];
   final clientIDClashMatrix = <Map<String, dynamic>>[];
   for (final clientId in clientIds) {
-    final presence = Realtime(options: getClientOptions(appKey, clientId))
+    final presence = createClient(options: getClientOptions(appKey, clientId))
         .channels
         .get('test')
         .presence;
@@ -103,7 +103,7 @@ Future<Map<String, dynamic>> testRealtimePresenceEnterUpdateLeave({
   // Interact with different types of data.
   final actionMatrix = <Map<String, dynamic>>[];
   final realtimePresence =
-      Realtime(options: getClientOptions(appKey, 'test-client'))
+      createClient(options: getClientOptions(appKey, 'test-client'))
           .channels
           .get('test')
           .presence;

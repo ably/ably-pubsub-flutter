@@ -18,7 +18,7 @@ Future<Map<String, dynamic>> testRealtimePresenceSubscribe({
 }) async {
   reporter.reportLog('init start');
   final appKey = await AppProvisioning().provisionApp();
-  final presence = Realtime(
+  final presence = createClient(
     options: ClientOptions(
       key: appKey,
       environment: 'sandbox',

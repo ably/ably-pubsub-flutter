@@ -348,7 +348,6 @@ public class AblyMessageCodec extends StandardMessageCodec {
         readValueFromJson(jsonMap, PlatformConstants.TxClientOptions.httpMaxRetryCount, v -> clientOptions.httpMaxRetryCount = (Integer) v);
         readValueFromJson(jsonMap, PlatformConstants.TxClientOptions.realtimeRequestTimeout, v -> clientOptions.realtimeRequestTimeout = readValueAsLong(v));
         readValueFromJson(jsonMap, PlatformConstants.TxClientOptions.fallbackHosts, v -> clientOptions.fallbackHosts = Arrays.copyOf(((ArrayList<?>)v).toArray(), ((ArrayList<?>)v).size(), String[].class));
-        readValueFromJson(jsonMap, PlatformConstants.TxClientOptions.fallbackHostsUseDefault, v -> clientOptions.fallbackHostsUseDefault = (Boolean) v);
         readValueFromJson(jsonMap, PlatformConstants.TxClientOptions.fallbackRetryTimeout, v -> clientOptions.fallbackRetryTimeout = readValueAsLong(v));
         readValueFromJson(jsonMap, PlatformConstants.TxClientOptions.defaultTokenParams, v -> clientOptions.defaultTokenParams = decodeTokenParams((Map<String, Object>) v));
         readValueFromJson(jsonMap, PlatformConstants.TxClientOptions.disconnectedRetryTimeout, v -> clientOptions.disconnectedRetryTimeout = (Integer) v);
