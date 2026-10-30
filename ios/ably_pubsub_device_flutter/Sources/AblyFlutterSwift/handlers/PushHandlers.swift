@@ -153,9 +153,10 @@ public class PushHandlers: NSObject {
 
     @objc
     public static let pushNotificationTapLaunchedAppFromTerminated: FlutterHandler = { ably, call, result in
-        if let data = pushNotificationTapLaunchedAppFromTerminatedData {
-            result(pushNotificationTapLaunchedAppFromTerminatedData)
-        }
+        // Returned once, like on Android, and nil when the app was not
+        // launched by a notification tap.
+        result(pushNotificationTapLaunchedAppFromTerminatedData)
+        pushNotificationTapLaunchedAppFromTerminatedData = nil
     }
 
     /// Gets the client.push property from PubSubClient when the call contains a handle.

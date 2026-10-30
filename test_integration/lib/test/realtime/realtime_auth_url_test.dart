@@ -18,7 +18,6 @@ Future<Map<String, dynamic>> testCreateRealtimeWithAuthUrl({
     endpoint: 'nonprod:sandbox',
     logLevel: LogLevel.error,
     autoConnect: false,
-    fallbackHosts: <String>['a.ably-realtime.com', 'b.ably-realtime.com'],
   );
 
   final ablyForToken = createClient(

@@ -39,24 +39,22 @@ class PushChannel extends PlatformObject {
 
   /// Retrieves all push subscriptions for the channel.
   ///
-  /// Subscriptions can be filtered using a [params] object containing key-value
-  /// pairs to filter subscriptions by. Can contain `clientId`, `deviceId` or a
-  /// combination of both if concatFilters is set to true, and a limit on the
-  /// number of subscriptions returned, up to 1,000.
+  /// [params] must contain exactly one of `deviceId` or `clientId` to filter
+  /// subscriptions by, and can contain a `limit` on the number of
+  /// subscriptions returned, up to 1,000.
+  ///
+  /// Throws an [AblyException] if [params] contains neither or both of
+  /// `deviceId` and `clientId`.
   ///
   /// Returns a [PaginatedResult] object containing a list of
   /// [PushChannelSubscription] objects.
   Future<PaginatedResult<PushChannelSubscription>> listSubscriptions(
       Map<String, String> params) async {
-    if (!params.containsKey('deviceId') &&
-        !params.containsKey('clientId') &&
-        !params.containsKey('deviceClientId') &&
-        !params.containsKey('channel')) {
-      // This error only happen on Androids. They are thrown here
-      // for both platforms (iOS/ Android) to make the API more consistent.
+    // ably-pubsub-cocoa only supports filtering by one of these, so it is
+    // enforced here on both platforms to keep the API consistent.
+    if (params.containsKey('deviceId') == params.containsKey('clientId')) {
       throw AblyException(
-        message: "expected parameter 'deviceId', 'clientId', "
-            "'deviceClientId', and/or 'channel'",
+        message: "expected exactly one of 'deviceId' and 'clientId'",
       );
     }
 

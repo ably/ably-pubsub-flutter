@@ -61,7 +61,7 @@ static const FlutterHandler _createRealtime = ^void(AblyFlutter *const ably, Flu
                     [logger log:[NSString stringWithFormat:@"No token data received %@", tokenData] withLevel: ARTLogLevelWarn];
                     callback(nil, [NSError errorWithDomain:ARTAblyErrorDomain
                                                       code:ARTErrorAuthConfiguredProviderFailure userInfo:nil]);
-                } if ([tokenData isKindOfClass:[FlutterError class]]) {
+                } else if ([tokenData isKindOfClass:[FlutterError class]]) {
                     [logger log:[NSString stringWithFormat:@"Error getting token data %@", tokenData] withLevel: ARTLogLevelError];
                     callback(nil, tokenData);
                 } else {
@@ -373,6 +373,12 @@ static const FlutterHandler _releaseRealtimeChannel = ^void(AblyFlutter *const a
     
     AblyInstanceStore *const instanceStore = [ably instanceStore];
     ARTPubSubClient *const realtime = [instanceStore realtimeFrom:ablyMessage.handle];
+    if (!realtime) {
+        result([FlutterError errorWithCode:@"release_error"
+                                   message:[NSString stringWithFormat:@"No Ably client with handle %@", ablyMessage.handle]
+                                   details:nil]);
+        return;
+    }
     
     NSError *error;
     if ([realtime.channels release:channelName error:&error]) {
@@ -485,6 +491,8 @@ static const FlutterHandler _realtimeAuthCreateTokenRequest = ^void(AblyFlutter 
     PushNotificationEventHandlers* _pushNotificationEventHandlers;
     // Set once the launch-time setup in `-setUpAfterLaunch` has run.
     BOOL _launchSetUpDone;
+    // Set once `scene:willConnectToSession:options:` has been called.
+    BOOL _sceneConnected;
 }
 
 @synthesize instanceStore = _instanceStore;
@@ -616,6 +624,10 @@ static const FlutterHandler _realtimeAuthCreateTokenRequest = ^void(AblyFlutter 
 
 /// Registers for remote notifications. Runs once, from whichever launch
 /// callback reaches the plugin first.
+///
+/// This runs even when the app sets `AblyFlutterHandlePushNotifications` to
+/// `NO`. That flag only stops the plugin from handling received notifications;
+/// Ably still needs the APNs device token to activate push.
 -(void)setUpAfterLaunch {
     if (_launchSetUpDone) {
         return;
@@ -649,8 +661,14 @@ static const FlutterHandler _realtimeAuthCreateTokenRequest = ^void(AblyFlutter 
                  options:(nullable UISceneConnectionOptions *)connectionOptions {
     [self setUpAfterLaunch];
 
+    // Only the first scene connects at launch. A scene that connects later,
+    // such as after iOS discarded a background scene, belongs to an app that
+    // is already running, so a tap that opens it is delivered as an ordinary
+    // tap through `userNotificationCenter:didReceiveNotificationResponse:`.
+    const BOOL isLaunchScene = !_sceneConnected;
+    _sceneConnected = YES;
     UNNotificationResponse *const response = connectionOptions.notificationResponse;
-    if (response) {
+    if (isLaunchScene && response) {
         PushHandlers.pushNotificationTapLaunchedAppFromTerminatedData =
             response.notification.request.content.userInfo;
     }

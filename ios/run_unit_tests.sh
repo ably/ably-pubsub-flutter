@@ -50,7 +50,15 @@ EOF
 
 simulator_id="${1:-}"
 if [[ -z "$simulator_id" ]]; then
-  simulator_id="$(xcrun simctl list devices available | grep -E 'iPhone' | head -n 1 | sed -E 's/.*\(([A-F0-9-]+)\).*/\1/')"
+  # awk reads all of its input rather than exiting early, so simctl cannot be
+  # killed by SIGPIPE and fail the pipeline.
+  simulator_id="$(xcrun simctl list devices available | awk '
+    /iPhone/ && !id && match($0, /[0-9A-F]{8}-([0-9A-F]{4}-){3}[0-9A-F]{12}/) { id = substr($0, RSTART, RLENGTH) }
+    END { print id }')"
+  if [[ -z "$simulator_id" ]]; then
+    echo "error: no available iPhone simulator found; pass a simulator UDID as the first argument" >&2
+    exit 1
+  fi
 fi
 
 cd "$ios_dir/ably_pubsub_device_flutter"

@@ -415,10 +415,15 @@ public class AblyMethodCallHandler implements MethodChannel.MethodCallHandler {
   private void releaseRealtimeChannel(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
     final AblyFlutterMessage<Map<String, Object>> ablyMessage = (AblyFlutterMessage<Map<String, Object>>) call.arguments;
     final String channelName = (String) ablyMessage.message.get(PlatformConstants.TxTransportKeys.channelName);
+    final PubSubRealtimeClient realtime = instanceStore.getRealtime(ablyMessage.handle);
+    if (realtime == null) {
+      result.error("release_error", "No Ably client with handle " + ablyMessage.handle, null);
+      return;
+    }
 
     try {
       // Throws 90011 unless the channel is INITIALIZED, DETACHED or FAILED (RTS4c-e).
-      instanceStore.getRealtime(ablyMessage.handle).channels.release(channelName);
+      realtime.channels.release(channelName);
       result.success(null);
     } catch (AblyException e) {
       handleAblyException(result, e);
