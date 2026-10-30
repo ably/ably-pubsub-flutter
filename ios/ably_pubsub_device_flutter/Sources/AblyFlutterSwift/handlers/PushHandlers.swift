@@ -1,4 +1,4 @@
-import Ably
+import AblyPubSubDevice
 import AblyFlutterCommon
 import Flutter
 import Foundation
@@ -100,19 +100,22 @@ public class PushHandlers: NSObject {
         let dataMap = ablyMessage.message as! Dictionary<String, Any>
         let params = dataMap[TxTransportKeys_params] as! Dictionary<String, String>
 
+        // ably-pubsub-cocoa raises NSInvalidArgumentException, which Swift cannot
+        // catch, unless exactly one of deviceId and clientId is given.
+        guard (params["deviceId"] != nil) != (params["clientId"] != nil) else {
+            result(FlutterError(code: "listSubscriptions_error", message: "Exactly one of deviceId and clientId must be given to list push channel subscriptions", details: nil))
+            return
+        }
+
         if let pushChannel = getPushChannel(ably: ably, call: call, result: result) {
-            do {
-                try pushChannel.listSubscriptions(params, callback: { paginatedSubscription, errorInfo in
-                    if let errorInfo = errorInfo {
-                        result(FlutterError(code: String(errorInfo.code), message: "Error listing subscriptions from push Channel \(pushChannel); err = \(errorInfo.message)", details: nil))
-                        return
-                    }
-                    let handle = ably.instanceStore.setPaginatedResult(paginatedSubscription as! ARTPaginatedResult<AnyObject>, handle: nil)
-                    result(AblyFlutterMessage(message: paginatedSubscription as Any, handle: handle))
-                })
-            } catch {
-                result(FlutterError(code: "listSubscriptions_error", message: "Error listing subscriptions from push Channel \(pushChannel); err = \(error.localizedDescription)", details: nil))
-            }
+            pushChannel.listSubscriptions(params, callback: { paginatedSubscription, errorInfo in
+                if let errorInfo = errorInfo {
+                    result(FlutterError(code: String(errorInfo.code), message: "Error listing subscriptions from push Channel \(pushChannel); err = \(errorInfo.message)", details: nil))
+                    return
+                }
+                let handle = ably.instanceStore.setPaginatedResult(paginatedSubscription as! PaginatedResult<AnyObject>, handle: nil)
+                result(AblyFlutterMessage(message: paginatedSubscription as Any, handle: handle))
+            })
         }
     }
 
@@ -155,8 +158,8 @@ public class PushHandlers: NSObject {
         }
     }
 
-    /// Gets the client.push property from ARTRealtime when the call contains a handle.
-    private static func getPush(instanceStore: AblyInstanceStore, call: FlutterMethodCall, result: @escaping FlutterResult) -> ARTPush? {
+    /// Gets the client.push property from PubSubClient when the call contains a handle.
+    private static func getPush(instanceStore: AblyInstanceStore, call: FlutterMethodCall, result: @escaping FlutterResult) -> Push? {
         let ablyMessage = call.arguments as! AblyFlutterMessage
         let realtime = instanceStore.realtime(from: ablyMessage.handle)
 
@@ -168,12 +171,12 @@ public class PushHandlers: NSObject {
         return nil;
     }
 
-    /// Gets the client.channels.get(channelName).push property from ARTRealtime
+    /// Gets the client.channels.get(channelName).push property from PubSubClient
     /// when the call contains the clients handle and a channelName.
     ///
-    /// The dart side can provide a handle (Int) which gets a ARTRealtime Ably client.
+    /// The dart side can provide a handle (Int) which gets a PubSubClient Ably client.
     /// This function will callback the with the push channel for the channelName and client handle you provide.
-    private static func getPushChannel(ably: AblyFlutterPluginContext, call: FlutterMethodCall, result: @escaping FlutterResult) -> ARTPushChannel? {
+    private static func getPushChannel(ably: AblyFlutterPluginContext, call: FlutterMethodCall, result: @escaping FlutterResult) -> PushChannel? {
         let ablyMessage = call.arguments as! AblyFlutterMessage
 
         /// Using `guard let handle` in that case caused compilation errors for some users

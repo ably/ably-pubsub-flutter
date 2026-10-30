@@ -9,7 +9,7 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodCodec;
 
-import io.ably.lib.util.Log;
+import io.ably.pubsub.util.Log;
 
 /**
  * Receives method calls on the background method channel from the Dart side's

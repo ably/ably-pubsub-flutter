@@ -52,13 +52,13 @@ void main() {
   });
 
   test(PlatformMethod.createRealtime, () async {
-    const host = 'http://realtime.ably.io/';
+    const endpoint = 'nonprod:sandbox';
     final o = ClientOptions(
-      realtimeHost: host,
+      endpoint: endpoint,
     );
     final realtime = createClient(options: o);
     expect(await realtime.handle, counter);
-    expect(realtime.options.realtimeHost, host);
+    expect(realtime.options.endpoint, endpoint);
   });
 
   test('createRealtimeWithToken', () async {

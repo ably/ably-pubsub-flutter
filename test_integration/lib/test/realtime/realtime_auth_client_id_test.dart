@@ -12,7 +12,7 @@ Future<Map<String, dynamic>> testRealtimeAuthClientId({
   //init ably for token
   final clientOptionsForToken = ClientOptions(
     key: appKey,
-    environment: 'sandbox',
+    endpoint: 'nonprod:sandbox',
     logLevel: LogLevel.error,
     autoConnect: false,
   );
@@ -25,7 +25,7 @@ Future<Map<String, dynamic>> testRealtimeAuthClientId({
 
   final clientOptions = ClientOptions(
       key: appKey,
-      environment: 'sandbox',
+      endpoint: 'nonprod:sandbox',
       useTokenAuth: true,
       autoConnect: false,
       clientId: 'testClientId',

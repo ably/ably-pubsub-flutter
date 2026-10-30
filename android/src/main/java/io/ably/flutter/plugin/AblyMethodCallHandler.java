@@ -20,23 +20,24 @@ import io.ably.flutter.plugin.generated.PlatformConstants;
 import io.ably.flutter.plugin.push.PushActivationEventHandlers;
 import io.ably.flutter.plugin.types.PlatformClientOptions;
 import io.ably.flutter.plugin.util.BiConsumer;
-import io.ably.lib.realtime.AblyRealtime;
-import io.ably.lib.realtime.Channel;
-import io.ably.lib.realtime.CompletionListener;
-import io.ably.lib.realtime.Presence;
-import io.ably.lib.rest.AblyBase;
-import io.ably.lib.rest.Auth;
-import io.ably.lib.transport.Defaults;
-import io.ably.lib.types.AblyException;
-import io.ably.lib.types.AsyncPaginatedResult;
-import io.ably.lib.types.Callback;
-import io.ably.lib.types.ChannelOptions;
-import io.ably.lib.types.ErrorInfo;
-import io.ably.lib.types.Message;
-import io.ably.lib.types.Param;
-import io.ably.lib.util.Base64Coder;
-import io.ably.lib.util.Crypto;
-import io.ably.lib.util.Log;
+import io.ably.pubsub.realtime.PubSubRealtimeClient;
+import io.ably.pubsub.realtime.Channel;
+import io.ably.pubsub.realtime.CompletionListener;
+import io.ably.pubsub.realtime.Presence;
+import io.ably.pubsub.http.PubSubBase;
+import io.ably.pubsub.http.Auth;
+import io.ably.pubsub.transport.Defaults;
+import io.ably.pubsub.types.AblyException;
+import io.ably.pubsub.types.AsyncPaginatedResult;
+import io.ably.pubsub.types.Callback;
+import io.ably.pubsub.types.ChannelOptions;
+import io.ably.pubsub.types.ErrorInfo;
+import io.ably.pubsub.types.PublishResult;
+import io.ably.pubsub.types.Message;
+import io.ably.pubsub.types.Param;
+import io.ably.pubsub.util.Base64Coder;
+import io.ably.pubsub.util.Crypto;
+import io.ably.pubsub.util.Log;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 
@@ -137,6 +138,25 @@ public class AblyMethodCallHandler implements MethodChannel.MethodCallHandler {
     return new CompletionListener() {
       @Override
       public void onSuccess() {
+        result.success(null);
+      }
+
+      @Override
+      public void onError(ErrorInfo reason) {
+        handleAblyException(result, AblyException.fromErrorInfo(reason));
+      }
+    };
+  }
+
+  /**
+   * Completes a publish. The Dart API does not expose the published messages' serials, so the
+   * {@link PublishResult} is dropped and the call completes with no value, as it did before
+   * ably-java 2.0 removed the {@link CompletionListener} publish overloads.
+   */
+  private Callback<PublishResult> handlePublishResult(@NonNull MethodChannel.Result result) {
+    return new Callback<PublishResult>() {
+      @Override
+      public void onSuccess(PublishResult publishResult) {
         result.success(null);
       }
 
@@ -386,7 +406,7 @@ public class AblyMethodCallHandler implements MethodChannel.MethodCallHandler {
       }
       Message[] messages = new Message[channelMessages.size()];
       messages = channelMessages.toArray(messages);
-      channel.publish(messages, handleCompletionWithListener(result));
+      channel.publish(messages, handlePublishResult(result));
     } catch (AblyException e) {
       handleAblyException(result, e);
     }
@@ -396,8 +416,13 @@ public class AblyMethodCallHandler implements MethodChannel.MethodCallHandler {
     final AblyFlutterMessage<Map<String, Object>> ablyMessage = (AblyFlutterMessage<Map<String, Object>>) call.arguments;
     final String channelName = (String) ablyMessage.message.get(PlatformConstants.TxTransportKeys.channelName);
 
-    instanceStore.getRealtime(ablyMessage.handle).channels.release(channelName);
-    result.success(null);
+    try {
+      // Throws 90011 unless the channel is INITIALIZED, DETACHED or FAILED (RTS4c-e).
+      instanceStore.getRealtime(ablyMessage.handle).channels.release(channelName);
+      result.success(null);
+    } catch (AblyException e) {
+      handleAblyException(result, e);
+    }
   }
 
     private void realtimeTime(@NonNull MethodCall methodCall, @NonNull MethodChannel.Result result) {
@@ -407,11 +432,11 @@ public class AblyMethodCallHandler implements MethodChannel.MethodCallHandler {
 
     private void connectionRecoveryKey(@NonNull MethodCall methodCall, @NonNull MethodChannel.Result result) {
         final AblyFlutterMessage<?> ablyMessage = (AblyFlutterMessage<?>) methodCall.arguments;
-        AblyRealtime realtime = instanceStore.getRealtime(ablyMessage.handle);
+        PubSubRealtimeClient realtime = instanceStore.getRealtime(ablyMessage.handle);
         result.success(realtime.connection.createRecoveryKey());
     }
 
-    private void time(@NonNull MethodChannel.Result result, AblyBase client) {
+    private void time(@NonNull MethodChannel.Result result, PubSubBase client) {
         Callback<Long> callback = new Callback<Long>() {
             @Override
             public void onSuccess(Long timeResult) {
@@ -533,7 +558,7 @@ public class AblyMethodCallHandler implements MethodChannel.MethodCallHandler {
   private void pushDevice(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
     final AblyFlutterMessage ablyMessage = (AblyFlutterMessage) call.arguments;
     try {
-      AblyRealtime realtime = instanceStore.getRealtime(ablyMessage.handle);
+      PubSubRealtimeClient realtime = instanceStore.getRealtime(ablyMessage.handle);
       if (realtime != null) {
         result.success(realtime.device());
         return;

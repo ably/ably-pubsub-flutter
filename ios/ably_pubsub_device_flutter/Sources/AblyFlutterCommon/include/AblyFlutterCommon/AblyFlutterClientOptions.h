@@ -1,4 +1,4 @@
-@import Ably;
+@import AblyPubSubDevice;
 
 
 NS_ASSUME_NONNULL_BEGIN

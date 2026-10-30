@@ -1,4 +1,4 @@
-@import Ably;
+@import AblyPubSubDevice;
 @import UserNotifications;
 @import AblyFlutterCommon;
 @import AblyFlutterSwift;

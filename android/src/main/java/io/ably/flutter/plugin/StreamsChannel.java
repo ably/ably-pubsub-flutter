@@ -34,7 +34,7 @@ import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodCodec;
 
-import io.ably.lib.util.Log;
+import io.ably.pubsub.util.Log;
 
 final class StreamsChannel {
 

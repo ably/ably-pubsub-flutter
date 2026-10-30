@@ -155,8 +155,7 @@ class TxClientOptions {
   static const String clientId = 'clientId';
   static const String logLevel = 'logLevel';
   static const String tls = 'tls';
-  static const String restHost = 'restHost';
-  static const String realtimeHost = 'realtimeHost';
+  static const String endpoint = 'endpoint';
   static const String port = 'port';
   static const String tlsPort = 'tlsPort';
   static const String autoConnect = 'autoConnect';
@@ -164,7 +163,6 @@ class TxClientOptions {
   static const String queueMessages = 'queueMessages';
   static const String echoMessages = 'echoMessages';
   static const String recover = 'recover';
-  static const String environment = 'environment';
   static const String idempotentRestPublishing = 'idempotentRestPublishing';
   static const String disconnectedRetryTimeout = 'disconnectedRetryTimeout';
   static const String suspendedRetryTimeout = 'suspendedRetryTimeout';

@@ -15,9 +15,9 @@ class AblyService {
         key: apiKeyProvision.key,
         clientId: Constants.clientId,
         logLevel: ably.LogLevel.verbose,
-        environment: apiKeyProvision.source == ApiKeySource.env
+        endpoint: apiKeyProvision.source == ApiKeySource.env
             ? null
-            : Constants.sandboxEnvironment,
+            : Constants.sandboxEndpoint,
         autoConnect: false,
       ),
     );

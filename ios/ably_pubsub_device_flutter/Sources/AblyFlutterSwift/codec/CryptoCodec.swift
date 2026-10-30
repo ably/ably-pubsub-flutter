@@ -1,4 +1,4 @@
-import Ably
+import AblyPubSubDevice
 import AblyFlutterCommon
 import Flutter
 import Foundation
@@ -6,14 +6,14 @@ import Foundation
 public class CryptoCodec: NSObject {
     
     @objc
-    public static let readCipherParams: (Dictionary<String, Any>) -> ARTCipherParams = { dictionary in
+    public static let readCipherParams: (Dictionary<String, Any>) -> CipherParams = { dictionary in
         let algorithm = dictionary[TxCipherParams_iosAlgorithm] as! String
         let key = dictionary[TxCipherParams_iosKey] as! FlutterStandardTypedData
-        return ARTCipherParams(algorithm: algorithm, key: key.data as NSData)
+        return CipherParams(algorithm: algorithm, key: key.data as NSData)
     }
     
     @objc
-    public static let encodeCipherParams: (ARTCipherParams) -> Dictionary<String, Any> = { cipherParams in
+    public static let encodeCipherParams: (CipherParams) -> Dictionary<String, Any> = { cipherParams in
         return [
             TxCipherParams_iosKey: cipherParams.key,
             TxCipherParams_iosAlgorithm: cipherParams.algorithm,
@@ -21,19 +21,19 @@ public class CryptoCodec: NSObject {
     }
     
     @objc
-    public static let readRealtimeChannelOptions: (Dictionary<String, Any>) -> ARTRealtimeChannelOptions = { dictionary in
-        var channelOptions: ARTRealtimeChannelOptions;
+    public static let readRealtimeChannelOptions: (Dictionary<String, Any>) -> RealtimeChannelOptions = { dictionary in
+        var channelOptions: RealtimeChannelOptions;
         if let cipherParamsDictionary = dictionary[TxRealtimeChannelOptions_cipherParams] as? Dictionary<String, Any> {
-            channelOptions = ARTRealtimeChannelOptions(cipher: readCipherParams(cipherParamsDictionary))
+            channelOptions = RealtimeChannelOptions(cipher: readCipherParams(cipherParamsDictionary))
         } else {
-            channelOptions = ARTRealtimeChannelOptions()
+            channelOptions = RealtimeChannelOptions()
         }
         
         channelOptions.params = dictionary[TxRealtimeChannelOptions_params] as? Dictionary<String, String>
         let modesStrings = dictionary[TxRealtimeChannelOptions_modes] as? [String]
         channelOptions.modes = []
         modesStrings?.forEach { mode in
-            if let mode = ARTChannelMode.from(mode: mode) {
+            if let mode = ChannelMode.from(mode: mode) {
                 channelOptions.modes.insert(mode)
             }
         }
@@ -41,33 +41,33 @@ public class CryptoCodec: NSObject {
     }
 }
 
-extension ARTChannelMode {
-    static func from(mode: String) -> ARTChannelMode? {
+extension ChannelMode {
+    static func from(mode: String) -> ChannelMode? {
         switch(mode) {
         case TxEnumConstants_presence:
-            return ARTChannelMode.presence
+            return ChannelMode.presence
         case TxEnumConstants_subscribe:
-            return ARTChannelMode.subscribe
+            return ChannelMode.subscribe
         case TxEnumConstants_publish:
-            return ARTChannelMode.publish
+            return ChannelMode.publish
         case TxEnumConstants_presenceSubscribe:
-            return ARTChannelMode.presenceSubscribe
+            return ChannelMode.presenceSubscribe
         default: return nil
         }
     }
     
     func toString() -> [String] {
         var modes: [String] = [];
-        if self.contains(ARTChannelMode.presence) {
+        if self.contains(ChannelMode.presence) {
             modes.append(TxEnumConstants_presence)
         }
-        if self.contains(ARTChannelMode.subscribe) {
+        if self.contains(ChannelMode.subscribe) {
             modes.append(TxEnumConstants_subscribe)
         }
-        if self.contains(ARTChannelMode.publish) {
+        if self.contains(ChannelMode.publish) {
             modes.append(TxEnumConstants_publish)
         }
-        if self.contains(ARTChannelMode.presenceSubscribe) {
+        if self.contains(ChannelMode.presenceSubscribe) {
             modes.append(TxEnumConstants_presenceSubscribe)
         }
         return modes

@@ -20,7 +20,7 @@ Future<Map<String, dynamic>> testRealtimeEncryptedPublish({
   final realtime = createClient(
     options: ClientOptions(
       key: appKey,
-      environment: 'sandbox',
+      endpoint: 'nonprod:sandbox',
       clientId: 'someClientId',
     ),
   );
@@ -50,7 +50,7 @@ Future<Map<String, dynamic>> testRealtimeEncryptedPublishSpec({
   final realtimeWithClientId = createClient(
     options: ClientOptions(
       key: appKey,
-      environment: 'sandbox',
+      endpoint: 'nonprod:sandbox',
       clientId: clientId,
       logLevel: LogLevel.error,
     ),

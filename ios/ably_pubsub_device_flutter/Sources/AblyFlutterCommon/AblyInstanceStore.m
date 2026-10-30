@@ -1,9 +1,9 @@
-@import Ably;
+@import AblyPubSubDevice;
 
 #import "AblyInstanceStore.h"
 
 @implementation AblyInstanceStore {
-    NSMutableDictionary<NSNumber *, ARTRealtime *>* _realtimeInstances;
+    NSMutableDictionary<NSNumber *, ARTPubSubClient *>* _realtimeInstances;
     NSMutableDictionary<NSNumber *, ARTPaginatedResult *>* _paginatedResults;
     long long _nextHandle;
 }
@@ -34,11 +34,11 @@
     return self;
 }
 
--(void)setRealtime:(ARTRealtime *const)realtime with:(NSNumber *const)handle {
+-(void)setRealtime:(ARTPubSubClient *const)realtime with:(NSNumber *const)handle {
     _realtimeInstances[handle] = realtime;
 }
 
--(ARTRealtime *)realtimeFrom:(NSNumber *)handle {
+-(ARTPubSubClient *)realtimeFrom:(NSNumber *)handle {
     return _realtimeInstances[handle];
 }
 
@@ -59,13 +59,13 @@
     _didRegisterForRemoteNotificationsWithDeviceToken_deviceToken = deviceToken;
     
     for (id realtimeHandle in _realtimeInstances) {
-        ARTRealtime *const realtime = _realtimeInstances[realtimeHandle];
-        [ARTPush didRegisterForRemoteNotificationsWithDeviceToken:deviceToken realtime:realtime];
+        ARTPubSubClient *const realtime = _realtimeInstances[realtimeHandle];
+        [ARTPush didRegisterForRemoteNotificationsWithDeviceToken:deviceToken pubsub:realtime];
     }
 }
 
 -(void)reset {
-    for (ARTRealtime *const r in _realtimeInstances.allValues) {
+    for (ARTPubSubClient *const r in _realtimeInstances.allValues) {
         [r close];
     }
     [_realtimeInstances removeAllObjects];

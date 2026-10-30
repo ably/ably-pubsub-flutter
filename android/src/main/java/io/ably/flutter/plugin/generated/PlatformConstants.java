@@ -150,8 +150,7 @@ final public class PlatformConstants {
         public static final String clientId = "clientId";
         public static final String logLevel = "logLevel";
         public static final String tls = "tls";
-        public static final String restHost = "restHost";
-        public static final String realtimeHost = "realtimeHost";
+        public static final String endpoint = "endpoint";
         public static final String port = "port";
         public static final String tlsPort = "tlsPort";
         public static final String autoConnect = "autoConnect";
@@ -159,7 +158,6 @@ final public class PlatformConstants {
         public static final String queueMessages = "queueMessages";
         public static final String echoMessages = "echoMessages";
         public static final String recover = "recover";
-        public static final String environment = "environment";
         public static final String idempotentRestPublishing = "idempotentRestPublishing";
         public static final String disconnectedRetryTimeout = "disconnectedRetryTimeout";
         public static final String suspendedRetryTimeout = "suspendedRetryTimeout";

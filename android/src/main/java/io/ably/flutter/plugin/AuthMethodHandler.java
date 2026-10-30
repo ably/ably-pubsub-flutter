@@ -10,8 +10,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import io.ably.flutter.plugin.generated.PlatformConstants;
-import io.ably.lib.rest.Auth;
-import io.ably.lib.types.AblyException;
+import io.ably.pubsub.http.Auth;
+import io.ably.pubsub.types.AblyException;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 

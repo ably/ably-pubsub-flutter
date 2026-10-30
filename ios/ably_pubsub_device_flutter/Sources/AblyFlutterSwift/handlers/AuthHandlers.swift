@@ -5,7 +5,7 @@
 //  Created by Ikbal Kaya on 17/03/2023.
 //
 
-import Ably
+import AblyPubSubDevice
 import AblyFlutterCommon
 import Flutter
 import Foundation
@@ -18,14 +18,14 @@ public class AuthHandlers: NSObject {
         let ablyMessage = call.arguments as! AblyFlutterMessage
         let realtime = ably.instanceStore.realtime(from: ablyMessage.handle)
         let dataMap = ablyMessage.message as! Dictionary<String, Any>
-        var authOptions: ARTAuthOptions?
-        var tokenParams: ARTTokenParams?
+        var authOptions: AuthOptions?
+        var tokenParams: TokenParams?
         
         if let dataMap = ablyMessage.message as? Dictionary<String, Any> {
-            authOptions = dataMap[TxTransportKeys_options] as? ARTAuthOptions
-            tokenParams = dataMap[TxTransportKeys_params] as? ARTTokenParams
+            authOptions = dataMap[TxTransportKeys_options] as? AuthOptions
+            tokenParams = dataMap[TxTransportKeys_params] as? TokenParams
         }
-        realtime?.auth.createTokenRequest(tokenParams, options: authOptions, callback: { (tokenRequest: ARTTokenRequest?, error: Error?) in
+        realtime?.auth.createTokenRequest(tokenParams, options: authOptions, callback: { (tokenRequest: TokenRequest?, error: Error?) in
             if let error = error {
                 result(error)
                 return
@@ -47,15 +47,15 @@ public class AuthHandlers: NSObject {
         let ablyMessage = call.arguments as! AblyFlutterMessage
         let realtime = ably.instanceStore.realtime(from: ablyMessage.handle)
         let dataMap = ablyMessage.message as! Dictionary<String, Any>
-        var authOptions: ARTAuthOptions?
-        var tokenParams: ARTTokenParams?
+        var authOptions: AuthOptions?
+        var tokenParams: TokenParams?
         
         if let dataMap = ablyMessage.message as? Dictionary<String, Any> {
-            authOptions = dataMap[TxTransportKeys_options] as? ARTAuthOptions
-            tokenParams = dataMap[TxTransportKeys_params] as? ARTTokenParams
+            authOptions = dataMap[TxTransportKeys_options] as? AuthOptions
+            tokenParams = dataMap[TxTransportKeys_params] as? TokenParams
         }
         
-        realtime?.auth.authorize(tokenParams, options: authOptions, callback: { (details:ARTTokenDetails?, error: Error?) in
+        realtime?.auth.authorize(tokenParams, options: authOptions, callback: { (details:TokenDetails?, error: Error?) in
             if let error = error {
                 result(error)
                 return
@@ -70,14 +70,14 @@ public class AuthHandlers: NSObject {
         let ablyMessage = call.arguments as! AblyFlutterMessage
         let realtime = ably.instanceStore.realtime(from: ablyMessage.handle)
         let dataMap = ablyMessage.message as! Dictionary<String, Any>
-        var authOptions: ARTAuthOptions?
-        var tokenParams: ARTTokenParams?
+        var authOptions: AuthOptions?
+        var tokenParams: TokenParams?
         
         if let dataMap = ablyMessage.message as? Dictionary<String, Any> {
-            authOptions = dataMap[TxTransportKeys_options] as? ARTAuthOptions
-            tokenParams = dataMap[TxTransportKeys_params] as? ARTTokenParams
+            authOptions = dataMap[TxTransportKeys_options] as? AuthOptions
+            tokenParams = dataMap[TxTransportKeys_params] as? TokenParams
         }
-        realtime?.auth.requestToken(tokenParams, with: authOptions, callback: { (details: ARTTokenDetails?, error: Error?) in
+        realtime?.auth.requestToken(tokenParams, with: authOptions, callback: { (details: TokenDetails?, error: Error?) in
             if let error = error {
                            result(error)
                            return

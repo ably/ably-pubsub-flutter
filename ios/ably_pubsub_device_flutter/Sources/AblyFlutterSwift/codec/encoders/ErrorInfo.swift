@@ -1,10 +1,10 @@
-import Ably
+import AblyPubSubDevice
 import AblyFlutterCommon
 import Foundation
 
 public class Encoders: NSObject {
     @objc
-    public static let encodeErrorInfo: (ARTErrorInfo) -> Dictionary<String, Any> = { errorInfo in
+    public static let encodeErrorInfo: (ErrorInfo) -> Dictionary<String, Any> = { errorInfo in
         return [
             TxErrorInfo_message: errorInfo.message,
             TxErrorInfo_statusCode: errorInfo.statusCode as Any

@@ -1,6 +1,6 @@
 @import Foundation;
 @import Flutter;
-@import Ably;
+@import AblyPubSubDevice;
 
 NS_ASSUME_NONNULL_BEGIN
 

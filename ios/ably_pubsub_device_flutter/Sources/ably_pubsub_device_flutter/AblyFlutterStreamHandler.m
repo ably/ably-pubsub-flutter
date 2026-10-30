@@ -1,4 +1,4 @@
-@import Ably;
+@import AblyPubSubDevice;
 @import AblyFlutterCommon;
 
 #import "AblyFlutterStreamHandler.h"
@@ -47,7 +47,7 @@
     NSString *const eventName = eventMessage.eventName;
     @try {
         if ([AblyPlatformMethod_onRealtimeConnectionStateChanged isEqual: eventName]) {
-            ARTRealtime *const realtime = [_instanceStore realtimeFrom:handle];
+            ARTPubSubClient *const realtime = [_instanceStore realtimeFrom:handle];
             listener = [realtime.connection  on: ^(ARTConnectionStateChange * const stateChange) {
                 if(![stateChange isKindOfClass:[ARTConnectionStateChange class]]) {
                     emitter([FlutterError errorWithCode:@"AblyFlutterStreamHandler.startListening"
@@ -62,7 +62,7 @@
         } else if ([AblyPlatformMethod_onRealtimeChannelStateChanged isEqual: eventName]) {
             NSAssert(eventMessage.message, @"event message is missing");
             NSMutableDictionary<NSString *, NSObject *>* eventPayload = eventMessage.message;
-            ARTRealtime *const realtime = [_instanceStore realtimeFrom:handle];
+            ARTPubSubClient *const realtime = [_instanceStore realtimeFrom:handle];
             
             NSString *const channelName = (NSString*) eventPayload[TxTransportKeys_channelName];
             ARTRealtimeChannel *const channel  = [realtime.channels get:channelName];
@@ -80,7 +80,7 @@
         } else if ([AblyPlatformMethod_onRealtimeChannelMessage isEqual: eventName]) {
             NSAssert(eventMessage.message, @"event message is missing");
             NSMutableDictionary<NSString *, NSObject *>* eventPayload = eventMessage.message;
-            ARTRealtime *const realtime = [_instanceStore realtimeFrom:handle];
+            ARTPubSubClient *const realtime = [_instanceStore realtimeFrom:handle];
             
             NSString *const channelName = (NSString*) eventPayload[TxTransportKeys_channelName];
             ARTRealtimeChannel *const channel  = [realtime.channels get:channelName];
@@ -98,7 +98,7 @@
         } else if ([AblyPlatformMethod_onRealtimePresenceMessage isEqual: eventName]) {
             NSAssert(eventMessage.message, @"event message is missing");
             NSMutableDictionary<NSString *, NSObject *>* eventPayload = eventMessage.message;
-            ARTRealtime *const realtime = [_instanceStore realtimeFrom:handle];
+            ARTPubSubClient *const realtime = [_instanceStore realtimeFrom:handle];
             
             NSString *const channelName = (NSString*) eventPayload[TxTransportKeys_channelName];
             ARTRealtimeChannel *const channel  = [realtime.channels get:channelName];
@@ -138,7 +138,7 @@
         // left as is as there is no way of propagating this error to flutter side
         NSAssert(eventMessage.message, @"event message is missing");
         NSMutableDictionary<NSString *, NSObject *>* eventPayload = eventMessage.message;
-        ARTRealtime *const realtime = [_instanceStore realtimeFrom:handle];
+        ARTPubSubClient *const realtime = [_instanceStore realtimeFrom:handle];
         
         NSString *const channelName = (NSString*) eventPayload[TxTransportKeys_channelName];
         ARTRealtimeChannel *const channel  = [realtime.channels get:channelName];
@@ -146,7 +146,7 @@
     } else if([AblyPlatformMethod_onRealtimeConnectionStateChanged isEqual: eventName]) {
         NSAssert(eventMessage.message, @"event message is missing");
         NSMutableDictionary<NSString *, NSObject *>* eventPayload = eventMessage.message;
-        ARTRealtime *const realtime = [_instanceStore realtimeFrom:handle];
+        ARTPubSubClient *const realtime = [_instanceStore realtimeFrom:handle];
         
         NSString *const channelName = (NSString*) eventPayload[TxTransportKeys_channelName];
         ARTRealtimeChannel *const channel  = [realtime.channels get:channelName];
@@ -154,7 +154,7 @@
     } else if ([AblyPlatformMethod_onRealtimePresenceMessage isEqual: eventName]) {
         NSAssert(eventMessage.message, @"event message is missing");
         NSMutableDictionary<NSString *, NSObject *>* eventPayload = eventMessage.message;
-        ARTRealtime *const realtime = [_instanceStore realtimeFrom:handle];
+        ARTPubSubClient *const realtime = [_instanceStore realtimeFrom:handle];
         
         NSString *const channelName = (NSString*) eventPayload[TxTransportKeys_channelName];
         ARTRealtimeChannel *const channel  = [realtime.channels get:channelName];

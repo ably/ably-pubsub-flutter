@@ -12,7 +12,7 @@ ClientOptions getClientOptions(
 ]) =>
     ClientOptions(
       key: appKey,
-      environment: 'sandbox',
+      endpoint: 'nonprod:sandbox',
       clientId: clientId,
       logLevel: LogLevel.error,
     );

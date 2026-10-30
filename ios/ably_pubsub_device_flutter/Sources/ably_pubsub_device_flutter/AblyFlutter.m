@@ -1,4 +1,4 @@
-@import Ably;
+@import AblyPubSubDevice;
 @import AblyFlutterCommon;
 @import AblyFlutterSwift;
 
@@ -29,7 +29,7 @@ static const FlutterHandler _getPlatformVersion = ^void(AblyFlutter *const ably,
 };
 
 static const FlutterHandler _getVersion = ^void(AblyFlutter *const ably, FlutterMethodCall *const call, const FlutterResult result) {
-    result([@"ably-cocoa " stringByAppendingString:[ARTDefault libraryVersion]]);
+    result([@"ably-pubsub-cocoa " stringByAppendingString:[ARTDefault libraryVersion]]);
 };
 
 static const FlutterHandler _resetAblyClients = ^void(AblyFlutter *const ably, FlutterMethodCall *const call, const FlutterResult result) {
@@ -70,7 +70,7 @@ static const FlutterHandler _createRealtime = ^void(AblyFlutter *const ably, Flu
             }];
         };
     }
-    ARTRealtime *const realtime = [[ARTRealtime alloc] initWithOptions:options.clientOptions];
+    ARTPubSubClient *const realtime = [ARTPubSubDevice createClientWithOptions:options.clientOptions];
     [instanceStore setRealtime:realtime with:handle];
 
     // Giving Ably client the deviceToken registered at device launch (didRegisterForRemoteNotificationsWithDeviceToken).
@@ -80,9 +80,9 @@ static const FlutterHandler _createRealtime = ^void(AblyFlutter *const ably, Flu
     NSData *const apnsDeviceToken = ably.instanceStore.didRegisterForRemoteNotificationsWithDeviceToken_deviceToken;
     NSError *const error = ably.instanceStore.didFailToRegisterForRemoteNotificationsWithError_error;
     if (apnsDeviceToken != nil) {
-        [ARTPush didRegisterForRemoteNotificationsWithDeviceToken:apnsDeviceToken realtime:realtime];
+        [ARTPush didRegisterForRemoteNotificationsWithDeviceToken:apnsDeviceToken pubsub:realtime];
     } else if (error != nil) {
-        [ARTPush didFailToRegisterForRemoteNotificationsWithError:error realtime:realtime];
+        [ARTPush didFailToRegisterForRemoteNotificationsWithError:error pubsub:realtime];
     }
     
     result(handle);
@@ -112,7 +112,7 @@ static const FlutterHandler _attachRealtimeChannel = ^void(AblyFlutter *const ab
     NSString *const channelName = (NSString*) message[TxTransportKeys_channelName];
     
     AblyInstanceStore *const instanceStore = [ably instanceStore];
-    ARTRealtime *const realtime = [instanceStore realtimeFrom:ablyMessage.handle];
+    ARTPubSubClient *const realtime = [instanceStore realtimeFrom:ablyMessage.handle];
     ARTRealtimeChannel *const channel = [realtime.channels get:channelName];
 
     [channel attach:^(ARTErrorInfo *_Nullable error){
@@ -135,7 +135,7 @@ static const FlutterHandler _detachRealtimeChannel = ^void(AblyFlutter *const ab
     NSString  *const channelName = (NSString*) realtimePayload[TxTransportKeys_channelName];
     
     AblyInstanceStore *const instanceStore = [ably instanceStore];
-    ARTRealtime *const realtime = [instanceStore realtimeFrom:ablyMessage.handle];
+    ARTPubSubClient *const realtime = [instanceStore realtimeFrom:ablyMessage.handle];
     ARTRealtimeChannel *const channel = [realtime.channels get:channelName];
     
     [channel detach:^(ARTErrorInfo *_Nullable error){
@@ -159,7 +159,7 @@ static const FlutterHandler _publishRealtimeChannelMessage = ^void(AblyFlutter *
     NSArray<ARTMessage *> *const messages = (NSArray<ARTMessage *>*) realtimePayload[TxTransportKeys_messages];
     
     AblyInstanceStore *const instanceStore = [ably instanceStore];
-    ARTRealtime *const realtime = [instanceStore realtimeFrom:ablyMessage.handle];
+    ARTPubSubClient *const realtime = [instanceStore realtimeFrom:ablyMessage.handle];
     ARTRealtimeChannel *const channel = [realtime.channels get:channelName];
     
     void (^callback)(ARTErrorInfo *_Nullable) = ^(ARTErrorInfo *_Nullable error){
@@ -184,7 +184,7 @@ static const FlutterHandler _setRealtimeChannelOptions = ^void(AblyFlutter *cons
     ARTRealtimeChannelOptions *const channelOptions = (ARTRealtimeChannelOptions*) realtimePayload[TxTransportKeys_options];
 
     AblyInstanceStore *const instanceStore = [ably instanceStore];
-    ARTRealtime *const realtime = [instanceStore realtimeFrom:ablyMessage.handle];
+    ARTPubSubClient *const realtime = [instanceStore realtimeFrom:ablyMessage.handle];
 
     ARTRealtimeChannel *const channel = [realtime.channels get:channelName];
     [channel setOptions:channelOptions callback:^(ARTErrorInfo * _Nullable error) {
@@ -208,7 +208,7 @@ static const FlutterHandler _getRealtimeHistory = ^void(AblyFlutter *const ably,
     ARTRealtimeHistoryQuery *const dataQuery = (ARTRealtimeHistoryQuery*) message[TxTransportKeys_params];
     
     AblyInstanceStore *const instanceStore = [ably instanceStore];
-    ARTRealtime *const realtime = [instanceStore realtimeFrom:ablyMessage.handle];
+    ARTPubSubClient *const realtime = [instanceStore realtimeFrom:ablyMessage.handle];
     ARTRealtimeChannel *const channel = [realtime.channels get:channelName];
     
     const id callback = ^(ARTPaginatedResult<ARTMessage *> * _Nullable paginatedResult, ARTErrorInfo * _Nullable error) {
@@ -226,7 +226,7 @@ static const FlutterHandler _getRealtimeHistory = ^void(AblyFlutter *const ably,
     };
     
     if (dataQuery) {
-        [channel history:dataQuery callback:callback error: nil];
+        [channel history:dataQuery callback:callback];
     } else {
         [channel history:callback];
     }
@@ -239,7 +239,7 @@ static const FlutterHandler _getRealtimePresence = ^void(AblyFlutter *const ably
     ARTRealtimePresenceQuery *const dataQuery = (ARTRealtimePresenceQuery*) message[TxTransportKeys_params];
     
     AblyInstanceStore *const instanceStore = [ably instanceStore];
-    ARTRealtime *const realtime = [instanceStore realtimeFrom:ablyMessage.handle];
+    ARTPubSubClient *const realtime = [instanceStore realtimeFrom:ablyMessage.handle];
     ARTRealtimeChannel *const channel = [realtime.channels get:channelName];
     
     const id callback = ^(NSArray<ARTPresenceMessage *> * _Nullable presenceMembers, ARTErrorInfo * _Nullable error) {
@@ -268,7 +268,7 @@ static const FlutterHandler _getRealtimePresenceHistory = ^void(AblyFlutter *con
     ARTRealtimeHistoryQuery *const dataQuery = (ARTRealtimeHistoryQuery*) message[TxTransportKeys_params];
     
     AblyInstanceStore *const instanceStore = [ably instanceStore];
-    ARTRealtime *const realtime = [instanceStore realtimeFrom:ablyMessage.handle];
+    ARTPubSubClient *const realtime = [instanceStore realtimeFrom:ablyMessage.handle];
     ARTRealtimeChannel *const channel = [realtime.channels get:channelName];
     
     const id callback = ^(ARTPaginatedResult<ARTMessage *> * _Nullable paginatedResult, ARTErrorInfo * _Nullable error) {
@@ -285,7 +285,7 @@ static const FlutterHandler _getRealtimePresenceHistory = ^void(AblyFlutter *con
         }
     };
     if (dataQuery) {
-        [[channel presence] history:dataQuery callback:callback error:nil];
+        [[channel presence] history:dataQuery callback:callback];
     } else {
         [[channel presence] history:callback];
     }
@@ -299,7 +299,7 @@ static const FlutterHandler _enterRealtimePresence = ^void(AblyFlutter *const ab
     const id data = message[TxTransportKeys_data];
     
     AblyInstanceStore *const instanceStore = [ably instanceStore];
-    ARTRealtime *const realtime = [instanceStore realtimeFrom:ablyMessage.handle];
+    ARTPubSubClient *const realtime = [instanceStore realtimeFrom:ablyMessage.handle];
     ARTRealtimeChannel *const channel = [realtime.channels get:channelName];
     
     [[channel presence] enterClient:clientId data:data callback:^(ARTErrorInfo * _Nullable error) {
@@ -324,7 +324,7 @@ static const FlutterHandler _updateRealtimePresence = ^void(AblyFlutter *const a
     const id data = message[TxTransportKeys_data];
     
     AblyInstanceStore *const instanceStore = [ably instanceStore];
-    ARTRealtime *const realtime = [instanceStore realtimeFrom:ablyMessage.handle];
+    ARTPubSubClient *const realtime = [instanceStore realtimeFrom:ablyMessage.handle];
     ARTRealtimeChannel *const channel = [realtime.channels get:channelName];
     
     [[channel presence] updateClient:clientId data:data callback:^(ARTErrorInfo * _Nullable error) {
@@ -349,7 +349,7 @@ static const FlutterHandler _leaveRealtimePresence = ^void(AblyFlutter *const ab
     const id data = message[TxTransportKeys_data];
     
     AblyInstanceStore *const instanceStore = [ably instanceStore];
-    ARTRealtime *const realtime = [instanceStore realtimeFrom:ablyMessage.handle];
+    ARTPubSubClient *const realtime = [instanceStore realtimeFrom:ablyMessage.handle];
     ARTRealtimeChannel *const channel = [realtime.channels get:channelName];
     
     [[channel presence] leaveClient:clientId data:data callback:^(ARTErrorInfo * _Nullable error) {
@@ -372,17 +372,24 @@ static const FlutterHandler _releaseRealtimeChannel = ^void(AblyFlutter *const a
     NSString *const channelName = (NSString*) message[TxTransportKeys_channelName];
     
     AblyInstanceStore *const instanceStore = [ably instanceStore];
-    ARTRealtime *const realtime = [instanceStore realtimeFrom:ablyMessage.handle];
+    ARTPubSubClient *const realtime = [instanceStore realtimeFrom:ablyMessage.handle];
     
-    [realtime.channels release:channelName];
-    result(nil);
+    NSError *error;
+    if ([realtime.channels release:channelName error:&error]) {
+        result(nil);
+    } else {
+        // 90011 when the channel is not initialized, detached or failed.
+        result([FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", (long)error.code]
+                                   message:error.localizedDescription
+                                   details:error]);
+    }
 };
 
 static const FlutterHandler _realtimeTime = ^void(AblyFlutter *const ably, FlutterMethodCall *const call, const FlutterResult result) {
     AblyFlutterMessage *const ablyMessage = call.arguments;
     
     AblyInstanceStore *const instanceStore = [ably instanceStore];
-    ARTRealtime *const realtime = [instanceStore realtimeFrom:ablyMessage.handle];
+    ARTPubSubClient *const realtime = [instanceStore realtimeFrom:ablyMessage.handle];
     
     [realtime time:^(NSDate * _Nullable dateTimeResult, NSError * _Nullable error) {
         if(error){
@@ -396,7 +403,7 @@ static const FlutterHandler _realtimeTime = ^void(AblyFlutter *const ably, Flutt
 static const FlutterHandler _connectionRecoveryKey = ^void(AblyFlutter *const ably, FlutterMethodCall *const call, const FlutterResult result) {
     AblyFlutterMessage *const ablyMessage = call.arguments;
     AblyInstanceStore *const instanceStore = [ably instanceStore];
-    ARTRealtime *const realtime = [instanceStore realtimeFrom:ablyMessage.handle];
+    ARTPubSubClient *const realtime = [instanceStore realtimeFrom:ablyMessage.handle];
     NSString *const connectionRecoveryKey = [realtime.connection createRecoveryKey];
     result(connectionRecoveryKey);
 };
@@ -451,7 +458,7 @@ static const FlutterHandler _realtimeAuthCreateTokenRequest = ^void(AblyFlutter 
     ARTAuthOptions *const authOptions = (ARTAuthOptions *) message[TxTransportKeys_options];
     
     AblyInstanceStore *const instanceStore = [ably instanceStore];
-    ARTRealtime *const realtime = [instanceStore realtimeFrom:ablyMessage.handle];
+    ARTPubSubClient *const realtime = [instanceStore realtimeFrom:ablyMessage.handle];
     [realtime.auth requestToken:tokenParams withOptions:authOptions callback:^(ARTTokenDetails * _Nullable tokenDetails, NSError * _Nullable error) {
         if (error) {
             result([

@@ -1,4 +1,4 @@
-import Ably
+import AblyPubSubDevice
 import AblyFlutterCommon
 import Flutter
 import Foundation
@@ -12,10 +12,10 @@ public class CryptoHandlers: NSObject {
         let key = message[TxCryptoGetParams_key]
 
         if let key = key as? NSString {
-            result(ARTCipherParams(algorithm: algorithm, key: key))
+            result(CipherParams(algorithm: algorithm, key: key))
             return
         } else if let key = key as? FlutterStandardTypedData {
-            result(ARTCipherParams(algorithm: algorithm, key: key.data as NSData))
+            result(CipherParams(algorithm: algorithm, key: key.data as NSData))
             return
         } else if let key = key {
             result(FlutterError(code: "CryptoHandlers_getParams", message: "Key must be a String or FlutterStandardTypedData, it is \(type(of: key))", details: nil))
@@ -29,6 +29,6 @@ public class CryptoHandlers: NSObject {
         let ablyMessage = call.arguments as! AblyFlutterMessage
         let message = ablyMessage.message as! Dictionary<String, Any>
         let keyLength = message[TxCryptoGenerateRandomKey_keyLength] as! Int;
-        result(ARTCrypto.generateRandomKey(UInt(keyLength)));
+        result(Crypto.generateRandomKey(UInt(keyLength)));
     }
 }

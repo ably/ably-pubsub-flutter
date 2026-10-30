@@ -34,12 +34,10 @@ This SDK supports the following platforms:
 
 | Platform | Support |
 |----------|---------|
-| Android  | Android 4.4 (API level 19) or newer. Java 8 language features supported via [Desugaring](https://developer.android.com/studio/write/java8-support#library-desugaring). |
-| iOS      | iOS 13 or newer |
+| Android  | Android 7.0 (API level 24) or newer |
+| iOS      | iOS 15 or newer |
 | Flutter  | Flutter 3.44.0 or higher |
 
-> [!NOTE]
-> If your project needs support for SDK Version lower than 24, Android Gradle Plugin 4.0.0+ must be used.
 You might also need to upgrade [gradle distribution](https://developer.android.com/studio/releases/gradle-plugin#updating-plugin).
 > [!IMPORTANT]
 > SDK versions < 1.2.25 will be [deprecated](https://ably.com/docs/platform/deprecate/protocol-v1) from November 1, 2025.

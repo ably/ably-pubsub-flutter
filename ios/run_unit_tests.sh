@@ -37,7 +37,7 @@ import PackageDescription
 
 let package = Package(
     name: "FlutterFramework",
-    platforms: [.iOS("13.0")],
+    platforms: [.iOS("15.0")],
     products: [
         .library(name: "FlutterFramework", targets: ["FlutterFramework"])
     ],

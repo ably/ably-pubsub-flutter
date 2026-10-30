@@ -22,10 +22,10 @@ See [issue #226](https://github.com/ably/ably-flutter/issues/226).
 
 ## Supported platforms
 
-- Android API level 19+ (Android 4.4+)
+- Android API level 24+ (Android 7.0+)
     - Android devices
     - Android emulator (with Google APIs)
-- iOS 13+
+- iOS 15+
     - Physical devices only
     - **Not supported:** iOS Simulator. Calling [`UIApplication:registerForRemoteNotifications`](https://developer.apple.com/documentation/uikit/uiapplication/1623078-registerforremotenotifications) will result in [`application:didFailToRegisterForRemoteNotificationsWithError`](https://developer.apple.com/documentation/uikit/uiapplicationdelegate/1622962-application) method being called in your AppDelegate with an error: `remote notifications are not supported in the simulator`). This is an iOS simulator limitation.
     
@@ -488,7 +488,7 @@ During development, you may want to validate or debug situations where your appl
 
 ### Activation and deactivation
 
-The platform SDKs ([ably-android](https://github.com/ably/ably-java) and [ably-cocoa](https://github.com/ably/ably-cocoa)) enable users to check if device activation, deactivation, or registration update fails. On Android, these errors are sent in Intents which users should register for at runtime. In Cocoa, errors are returned through `ARTPushRegistererDelegate` methods. However, in both SDKs, this error does not always return quickly. For example, if there was no internet connection, then `Push.activate()` will not throw an error, it will just block forever, because errors are not provided by the SDKs. Once an internet connection is made, the Intent will be sent and delegate methods will be called.
+The platform SDKs ([ably-pubsub-java](https://github.com/ably/ably-pubsub-java) and [ably-pubsub-cocoa](https://github.com/ably/ably-pubsub-cocoa)) enable users to check if device activation, deactivation, or registration update fails. On Android, these errors are sent in Intents which users should register for at runtime. In Cocoa, errors are returned through `ARTPushRegistererDelegate` methods. However, in both SDKs, this error does not always return quickly. For example, if there was no internet connection, then `Push.activate()` will not throw an error, it will just block forever, because errors are not provided by the SDKs. Once an internet connection is made, the Intent will be sent and delegate methods will be called.
 
 Ably Flutter does this by passing a reference to the `FlutterResult` used to pass back the result to the Dart side, when the activation or deactivation completes. This makes it convenient for users: they can `await push.activate()`. However, users should not rely on this Future completing, in the case of network issues.
 

@@ -1,4 +1,4 @@
-import Ably
+import AblyPubSubDevice
 import AblyFlutterCommon
 import Foundation
 import UserNotifications
@@ -6,7 +6,7 @@ import UserNotifications
 public class PushNotificationEncoders: NSObject {
 
     @objc
-    public static let encodeDeviceDetails: (ARTDeviceDetails) -> Dictionary<String, Any> = { device in
+    public static let encodeDeviceDetails: (DeviceDetails) -> Dictionary<String, Any> = { device in
         [
             TxDeviceDetails_id: device.id,
             TxDeviceDetails_clientId: device.clientId as Any,
@@ -18,16 +18,16 @@ public class PushNotificationEncoders: NSObject {
     }
     
     @objc
-    public static let encodeDevicePushDetails: (ARTDevicePushDetails) -> Dictionary<String, Any> = { devicePushDetails in
+    public static let encodeDevicePushDetails: (DevicePushDetails) -> Dictionary<String, Any> = { devicePushDetails in
         [
             TxDevicePushDetails_recipient: devicePushDetails.recipient,
-            TxDevicePushDetails_state: devicePushDetails.state as Any,
+            TxDevicePushDetails_state: devicePushDetails.state.toString() as Any,
             TxDevicePushDetails_errorReason: (devicePushDetails.errorReason != nil ? Encoders.encodeErrorInfo(devicePushDetails.errorReason!) : nil) as Any
         ];
     }
     
     @objc
-    public static let encodeLocalDevice: (ARTLocalDevice) -> Dictionary<String, Any> = { device in
+    public static let encodeLocalDevice: (LocalDevice) -> Dictionary<String, Any> = { device in
         [
             TxLocalDevice_deviceSecret: device.secret as Any,
             TxLocalDevice_deviceIdentityToken: device.identityTokenDetails?.token as Any,
@@ -42,7 +42,7 @@ public class PushNotificationEncoders: NSObject {
     }
     
     @objc
-    public static let encodePushChannelSubscription: (ARTPushChannelSubscription) -> Dictionary<String, Any> = { subscription in
+    public static let encodePushChannelSubscription: (PushChannelSubscription) -> Dictionary<String, Any> = { subscription in
         [
             TxPushChannelSubscription_channel: subscription.channel,
             TxPushChannelSubscription_clientId: subscription.clientId as Any,
@@ -162,6 +162,24 @@ extension UNShowPreviewsSetting {
             return TxUNShowPreviewsSettingEnum_whenAuthenticated
         @unknown default:
             fatalError("Unsupported value in \(self).")
+        }
+    }
+}
+
+extension DevicePushState {
+    /// `nil` for `.unknown`, which stands for a state Ably did not report.
+    func toString() -> String? {
+        switch self {
+        case .active:
+            return TxDevicePushStateEnum_active
+        case .failing:
+            return TxDevicePushStateEnum_failing
+        case .failed:
+            return TxDevicePushStateEnum_failed
+        case .unknown:
+            return nil
+        @unknown default:
+            return nil
         }
     }
 }

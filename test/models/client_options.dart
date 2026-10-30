@@ -11,8 +11,7 @@ void main() {
     expect(clientOptions.clientId, isNull);
     expect(clientOptions.logLevel, LogLevel.info);
     expect(clientOptions.tls, isNull);
-    expect(clientOptions.restHost, isNull);
-    expect(clientOptions.realtimeHost, isNull);
+    expect(clientOptions.endpoint, isNull);
     expect(clientOptions.port, isNull);
     expect(clientOptions.tlsPort, isNull);
     expect(clientOptions.autoConnect, isNull);
@@ -20,7 +19,6 @@ void main() {
     expect(clientOptions.queueMessages, isNull);
     expect(clientOptions.echoMessages, isNull);
     expect(clientOptions.recover, isNull);
-    expect(clientOptions.environment, isNull);
     expect(clientOptions.idempotentRestPublishing, isNull);
     expect(clientOptions.httpOpenTimeout, isNull);
     expect(clientOptions.httpRequestTimeout, isNull);

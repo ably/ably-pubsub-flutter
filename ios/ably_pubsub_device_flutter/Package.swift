@@ -16,8 +16,8 @@ import PackageDescription
 let package = Package(
     name: "ably_pubsub_device_flutter",
     platforms: [
-        // UIScene, and therefore `FlutterSceneLifeCycleDelegate`, is iOS 13+ only.
-        .iOS("13.0")
+        // ably-pubsub-cocoa 2.0 requires iOS 15.
+        .iOS("15.0")
     ],
     products: [
         .library(name: "ably-pubsub-device-flutter", targets: ["ably_pubsub_device_flutter"])
@@ -25,7 +25,7 @@ let package = Package(
     dependencies: [
         // Provided by the Flutter tool alongside this package when it builds an app.
         .package(name: "FlutterFramework", path: "../FlutterFramework"),
-        .package(url: "https://github.com/ably/ably-cocoa", exact: "1.2.53"),
+        .package(url: "https://github.com/ably/ably-pubsub-cocoa", exact: "2.0.0"),
     ],
     targets: [
         .target(
@@ -34,7 +34,7 @@ let package = Package(
                 "AblyFlutterCommon",
                 "AblyFlutterSwift",
                 .product(name: "FlutterFramework", package: "FlutterFramework"),
-                .product(name: "Ably", package: "ably-cocoa"),
+                .product(name: "AblyPubSubDevice", package: "ably-pubsub-cocoa"),
             ],
             resources: [
                 .process("PrivacyInfo.xcprivacy")
@@ -48,14 +48,14 @@ let package = Package(
             dependencies: [
                 "AblyFlutterCommon",
                 .product(name: "FlutterFramework", package: "FlutterFramework"),
-                .product(name: "Ably", package: "ably-cocoa"),
+                .product(name: "AblyPubSubDevice", package: "ably-pubsub-cocoa"),
             ]
         ),
         .target(
             name: "AblyFlutterCommon",
             dependencies: [
                 .product(name: "FlutterFramework", package: "FlutterFramework"),
-                .product(name: "Ably", package: "ably-cocoa"),
+                .product(name: "AblyPubSubDevice", package: "ably-pubsub-cocoa"),
             ],
             cSettings: [
                 // Lets the implementation files import their public headers by

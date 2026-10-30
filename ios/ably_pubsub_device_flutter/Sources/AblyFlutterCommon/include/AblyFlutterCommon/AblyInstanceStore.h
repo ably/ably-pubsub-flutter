@@ -1,7 +1,7 @@
 @import Foundation;
 @import Flutter;
 
-@class ARTRealtime;
+@class ARTPubSubClient;
 #import "AblyFlutterClientOptions.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -12,9 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(NSNumber *) getNextHandle;
 
--(void)setRealtime:(ARTRealtime *const)realtime with:(NSNumber *const)handle;
+-(void)setRealtime:(ARTPubSubClient *const)realtime with:(NSNumber *const)handle;
 
--(nullable ARTRealtime *)realtimeFrom:(NSNumber *)handle;
+-(nullable ARTPubSubClient *)realtimeFrom:(NSNumber *)handle;
 
 -(NSNumber *)setPaginatedResult:(ARTPaginatedResult *const)result handle:(nullable NSNumber *)handle;
 

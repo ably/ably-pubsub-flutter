@@ -15,7 +15,7 @@ Future<Map<String, dynamic>> testCreateRealtimeWithAuthUrl({
 
   final clientOptionsForToken = ClientOptions(
     key: appKey,
-    environment: 'sandbox',
+    endpoint: 'nonprod:sandbox',
     logLevel: LogLevel.error,
     autoConnect: false,
     fallbackHosts: <String>['a.ably-realtime.com', 'b.ably-realtime.com'],
@@ -30,7 +30,7 @@ Future<Map<String, dynamic>> testCreateRealtimeWithAuthUrl({
       'https://echo.ably.io/?body=${Uri.encodeComponent(tokenDetails.token!)}';
   final options = ClientOptions(
       authUrl: authUrl,
-      environment: 'sandbox',
+      endpoint: 'nonprod:sandbox',
       useTokenAuth: true,
       autoConnect: false,
       logLevel: LogLevel.error);

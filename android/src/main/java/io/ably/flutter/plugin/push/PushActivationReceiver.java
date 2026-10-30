@@ -8,8 +8,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import io.ably.lib.types.ErrorInfo;
-import io.ably.lib.util.IntentUtils;
+import io.ably.pubsub.types.ErrorInfo;
+import io.ably.pubsub.util.IntentUtils;
 
 class PushActivationReceiver extends android.content.BroadcastReceiver {
     static final String PUSH_ACTIVATE_ACTION = "io.ably.broadcast.PUSH_ACTIVATE";

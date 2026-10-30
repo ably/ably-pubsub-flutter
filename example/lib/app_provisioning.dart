@@ -10,11 +10,11 @@ import 'package:http/retry.dart';
 /// A copy of this class is also present in test_integration package, to avoid
 /// putting it in the base ably_pubsub_device_flutter package
 class AppProvisioning {
-  /// Prefix of REST environment used to provision the app. For example,
-  /// with prefix `sandbox-` URL `sandbox-rest.ably.io` will be used
+  /// Host of the Ably environment the app is provisioned in.
   ///
-  /// Defaults to [defaultEnvironmentPrefix]
-  String environmentPrefix;
+  /// Defaults to [defaultHost], the sandbox environment that clients reach
+  /// with `endpoint: 'nonprod:sandbox'`.
+  String host;
 
   /// List of capabilities for the provisioned key
   ///
@@ -28,13 +28,13 @@ class AppProvisioning {
 
   /// Creates instance of [AppProvisioning]
   AppProvisioning({
-    this.environmentPrefix = defaultEnvironmentPrefix,
+    this.host = defaultHost,
     this.keyCapabilities = defaultKeyCapabilities,
     this.pushEnabled = true,
   });
 
-  /// Default prefix for REST provisioning url
-  static const String defaultEnvironmentPrefix = 'sandbox-';
+  /// Host of the sandbox environment
+  static const String defaultHost = 'sandbox.realtime.ably-nonprod.net';
 
   /// Default list of key capabilities
   /// Enables all capabilities on all channels
@@ -58,7 +58,7 @@ class AppProvisioning {
 
   /// URL used for app provisioning requests
   String get _provisioningUrl =>
-      'https://${environmentPrefix}rest.ably.io/apps';
+      'https://$host/apps';
 
   /// URL used for getting token request
   String get _tokenRequestAuthUrl =>

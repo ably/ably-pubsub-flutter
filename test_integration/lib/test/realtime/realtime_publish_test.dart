@@ -16,7 +16,7 @@ Future<Map<String, dynamic>> testRealtimePublish({
   final realtime = createClient(
     options: ClientOptions(
       key: appKey,
-      environment: 'sandbox',
+      endpoint: 'nonprod:sandbox',
       clientId: 'someClientId',
       logLevel: LogLevel.error,
     ),
@@ -38,7 +38,7 @@ Future<Map<String, dynamic>> testRealtimePublishSpec({
   final realtime = createClient(
     options: ClientOptions(
       key: appKey,
-      environment: 'sandbox',
+      endpoint: 'nonprod:sandbox',
       clientId: 'someClientId',
       logLevel: LogLevel.error,
     ),
@@ -84,7 +84,7 @@ Future<Map<String, dynamic>> testRealtimePublishSpec({
   final realtime2 = createClient(
     options: ClientOptions(
       key: appKey,
-      environment: 'sandbox',
+      endpoint: 'nonprod:sandbox',
     ),
   );
 

@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   ios:
-    runs-on: "macos-latest"
+    runs-on: macos-26 # ably-pubsub-cocoa 2.0 needs Xcode 26
     steps:
       # Check out into a directory named after the plugin. When Flutter adds
       # Swift Package Manager integration to a plugin's own example app, it

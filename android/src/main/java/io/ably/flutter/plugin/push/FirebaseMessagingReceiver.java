@@ -17,7 +17,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import io.ably.flutter.plugin.AblyFlutter;
-import io.ably.lib.util.Log;
+import io.ably.pubsub.util.Log;
 
 public class FirebaseMessagingReceiver extends BroadcastReceiver {
   private static final String TAG = FirebaseMessagingReceiver.class.getName();

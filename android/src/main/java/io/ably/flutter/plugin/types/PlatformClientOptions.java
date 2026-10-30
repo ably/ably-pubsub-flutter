@@ -1,6 +1,6 @@
 package io.ably.flutter.plugin.types;
 
-import io.ably.lib.types.ClientOptions;
+import io.ably.pubsub.types.ClientOptions;
 
 public class PlatformClientOptions {
 

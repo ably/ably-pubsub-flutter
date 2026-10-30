@@ -21,7 +21,7 @@ Future<Map<String, dynamic>> testRealtimePresenceSubscribe({
   final presence = createClient(
     options: ClientOptions(
       key: appKey,
-      environment: 'sandbox',
+      endpoint: 'nonprod:sandbox',
       clientId: 'someClientId',
       logLevel: LogLevel.error,
     ),

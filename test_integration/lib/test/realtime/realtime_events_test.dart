@@ -21,7 +21,7 @@ Future<Map<String, dynamic>> testRealtimeEvents({
   final realtime = createClient(
     options: ClientOptions(
       key: appKey,
-      environment: 'sandbox',
+      endpoint: 'nonprod:sandbox',
       clientId: 'someClientId',
       autoConnect: false,
     ),

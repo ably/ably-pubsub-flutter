@@ -9,7 +9,7 @@ Future<PubSubClient> _createRealtime(String apiKey) async {
   final realtime = createClient(
     options: ClientOptions(
       key: apiKey,
-      environment: 'sandbox',
+      endpoint: 'nonprod:sandbox',
       clientId: 'someClientId',
       autoConnect: false,
     ),

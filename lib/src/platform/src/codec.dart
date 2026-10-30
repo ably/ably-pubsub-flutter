@@ -249,8 +249,7 @@ class Codec extends StandardMessageCodec {
     _writeToJson(
         jsonMap, TxClientOptions.logLevel, _encodeLogLevel(v.logLevel));
     _writeToJson(jsonMap, TxClientOptions.tls, v.tls);
-    _writeToJson(jsonMap, TxClientOptions.restHost, v.restHost);
-    _writeToJson(jsonMap, TxClientOptions.realtimeHost, v.realtimeHost);
+    _writeToJson(jsonMap, TxClientOptions.endpoint, v.endpoint);
     _writeToJson(jsonMap, TxClientOptions.port, v.port);
     _writeToJson(jsonMap, TxClientOptions.tlsPort, v.tlsPort);
     _writeToJson(jsonMap, TxClientOptions.autoConnect, v.autoConnect);
@@ -259,7 +258,6 @@ class Codec extends StandardMessageCodec {
     _writeToJson(jsonMap, TxClientOptions.queueMessages, v.queueMessages);
     _writeToJson(jsonMap, TxClientOptions.echoMessages, v.echoMessages);
     _writeToJson(jsonMap, TxClientOptions.recover, v.recover);
-    _writeToJson(jsonMap, TxClientOptions.environment, v.environment);
     _writeToJson(jsonMap, TxClientOptions.idempotentRestPublishing,
         v.idempotentRestPublishing);
     _writeToJson(jsonMap, TxClientOptions.httpOpenTimeout, v.httpOpenTimeout);
@@ -587,13 +585,9 @@ class Codec extends StandardMessageCodec {
       ),
       logLevel: _decodeLogLevel(jsonMap[TxClientOptions.logLevel] as String?),
       tls: jsonMap[TxClientOptions.tls] as bool,
-      restHost: _readFromJson<String>(
+      endpoint: _readFromJson<String>(
         jsonMap,
-        TxClientOptions.restHost,
-      ),
-      realtimeHost: _readFromJson<String>(
-        jsonMap,
-        TxClientOptions.realtimeHost,
+        TxClientOptions.endpoint,
       ),
       port: _readFromJson<int>(
         jsonMap,
@@ -610,10 +604,6 @@ class Codec extends StandardMessageCodec {
       recover: _readFromJson<String>(
         jsonMap,
         TxClientOptions.recover,
-      ),
-      environment: _readFromJson<String>(
-        jsonMap,
-        TxClientOptions.environment,
       ),
       idempotentRestPublishing: _readFromJson<bool>(
         jsonMap,

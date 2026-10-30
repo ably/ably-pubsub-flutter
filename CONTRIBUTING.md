@@ -1,7 +1,7 @@
 # Contributing to Ably Flutter
 
 ## Overview
-A [Flutter](https://flutter.dev/) plugin for [Ably](https://www.ably.com), built on top of Ably's [iOS](https://github.com/ably/ably-cocoa) and [Android](https://github.com/ably/ably-java) SDKs.
+A [Flutter](https://flutter.dev/) plugin for [Ably](https://www.ably.com), built on top of Ably's [iOS](https://github.com/ably/ably-pubsub-cocoa) and [Android](https://github.com/ably/ably-pubsub-java) SDKs.
 
 ## Running the example
 
@@ -104,15 +104,15 @@ After the app is launched, it can be re-launched from XCode/Android Studio with 
 
 ### Testing changes in platform libraries
 
-After making changes to `ably-java` or `ably-cocoa`, you can test changes without releasing those dependencies to users. To do this, you need a local copy of the repo with the changes you want to test.
+After making changes to `ably-pubsub-java` or `ably-pubsub-cocoa`, you can test changes without releasing those dependencies to users. To do this, you need a local copy of the repo with the changes you want to test.
 
-To test `ably-cocoa` changes, in [ios/ably_pubsub_device_flutter/Package.swift](ios/ably_pubsub_device_flutter/Package.swift), temporarily replace the `ably-cocoa` dependency with a local one:
+To test `ably-pubsub-cocoa` changes, in [ios/ably_pubsub_device_flutter/Package.swift](ios/ably_pubsub_device_flutter/Package.swift), temporarily replace the `ably-pubsub-cocoa` dependency with a local one:
 
 ```swift
-.package(name: "ably-cocoa", path: "local/path/to/ably-cocoa"),
+.package(name: "ably-pubsub-cocoa", path: "local/path/to/ably-pubsub-cocoa"),
 ```
 
-To test `ably-java` changes, see [Using ably-java / ably-android locally in other projects](https://github.com/ably/ably-java/blob/main/CONTRIBUTING.md#using-ably-java--ably-android-locally-in-other-projects).
+To test `ably-pubsub-java` changes, publish them to your local Maven repository and point [android/build.gradle](android/build.gradle) at that version; see the [ably-pubsub-java contributing guide](https://github.com/ably/ably-pubsub-java/blob/main/CONTRIBUTING.md).
 
 ### Generating platform constants
 

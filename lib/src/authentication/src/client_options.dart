@@ -17,13 +17,18 @@ class ClientOptions extends AuthOptions {
   /// `verbose`, `debug`, `info`, `warn` and `error`.
   LogLevel logLevel = LogLevel.info;
 
-  /// Enables a non-default Ably host to be specified. For development
-  /// environments only.
-  String? restHost;
-
-  /// Enables a non-default Ably host to be specified for realtime connections.
-  /// For development environments only.
-  String? realtimeHost;
+  /// The Ably endpoint the client connects to, for both REST requests and the
+  /// realtime connection.
+  ///
+  /// - Unset: the default, `main.realtime.ably.net`.
+  /// - A routing policy name, such as `acme`: `acme.realtime.ably.net`.
+  /// - A non-production routing policy name, such as `nonprod:sandbox`:
+  ///   `sandbox.realtime.ably-nonprod.net`.
+  /// - A hostname, such as `localhost` or `ably.example.com`: that host, with
+  ///   no default fallback hosts.
+  ///
+  /// Do not put a port in the endpoint; set [port] or [tlsPort] instead.
+  String? endpoint;
 
   /// Enables a non-default Ably port to be specified. For development
   /// environments only.
@@ -71,10 +76,6 @@ class ClientOptions extends AuthOptions {
   /// confirming whether the connection should be recovered or not. See
   /// [connection state recovery](https://ably.com/docs/realtime/connection/#connection-state-recovery) for further information.
   String? recover;
-
-  /// Enables a [custom environment](https://ably.com/docs/platform-customization)
-  /// to be used with the Ably service.
-  String? environment;
 
   /// A list of fallback hosts to be used in the case of an error necessitating
   /// the use of an alternative host.
@@ -158,7 +159,7 @@ class ClientOptions extends AuthOptions {
     this.defaultTokenParams,
     int? disconnectedRetryTimeout,
     bool? echoMessages,
-    this.environment,
+    this.endpoint,
     this.fallbackHosts,
     int? fallbackRetryTimeout,
     int? httpMaxRetryCount,
@@ -170,10 +171,8 @@ class ClientOptions extends AuthOptions {
     this.port,
     bool? queryTime,
     bool? queueMessages,
-    this.realtimeHost,
     this.realtimeRequestTimeout,
     this.recover,
-    this.restHost,
     int? suspendedRetryTimeout,
     bool? tls,
     this.tlsPort,

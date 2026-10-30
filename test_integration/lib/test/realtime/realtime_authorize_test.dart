@@ -12,7 +12,7 @@ Future<Map<String, dynamic>> testRealtimeAuthroize({
   //init ably for token
   final clientOptionsForToken = ClientOptions(
     key: appKey,
-    environment: 'sandbox',
+    endpoint: 'nonprod:sandbox',
     logLevel: LogLevel.error,
     autoConnect: false,
   );
@@ -25,7 +25,7 @@ Future<Map<String, dynamic>> testRealtimeAuthroize({
 
   final clientOptions = ClientOptions(
       key: appKey,
-      environment: 'sandbox',
+      endpoint: 'nonprod:sandbox',
       useTokenAuth: true,
       autoConnect: false,
       tokenDetails: firstToken);
