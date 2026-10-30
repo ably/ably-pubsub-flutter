@@ -474,11 +474,17 @@ static const FlutterHandler _realtimeAuthCreateTokenRequest = ^void(AblyFlutter 
     }];
 };
 
+// Receives `UISceneDelegate` calls, for apps that adopt the UIScene life cycle.
+@interface AblyFlutter () <FlutterSceneLifeCycleDelegate>
+@end
+
 @implementation AblyFlutter {
     NSDictionary<NSString *, FlutterHandler>* _handlers;
     AblyStreamsChannel* _streamsChannel;
     FlutterMethodChannel* _channel;
     PushNotificationEventHandlers* _pushNotificationEventHandlers;
+    // Set once the launch-time setup in `-setUpAfterLaunch` has run.
+    BOOL _launchSetUpDone;
 }
 
 @synthesize instanceStore = _instanceStore;
@@ -504,6 +510,16 @@ static const FlutterHandler _realtimeAuthCreateTokenRequest = ^void(AblyFlutter 
     
     // registering method channel with registrar
     [registrar addMethodCallDelegate:ably channel:methodChannel];
+
+    // An app that adopts the UIScene life cycle registers plugins once a scene
+    // has connected, after `application:didFinishLaunchingWithOptions:`.
+    // Flutter replays that and `scene:willConnectToSession:options:` to the
+    // plugin, but an app whose scene delegate does not forward them to Flutter
+    // never delivers them, so run the launch-time setup now. It runs once
+    // however many of these paths reach it.
+    if (UIApplication.sharedApplication.connectedScenes.count > 0) {
+        [ably setUpAfterLaunch];
+    }
     
     // setting up stream handler factory for eventChannel to handle multiple listeners
     [streamsChannel setStreamHandlerFactory:^NSObject<FlutterStreamHandler> *(id arguments) {
@@ -575,6 +591,7 @@ static const FlutterHandler _realtimeAuthCreateTokenRequest = ^void(AblyFlutter 
     };
 
     [registrar addApplicationDelegate:self];
+    [registrar addSceneDelegate:self];
     return self;
 }
 
@@ -597,10 +614,22 @@ static const FlutterHandler _realtimeAuthCreateTokenRequest = ^void(AblyFlutter 
     [self->_streamsChannel reset];
 }
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+/// Registers for remote notifications. Runs once, from whichever launch
+/// callback reaches the plugin first.
+-(void)setUpAfterLaunch {
+    if (_launchSetUpDone) {
+        return;
+    }
+    _launchSetUpDone = YES;
     [[UIApplication sharedApplication] registerForRemoteNotifications];
-    // Check if application was launched from a notification tap.
-    
+}
+
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    [self setUpAfterLaunch];
+
+    // Check if application was launched from a notification tap. An app that
+    // adopts the UIScene life cycle gets the tap in
+    // `scene:willConnectToSession:options:` instead.
     // https://stackoverflow.com/a/21611009/7365866
     NSDictionary *notification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
     if (notification) {
@@ -608,6 +637,24 @@ static const FlutterHandler _realtimeAuthCreateTokenRequest = ^void(AblyFlutter 
     }
     
     return YES;
+}
+
+#pragma mark - UISceneDelegate
+
+/// Returns `NO` even when it reads a notification tap from the connection
+/// options: `YES` would tell Flutter the connection was consumed, which skips
+/// its cold-start deep link handling and hides the options from other plugins.
+- (BOOL)scene:(UIScene *)scene
+    willConnectToSession:(UISceneSession *)session
+                 options:(nullable UISceneConnectionOptions *)connectionOptions {
+    [self setUpAfterLaunch];
+
+    UNNotificationResponse *const response = connectionOptions.notificationResponse;
+    if (response) {
+        PushHandlers.pushNotificationTapLaunchedAppFromTerminatedData =
+            response.notification.request.content.userInfo;
+    }
+    return NO;
 }
 
 #pragma mark - Push Notifications Registration - UIApplicationDelegate
