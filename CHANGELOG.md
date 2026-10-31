@@ -1,5 +1,45 @@
 # Changelog
 
+## [2.0.0](https://github.com/ably/ably-pubsub-flutter/tree/v2.0.0)
+
+[Full Changelog](https://github.com/ably/ably-pubsub-flutter/compare/v1.2.44...v2.0.0)
+
+The 2.0.0 release makes it clear that this SDK is for code that runs on an end user's device. The package is renamed `ably_pubsub_device_flutter` and offers a single realtime client, `PubSubClient`.
+
+v2 also removes the REST client and the APIs and client options deprecated in v1.
+
+Below is an overview of the major changes in this release.
+
+Please refer to the [migration guide](./UPDATING.md#upgrading-from-v12x) for the full details, including a list of all breaking changes and instructions on how to address them.
+
+### Package rename
+
+- The package is renamed from `ably_flutter` to `ably_pubsub_device_flutter`. Replace `ably_flutter: ^1.2.x` with `ably_pubsub_device_flutter: ^2.0.0` in your `pubspec.yaml`, and import `package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart`.
+
+### Client API naming
+
+- `Realtime` is renamed `PubSubClient` [#607](https://github.com/ably/ably-pubsub-flutter/pull/607).
+- Clients are created through the top-level `createClient()` function instead of a constructor. `PubSubClient` has no public constructor, and the `key` parameter and `Realtime.fromKey()` are removed. Pass the key through `ClientOptions` instead.
+
+### REST client removal
+
+- The `Rest` client is removed. Use `channels`, `auth`, `push` and `time()` on `PubSubClient` instead.
+- `RestChannel`, `RestChannels`, `RestPresence`, `RestChannelOptions`, `RestHistoryParams` and `RestPresenceParams` are removed in favour of their `Realtime` equivalents.
+- `Message.fromEncoded`, `Message.fromEncodedArray`, `PresenceMessage.fromEncoded` and `PresenceMessage.fromEncodedArray` take a `RealtimeChannelOptions` instead of a `RestChannelOptions`.
+- `Push` and `PushChannel` require a realtime client and no longer accept a `rest` client.
+
+### Removed APIs
+
+- `Connection.recoveryKey` is removed in favour of `Connection.createRecoveryKey()`.
+- The `ClientOptions.logHandler` client option and the `LogHandler` typedef are removed. Logging is handled by the underlying native SDK; use `ClientOptions.logLevel` to control verbosity.
+- The `ClientOptions.fallbackHostsUseDefault` client option is removed. Default fallback hosts are used unless `ClientOptions.fallbackHosts` is set.
+- `ClientOptions.fromKey()` and `AuthOptions.fromKey()` are removed in favour of the constructors' named `key` parameter.
+
+### Channel release
+
+- `RealtimeChannels.release()` returns a `Future<void>` and throws unless the channel is `initialized`, `detached` or `failed`. It no longer detaches the channel implicitly; the future completes with an `AblyException` with code 90011 and the channel is not released. To release an attached channel, `await channel.detach()` first [#610](https://github.com/ably/ably-pubsub-flutter/pull/610).
+- Releasing a channel name that doesn't exist is a no-op.
+
 ## [1.2.44](https://github.com/ably/ably-flutter/tree/v1.2.44)
 
 [Full Changelog](https://github.com/ably/ably-flutter/compare/v1.2.43...v1.2.44)
