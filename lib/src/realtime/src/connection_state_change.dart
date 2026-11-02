@@ -1,4 +1,4 @@
-import 'package:ably_flutter/ably_flutter.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 import 'package:meta/meta.dart';
 
 /// Contains [ConnectionState] change information emitted by the [Connection]
@@ -49,6 +49,9 @@ class EnrichedConnectionStateChange {
   final String? connectionKey;
 
   /// @nodoc
-  const EnrichedConnectionStateChange(
-      {required this.stateChange, this.connectionId, this.connectionKey});
+  const EnrichedConnectionStateChange({
+    required this.stateChange,
+    this.connectionId,
+    this.connectionKey,
+  });
 }

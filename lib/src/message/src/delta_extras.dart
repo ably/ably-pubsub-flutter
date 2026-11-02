@@ -1,5 +1,5 @@
-import 'package:ably_flutter/src/common/src/object_hash.dart';
-import 'package:ably_flutter/src/generated/platform_constants.dart';
+import 'package:ably_pubsub_device_flutter/src/common/src/object_hash.dart';
+import 'package:ably_pubsub_device_flutter/src/generated/platform_constants.dart';
 import 'package:meta/meta.dart';
 
 /// Contains any arbitrary key-value pairs, which may also contain other
@@ -17,16 +17,13 @@ class DeltaExtras with ObjectHash {
   /// create instance from a map
   @protected
   DeltaExtras.fromMap(Map<String, dynamic> value)
-      : format = value[TxDeltaExtras.format] as String?,
-        from = value[TxDeltaExtras.from] as String?;
+    : format = value[TxDeltaExtras.format] as String?,
+      from = value[TxDeltaExtras.from] as String?;
 
   @override
   bool operator ==(Object other) =>
       other is DeltaExtras && other.from == from && other.format == format;
 
   @override
-  int get hashCode => objectHash([
-        from,
-        format,
-      ]);
+  int get hashCode => objectHash([from, format]);
 }

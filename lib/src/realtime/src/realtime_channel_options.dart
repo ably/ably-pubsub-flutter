@@ -1,4 +1,4 @@
-import 'package:ably_flutter/ably_flutter.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 import 'package:meta/meta.dart';
 
 /// Passes additional properties to a [RealtimeChannel] object, such as
@@ -28,9 +28,5 @@ class RealtimeChannelOptions {
   /// If a [cipherParams] is set, messages will be encrypted with the cipher.
   ///
   /// https://docs.ably.com/client-lib-development-guide/features/#TB2
-  const RealtimeChannelOptions({
-    this.cipherParams,
-    this.modes,
-    this.params,
-  });
+  const RealtimeChannelOptions({this.cipherParams, this.modes, this.params});
 }

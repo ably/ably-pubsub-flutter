@@ -1,4 +1,4 @@
-import 'package:ably_flutter/ably_flutter.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 import 'package:meta/meta.dart';
 
 /// Contains properties used to filter [RealtimeChannel] history.
@@ -41,12 +41,13 @@ class RealtimeHistoryParams {
     this.limit = 100,
     DateTime? start,
     this.untilAttach,
-  })  : assert(direction == 'backwards' || direction == 'forwards'),
-        end = end ?? DateTime.now(),
-        start = start ?? DateTime.fromMillisecondsSinceEpoch(0);
+  }) : assert(direction == 'backwards' || direction == 'forwards'),
+       end = end ?? DateTime.now(),
+       start = start ?? DateTime.fromMillisecondsSinceEpoch(0);
 
   @override
-  String toString() => 'RealtimeHistoryParams:'
+  String toString() =>
+      'RealtimeHistoryParams:'
       ' start=$start'
       ' end=$end'
       ' direction=$direction'

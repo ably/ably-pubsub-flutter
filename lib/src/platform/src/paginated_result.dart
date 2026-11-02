@@ -1,5 +1,5 @@
-import 'package:ably_flutter/ably_flutter.dart';
-import 'package:ably_flutter/src/platform/platform_internal.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
+import 'package:ably_pubsub_device_flutter/src/platform/platform_internal.dart';
 
 /// Contains a page of results for message or presence history, stats, or REST
 /// presence requests.
@@ -32,8 +32,8 @@ class PaginatedResult<T> extends PlatformObject {
   /// Creates a PaginatedResult instance from items and a boolean indicating
   /// whether there is a next page
   PaginatedResult(this._items, {required bool hasNext})
-      : _hasNext = hasNext,
-        super(fetchHandle: false);
+    : _hasNext = hasNext,
+      super(fetchHandle: false);
 
   /// @nodoc
   /// Instantiates by extracting result from [AblyMessage] returned from
@@ -42,10 +42,10 @@ class PaginatedResult<T> extends PlatformObject {
   /// Sets appropriate [_pageHandle] for identifying platform side of this
   /// result object so that [next] and [first] can be executed
   PaginatedResult.fromAblyMessage(AblyMessage<PaginatedResult<dynamic>> message)
-      : _hasNext = message.message.hasNext(),
-        _items = message.message.items.map<T>((e) => e as T).toList(),
-        _pageHandle = message.handle,
-        super(fetchHandle: false);
+    : _hasNext = message.message.hasNext(),
+      _items = message.message.items.map<T>((e) => e as T).toList(),
+      _pageHandle = message.handle,
+      super(fetchHandle: false);
 
   /// @nodoc
   @override
@@ -57,8 +57,9 @@ class PaginatedResult<T> extends PlatformObject {
   ///
   /// If there are no further pages, then null is returned.
   Future<PaginatedResult<T>> next() async {
-    final message =
-        await invokeRequest<AblyMessage<dynamic>>(PlatformMethod.nextPage);
+    final message = await invokeRequest<AblyMessage<dynamic>>(
+      PlatformMethod.nextPage,
+    );
     return PaginatedResult<T>.fromAblyMessage(
       AblyMessage.castFrom<dynamic, PaginatedResult<dynamic>>(message),
     );
@@ -68,8 +69,9 @@ class PaginatedResult<T> extends PlatformObject {
   /// and presence history, stats, and REST presence requests, for the first
   /// page of results.
   Future<PaginatedResult<T>> first() async {
-    final message =
-        await invokeRequest<AblyMessage<dynamic>>(PlatformMethod.firstPage);
+    final message = await invokeRequest<AblyMessage<dynamic>>(
+      PlatformMethod.firstPage,
+    );
     return PaginatedResult<T>.fromAblyMessage(
       AblyMessage.castFrom<dynamic, PaginatedResult<dynamic>>(message),
     );

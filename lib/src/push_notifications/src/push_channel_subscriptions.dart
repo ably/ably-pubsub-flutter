@@ -1,4 +1,4 @@
-import 'package:ably_flutter/ably_flutter.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 
 /// Enables device push channel subscriptions.
 abstract class PushChannelSubscriptions {
@@ -13,9 +13,7 @@ abstract class PushChannelSubscriptions {
   /// notifications using a [params] object.
   ///
   /// Returns a [PaginatedResult] object, containing an array of channel names.
-  Future<PaginatedResult<String>> listChannels(
-    PushChannelsParams params,
-  );
+  Future<PaginatedResult<String>> listChannels(PushChannelsParams params);
 
   /// Subscribes a device, or a group of devices sharing the same `clientId` to
   /// push notifications on a channel, using the [subscription] object.

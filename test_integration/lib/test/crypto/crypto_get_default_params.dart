@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 
-import 'package:ably_flutter/ably_flutter.dart';
 import 'package:ably_flutter_integration_test/factory/reporter.dart';
 import 'package:ably_flutter_integration_test/utils/encoders.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 
 Future<Map<String, dynamic>> testCryptoGetDefaultParams({
   required Reporter reporter,
@@ -13,8 +13,9 @@ Future<Map<String, dynamic>> testCryptoGetDefaultParams({
 
   final keyWithDefaultLength = await Crypto.generateRandomKey();
 
-  final keyWith127BitLength =
-      Uint8List.fromList(List.generate(127, (index) => index));
+  final keyWith127BitLength = Uint8List.fromList(
+    List.generate(127, (index) => index),
+  );
 
   try {
     await Crypto.getDefaultParams(key: keyWith127BitLength);

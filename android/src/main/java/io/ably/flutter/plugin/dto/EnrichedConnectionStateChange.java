@@ -1,6 +1,6 @@
 package io.ably.flutter.plugin.dto;
 
-import io.ably.lib.realtime.ConnectionStateListener;
+import io.ably.pubsub.realtime.ConnectionStateListener;
 
 public class EnrichedConnectionStateChange {
     public final ConnectionStateListener.ConnectionStateChange stateChange;

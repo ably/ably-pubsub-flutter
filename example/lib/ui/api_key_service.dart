@@ -8,10 +8,7 @@ class ApiKeyService {
 
   Future<ApiKeyProvision> getOrProvisionApiKey() async {
     if (envKey.isNotEmpty && envKey != defaultEnvKeyPlaceholder) {
-      return ApiKeyProvision(
-        key: envKey,
-        source: ApiKeySource.env,
-      );
+      return ApiKeyProvision(key: envKey, source: ApiKeySource.env);
     } else {
       final provisionedKey = await AppProvisioning().provisionApp();
       return ApiKeyProvision(
@@ -27,13 +24,7 @@ class ApiKeyProvision {
 
   ApiKeySource source;
 
-  ApiKeyProvision({
-    required this.key,
-    required this.source,
-  });
+  ApiKeyProvision({required this.key, required this.source});
 }
 
-enum ApiKeySource {
-  env,
-  testProvision,
-}
+enum ApiKeySource { env, testProvision }

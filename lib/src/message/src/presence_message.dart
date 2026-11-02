@@ -1,5 +1,5 @@
-import 'package:ably_flutter/ably_flutter.dart';
-import 'package:ably_flutter/src/common/src/object_hash.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
+import 'package:ably_pubsub_device_flutter/src/common/src/object_hash.dart';
 import 'package:meta/meta.dart';
 
 /// Contains an individual presence update sent to, or received from, Ably.
@@ -68,15 +68,15 @@ class PresenceMessage with ObjectHash {
 
   @override
   int get hashCode => objectHash([
-        id,
-        encoding,
-        clientId,
-        timestamp,
-        connectionId,
-        data,
-        action,
-        extras,
-      ]);
+    id,
+    encoding,
+    clientId,
+    timestamp,
+    connectionId,
+    data,
+    action,
+    extras,
+  ]);
 
   // https://docs.ably.com/client-lib-development-guide/features/#TP4
   //
@@ -92,24 +92,23 @@ class PresenceMessage with ObjectHash {
   /// having to parse the encoding string.
   PresenceMessage.fromEncoded(
     Map<String, dynamic> jsonObject, [
-    RestChannelOptions? channelOptions,
-  ])  : id = jsonObject['id'] as String?,
-        action = PresenceAction.values.firstWhere((e) =>
-            e.toString().split('.')[1] == jsonObject['action'] as String?),
-        clientId = jsonObject['clientId'] as String?,
-        connectionId = jsonObject['connectionId'] as String?,
-        _data = MessageData.fromValue(jsonObject['data']),
-        encoding = jsonObject['encoding'] as String?,
-        extras = MessageExtras.fromMap(
-          Map.castFrom<dynamic, dynamic, String, dynamic>(
-            jsonObject['extras'] as Map,
-          ),
-        ),
-        timestamp = jsonObject['timestamp'] != null
-            ? DateTime.fromMillisecondsSinceEpoch(
-                jsonObject['timestamp'] as int,
-              )
-            : null;
+    RealtimeChannelOptions? channelOptions,
+  ]) : id = jsonObject['id'] as String?,
+       action = PresenceAction.values.firstWhere(
+         (e) => e.toString().split('.')[1] == jsonObject['action'] as String?,
+       ),
+       clientId = jsonObject['clientId'] as String?,
+       connectionId = jsonObject['connectionId'] as String?,
+       _data = MessageData.fromValue(jsonObject['data']),
+       encoding = jsonObject['encoding'] as String?,
+       extras = MessageExtras.fromMap(
+         Map.castFrom<dynamic, dynamic, String, dynamic>(
+           jsonObject['extras'] as Map,
+         ),
+       ),
+       timestamp = jsonObject['timestamp'] != null
+           ? DateTime.fromMillisecondsSinceEpoch(jsonObject['timestamp'] as int)
+           : null;
 
   /// Decodes and decrypts a [jsonArray] of deserialized PresenceMessage-like
   /// object using the cipher in [channelOptions].
@@ -120,17 +119,16 @@ class PresenceMessage with ObjectHash {
   /// having to parse the encoding string.
   static List<PresenceMessage> fromEncodedArray(
     List<Map<String, dynamic>> jsonArray, [
-    RestChannelOptions? channelOptions,
-  ]) =>
-      jsonArray
-          .map((jsonObject) => PresenceMessage.fromEncoded(
-                jsonObject,
-                channelOptions,
-              ))
-          .toList();
+    RealtimeChannelOptions? channelOptions,
+  ]) => jsonArray
+      .map(
+        (jsonObject) => PresenceMessage.fromEncoded(jsonObject, channelOptions),
+      )
+      .toList();
 
   @override
-  String toString() => 'PresenceMessage'
+  String toString() =>
+      'PresenceMessage'
       ' id=$id'
       ' data=$data'
       ' action=$action'

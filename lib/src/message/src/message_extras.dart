@@ -1,6 +1,6 @@
-import 'package:ably_flutter/ably_flutter.dart';
-import 'package:ably_flutter/src/common/src/object_hash.dart';
-import 'package:ably_flutter/src/platform/platform_internal.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
+import 'package:ably_pubsub_device_flutter/src/common/src/object_hash.dart';
+import 'package:ably_pubsub_device_flutter/src/platform/platform_internal.dart';
 import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
 
@@ -37,10 +37,7 @@ class MessageExtras with ObjectHash {
         ? null
         : DeltaExtras.fromMap(Map<String, dynamic>.from(deltaMap));
 
-    return MessageExtras._withDelta(
-      mutableExtrasMap,
-      deltaExtras,
-    );
+    return MessageExtras._withDelta(mutableExtrasMap, deltaExtras);
   }
 
   @override
@@ -53,8 +50,5 @@ class MessageExtras with ObjectHash {
       other.delta == delta;
 
   @override
-  int get hashCode => objectHash([
-        map,
-        delta,
-      ]);
+  int get hashCode => objectHash([map, delta]);
 }

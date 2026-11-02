@@ -56,9 +56,9 @@ class TokenDetails {
   /// Ably ensures that all fields are consistently serialized and deserialized
   /// across platforms.
   TokenDetails.fromMap(Map<String, dynamic> map)
-      : capability = map['capability'] as String?,
-        clientId = map['clientId'] as String?,
-        expires = map['expires'] as int?,
-        issued = map['issued'] as int?,
-        token = map['token'] as String?;
+    : capability = map['capability'] as String?,
+      clientId = map['clientId'] as String?,
+      expires = map['expires'] as int?,
+      issued = map['issued'] as int?,
+      token = map['token'] as String?;
 }

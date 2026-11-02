@@ -5,14 +5,8 @@ import 'package:test/test.dart';
 
 import 'tests_config.dart';
 
-void runTests({
-  bool all = false,
-  Iterable<TestModules>? testModules,
-}) {
-  final tests = getTestsFor(
-    all: all,
-    testModules: testModules,
-  );
+void runTests({bool all = false, Iterable<TestModules>? testModules}) {
+  final tests = getTestsFor(all: all, testModules: testModules);
 
   late FlutterDriver driver;
 
@@ -32,10 +26,7 @@ void runTests({
 
   for (final testModule in tests.keys) {
     final testModuleName = EnumToString.convertToString(testModule);
-    tests[testModule]!.forEach((
-      testGroupName,
-      testFunction,
-    ) {
+    tests[testModule]!.forEach((testGroupName, testFunction) {
       group(
         'Module: $testModuleName. Group: $testGroupName. Test: ',
         () => testFunction(getDriver),

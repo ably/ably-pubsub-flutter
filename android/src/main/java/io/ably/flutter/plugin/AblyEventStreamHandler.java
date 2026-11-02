@@ -7,15 +7,15 @@ import java.util.Map;
 
 import io.ably.flutter.plugin.dto.EnrichedConnectionStateChange;
 import io.ably.flutter.plugin.generated.PlatformConstants;
-import io.ably.lib.realtime.AblyRealtime;
-import io.ably.lib.realtime.Channel;
-import io.ably.lib.realtime.ChannelStateListener;
-import io.ably.lib.realtime.ConnectionStateListener;
-import io.ably.lib.realtime.Presence;
-import io.ably.lib.types.AblyException;
-import io.ably.lib.types.Message;
-import io.ably.lib.types.PresenceMessage;
-import io.ably.lib.util.Log;
+import io.ably.pubsub.realtime.PubSubRealtimeClient;
+import io.ably.pubsub.realtime.Channel;
+import io.ably.pubsub.realtime.ChannelStateListener;
+import io.ably.pubsub.realtime.ConnectionStateListener;
+import io.ably.pubsub.realtime.Presence;
+import io.ably.pubsub.types.AblyException;
+import io.ably.pubsub.types.Message;
+import io.ably.pubsub.types.PresenceMessage;
+import io.ably.pubsub.util.Log;
 import io.flutter.plugin.common.EventChannel;
 
 
@@ -78,9 +78,9 @@ public class AblyEventStreamHandler implements EventChannel.StreamHandler {
 
   static private class PluginConnectionStateListener extends Listener implements ConnectionStateListener {
 
-    private final AblyRealtime realtime;
+    private final PubSubRealtimeClient realtime;
 
-    PluginConnectionStateListener(EventChannel.EventSink eventSink, AblyRealtime realtime) {
+    PluginConnectionStateListener(EventChannel.EventSink eventSink, PubSubRealtimeClient realtime) {
       super(eventSink);
       this.realtime = realtime;
     }
@@ -137,7 +137,7 @@ public class AblyEventStreamHandler implements EventChannel.StreamHandler {
     try {
       switch (eventName) {
         case PlatformConstants.PlatformMethod.onRealtimeConnectionStateChanged:
-          final AblyRealtime realtime = instanceStore.getRealtime(ablyMessage.handle);
+          final PubSubRealtimeClient realtime = instanceStore.getRealtime(ablyMessage.handle);
           connectionStateListener = new PluginConnectionStateListener(eventSink, realtime);
           realtime.connection.on(connectionStateListener);
           break;

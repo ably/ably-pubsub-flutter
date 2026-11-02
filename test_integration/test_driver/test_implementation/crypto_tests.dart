@@ -45,14 +45,18 @@ void testCryptoEnsureSupportedKeyLength(FlutterDriver Function() getDriver) {
 
   setUpAll(() async {
     response = await requestDataForTest(getDriver(), message);
-    keyWithDefaultLengthException = response
-        .payload['keyWithDefaultLengthException'] as Map<String, dynamic>?;
-    keyWith128BitLengthException = response
-        .payload['keyWith128BitLengthException'] as Map<String, dynamic>?;
-    keyWith256BitLengthException = response
-        .payload['keyWith256BitLengthException'] as Map<String, dynamic>?;
-    keyWith127BitLengthException = response
-        .payload['keyWith127BitLengthException'] as Map<String, dynamic>?;
+    keyWithDefaultLengthException =
+        response.payload['keyWithDefaultLengthException']
+            as Map<String, dynamic>?;
+    keyWith128BitLengthException =
+        response.payload['keyWith128BitLengthException']
+            as Map<String, dynamic>?;
+    keyWith256BitLengthException =
+        response.payload['keyWith256BitLengthException']
+            as Map<String, dynamic>?;
+    keyWith127BitLengthException =
+        response.payload['keyWith127BitLengthException']
+            as Map<String, dynamic>?;
   });
 
   group('crypto#ensureSupportedKeyLength', () {
@@ -79,15 +83,17 @@ void testCryptoGetDefaultParams(FlutterDriver Function() getDriver) {
   late TestControlResponseMessage response;
   Map<String, dynamic>? keyWith127BitLengthException;
 
-  // Can't use [CipherParams] as a type here because import from
-  // ably_flutter package in this file breaks integration test suite
+  // Can't use [CipherParams] as a type here because import from the
+  // ably_pubsub_device_flutter package in this file breaks the integration
+  // test suite
   // So we can only pass a value to determine if params were fetched
   late bool? didFetchDefaultParams;
 
   setUpAll(() async {
     response = await requestDataForTest(getDriver(), message);
-    keyWith127BitLengthException = response
-        .payload['keyWith127BitLengthException'] as Map<String, dynamic>?;
+    keyWith127BitLengthException =
+        response.payload['keyWith127BitLengthException']
+            as Map<String, dynamic>?;
     didFetchDefaultParams = response.payload['didFetchDefaultParams'] as bool?;
   });
 

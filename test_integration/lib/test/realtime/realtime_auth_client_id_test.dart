@@ -1,6 +1,6 @@
-import 'package:ably_flutter/ably_flutter.dart';
 import 'package:ably_flutter_integration_test/app_provisioning.dart';
 import 'package:ably_flutter_integration_test/factory/reporter.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 
 Future<Map<String, dynamic>> testRealtimeAuthClientId({
   required Reporter reporter,
@@ -12,24 +12,24 @@ Future<Map<String, dynamic>> testRealtimeAuthClientId({
   //init ably for token
   final clientOptionsForToken = ClientOptions(
     key: appKey,
-    environment: 'sandbox',
+    endpoint: 'nonprod:sandbox',
     logLevel: LogLevel.error,
+    autoConnect: false,
   );
 
-  final ablyForToken = Rest(
-    options: clientOptionsForToken,
-  );
+  final ablyForToken = createClient(options: clientOptionsForToken);
   /* get first token */
   final firstToken = await ablyForToken.auth.requestToken();
 
   final clientOptions = ClientOptions(
-      key: appKey,
-      environment: 'sandbox',
-      useTokenAuth: true,
-      autoConnect: false,
-      clientId: 'testClientId',
-      tokenDetails: firstToken);
-  final realtime = Realtime(options: clientOptions);
+    key: appKey,
+    endpoint: 'nonprod:sandbox',
+    useTokenAuth: true,
+    autoConnect: false,
+    clientId: 'testClientId',
+    tokenDetails: firstToken,
+  );
+  final realtime = createClient(options: clientOptions);
   await realtime.connect();
 
   final clientId = await realtime.auth.clientId;

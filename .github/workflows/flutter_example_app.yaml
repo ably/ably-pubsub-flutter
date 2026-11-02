@@ -9,18 +9,25 @@ permissions:
 
 jobs:
   ios:
-    runs-on: "macos-latest"
+    runs-on: macos-26 # ably-pubsub-cocoa 2.0 needs Xcode 26
     steps:
+      # Check out into a directory named after the plugin. When Flutter adds
+      # Swift Package Manager integration to a plugin's own example app, it
+      # references the plugin's package both directly (identity:
+      # `ably_pubsub_device_flutter`) and through a symlink named after the
+      # checkout directory, and package resolution fails if the two differ.
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
           persist-credentials: false
+          path: ably_pubsub_device_flutter
 
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
-          flutter-version: "3.24"
+          flutter-version: "3.47.3"
           cache: true
 
       - name: "Build example app for iOS"
+        working-directory: ably_pubsub_device_flutter
         run: |
           flutter pub get
           cd example && flutter build ios --no-codesign
@@ -39,7 +46,7 @@ jobs:
 
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
-          flutter-version: "3.29"
+          flutter-version: "3.47.3"
           cache: true
 
       - name: "Build example app for Android"

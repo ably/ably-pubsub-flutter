@@ -1,7 +1,6 @@
-import 'package:ably_flutter/ably_flutter.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 
-/// Passes additional client-specific properties to the REST
-/// [Rest.new] or the Realtime [Realtime.new]
+/// Passes additional client-specific properties to [createClient].
 class ClientOptions extends AuthOptions {
   /// A client ID, used for identifying this client when publishing messages or
   /// for presence purposes.
@@ -14,26 +13,22 @@ class ClientOptions extends AuthOptions {
   /// with the `clientId` implicit in the token.
   String? clientId;
 
-  /// Controls the log output of the library. This is a function to handle each
-  /// line of log output.
-  @Deprecated(
-    'Not used, as log messages are handled by the default mechanism '
-    'in the underlying SDK. This instance variable will be removed '
-    'in a future release.',
-  )
-  LogHandler? logHandler;
-
   /// Controls the verbosity of the logs output from the library. Levels include
   /// `verbose`, `debug`, `info`, `warn` and `error`.
   LogLevel logLevel = LogLevel.info;
 
-  /// Enables a non-default Ably host to be specified. For development
-  /// environments only.
-  String? restHost;
-
-  /// Enables a non-default Ably host to be specified for realtime connections.
-  /// For development environments only.
-  String? realtimeHost;
+  /// The Ably endpoint the client connects to, for both REST requests and the
+  /// realtime connection.
+  ///
+  /// - Unset: the default, `main.realtime.ably.net`.
+  /// - A routing policy name, such as `acme`: `acme.realtime.ably.net`.
+  /// - A non-production routing policy name, such as `nonprod:sandbox`:
+  ///   `sandbox.realtime.ably-nonprod.net`.
+  /// - A hostname, such as `localhost` or `ably.example.com`: that host, with
+  ///   no default fallback hosts.
+  ///
+  /// Do not put a port in the endpoint; set [port] or [tlsPort] instead.
+  String? endpoint;
 
   /// Enables a non-default Ably port to be specified. For development
   /// environments only.
@@ -82,21 +77,12 @@ class ClientOptions extends AuthOptions {
   /// [connection state recovery](https://ably.com/docs/realtime/connection/#connection-state-recovery) for further information.
   String? recover;
 
-  /// Enables a [custom environment](https://ably.com/docs/platform-customization)
-  /// to be used with the Ably service.
-  String? environment;
-
   /// A list of fallback hosts to be used in the case of an error necessitating
   /// the use of an alternative host.
   ///
   /// If you have been provided a set of custom fallback hosts by Ably, please
   /// specify them here.
   List<String>? fallbackHosts;
-
-  /// DEPRECATED: this property is deprecated and will be removed in a future
-  /// version. Enables default fallback hosts to be used.
-  @Deprecated('no alternative to this')
-  bool? fallbackHostsUseDefault;
 
   /// When a [TokenParams] object is provided, it overrides the client library
   /// defaults when issuing new Ably Tokens or Ably [TokenRequest]s.
@@ -173,24 +159,20 @@ class ClientOptions extends AuthOptions {
     this.defaultTokenParams,
     int? disconnectedRetryTimeout,
     bool? echoMessages,
-    this.environment,
+    this.endpoint,
     this.fallbackHosts,
     int? fallbackRetryTimeout,
-    this.fallbackHostsUseDefault,
     int? httpMaxRetryCount,
     int? httpOpenTimeout,
     int? httpRequestTimeout,
     this.idempotentRestPublishing,
     String? key,
-    this.logHandler,
     LogLevel? logLevel,
     this.port,
     bool? queryTime,
     bool? queueMessages,
-    this.realtimeHost,
     this.realtimeRequestTimeout,
     this.recover,
-    this.restHost,
     int? suspendedRetryTimeout,
     bool? tls,
     this.tlsPort,
@@ -199,20 +181,16 @@ class ClientOptions extends AuthOptions {
     bool? useBinaryProtocol,
     bool? useTokenAuth,
   }) : super(
-          authCallback: authCallback,
-          authUrl: authUrl,
-          authMethod: authMethod,
-          key: key,
-          tokenDetails: tokenDetails,
-          authHeaders: authHeaders,
-          authParams: authParams,
-          queryTime: queryTime,
-          useTokenAuth: useTokenAuth,
-        ) {
-    /// @nodoc
-    /// These default value assignments are only required until
-    /// [ClientOptions.fromKey] is removed, because then defaults can be set
-    /// directly in the constructor invocation
+         authCallback: authCallback,
+         authUrl: authUrl,
+         authMethod: authMethod,
+         key: key,
+         tokenDetails: tokenDetails,
+         authHeaders: authHeaders,
+         authParams: authParams,
+         queryTime: queryTime,
+         useTokenAuth: useTokenAuth,
+       ) {
     this.autoConnect = autoConnect ?? this.autoConnect;
     this.channelRetryTimeout = channelRetryTimeout ?? this.channelRetryTimeout;
     this.disconnectedRetryTimeout =
@@ -231,21 +209,13 @@ class ClientOptions extends AuthOptions {
     this.useBinaryProtocol = useBinaryProtocol ?? this.useBinaryProtocol;
   }
 
-  /// @nodoc
-  /// initializes [ClientOptions] with a key and log level set to info
-  ///
-  /// See [AuthOptions.fromKey] for more details
-  @Deprecated(
-      "Use ClientOptions constructor with named 'key' parameter instead")
-  ClientOptions.fromKey(String key) : super.fromKey(key);
-
-// TODO(tiholic) unimplemented:
-//
-//  (TO3m) logExceptionReportingUrl
-//  (TO3l6) httpMaxRetryDuration
-//  (TO3l8) maxMessageSize
-//  (TO3l9) maxFrameSize
-//  (TO3o) plugins
-//  (TO3p) addRequestIds
-//  (DF1a) connectionStateTtl
+  // TODO(tiholic) unimplemented:
+  //
+  //  (TO3m) logExceptionReportingUrl
+  //  (TO3l6) httpMaxRetryDuration
+  //  (TO3l8) maxMessageSize
+  //  (TO3l9) maxFrameSize
+  //  (TO3o) plugins
+  //  (TO3p) addRequestIds
+  //  (DF1a) connectionStateTtl
 }

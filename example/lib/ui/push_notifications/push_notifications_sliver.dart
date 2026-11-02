@@ -12,49 +12,51 @@ class PushNotificationsSliver extends StatelessWidget {
   final PushNotificationService _pushNotificationService;
 
   const PushNotificationsSliver(this._pushNotificationService, {Key? key})
-      : super(key: key);
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const Padding(
-            padding: EdgeInsets.only(bottom: 16),
-            child: Text(
-              'Push Notifications',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-          ),
-          buildSummaryText(),
-          PushNotificationsActivationSliver(
-            pushNotificationService: _pushNotificationService,
-          ),
-          PushNotificationsDeviceInformation(
-            pushNotificationService: _pushNotificationService,
-          ),
-          PushNotificationsIOSNotificationSettingsSliver(
-            pushNotificationService: _pushNotificationService,
-          ),
-          PushNotificationsSubscriptionsSliver(
-            pushNotificationService: _pushNotificationService,
-          ),
-          PushNotificationsPublishingSliver(
-              pushNotificationService: _pushNotificationService),
-          const PushNotificationsReceivedSliver(),
-          PushRealtimeClientReceivedSliver(
-            pushNotificationService: _pushNotificationService,
-          ),
-        ],
-      );
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      const Padding(
+        padding: EdgeInsets.only(bottom: 16),
+        child: Text(
+          'Push Notifications',
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        ),
+      ),
+      buildSummaryText(),
+      PushNotificationsActivationSliver(
+        pushNotificationService: _pushNotificationService,
+      ),
+      PushNotificationsDeviceInformation(
+        pushNotificationService: _pushNotificationService,
+      ),
+      PushNotificationsIOSNotificationSettingsSliver(
+        pushNotificationService: _pushNotificationService,
+      ),
+      PushNotificationsSubscriptionsSliver(
+        pushNotificationService: _pushNotificationService,
+      ),
+      PushNotificationsPublishingSliver(
+        pushNotificationService: _pushNotificationService,
+      ),
+      const PushNotificationsReceivedSliver(),
+      PushRealtimeClientReceivedSliver(
+        pushNotificationService: _pushNotificationService,
+      ),
+    ],
+  );
 
   Widget buildSummaryText() => const Column(
-        children: [
-          Text(
-              'Activate your device, view your local device information, '
-              'subscribe to a push channel with either your device or '
-              'client ID, and then publish to the channel.',
-              style: TextStyle(color: Colors.black)),
-          SizedBox(height: 16),
-        ],
-      );
+    children: [
+      Text(
+        'Activate your device, view your local device information, '
+        'subscribe to a push channel with either your device or '
+        'client ID, and then publish to the channel.',
+        style: TextStyle(color: Colors.black),
+      ),
+      SizedBox(height: 16),
+    ],
+  );
 }

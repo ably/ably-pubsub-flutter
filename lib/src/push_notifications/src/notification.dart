@@ -1,4 +1,4 @@
-import 'package:ably_flutter/src/platform/platform_internal.dart';
+import 'package:ably_pubsub_device_flutter/src/platform/platform_internal.dart';
 import 'package:meta/meta.dart';
 
 /// Notification sent by APNS or FCM
@@ -17,15 +17,12 @@ class Notification {
 
   /// @nodoc
   /// Initializes an instance without any defaults.
-  const Notification({
-    required this.title,
-    this.body,
-  });
+  const Notification({required this.title, this.body});
 
   /// @nodoc
   /// Creates an instance from the map.
   factory Notification.fromMap(Map<String, dynamic> map) => Notification(
-        body: map[TxNotification.body] as String?,
-        title: map[TxNotification.title] as String? ?? '',
-      );
+    body: map[TxNotification.body] as String?,
+    title: map[TxNotification.title] as String? ?? '',
+  );
 }

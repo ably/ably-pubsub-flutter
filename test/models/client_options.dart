@@ -1,4 +1,4 @@
-import 'package:ably_flutter/ably_flutter.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -11,8 +11,7 @@ void main() {
     expect(clientOptions.clientId, isNull);
     expect(clientOptions.logLevel, LogLevel.info);
     expect(clientOptions.tls, isNull);
-    expect(clientOptions.restHost, isNull);
-    expect(clientOptions.realtimeHost, isNull);
+    expect(clientOptions.endpoint, isNull);
     expect(clientOptions.port, isNull);
     expect(clientOptions.tlsPort, isNull);
     expect(clientOptions.autoConnect, isNull);
@@ -20,15 +19,12 @@ void main() {
     expect(clientOptions.queueMessages, isNull);
     expect(clientOptions.echoMessages, isNull);
     expect(clientOptions.recover, isNull);
-    expect(clientOptions.environment, isNull);
     expect(clientOptions.idempotentRestPublishing, isNull);
     expect(clientOptions.httpOpenTimeout, isNull);
     expect(clientOptions.httpRequestTimeout, isNull);
     expect(clientOptions.httpMaxRetryCount, isNull);
     expect(clientOptions.realtimeRequestTimeout, isNull);
     expect(clientOptions.fallbackHosts, isNull);
-    // ignore: deprecated_member_use_from_same_package
-    expect(clientOptions.fallbackHostsUseDefault, isNull);
     expect(clientOptions.fallbackRetryTimeout, isNull);
     expect(clientOptions.defaultTokenParams, isNull);
     expect(clientOptions.channelRetryTimeout, isNull);

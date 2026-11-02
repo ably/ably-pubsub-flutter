@@ -1,5 +1,5 @@
-import 'package:ably_flutter/ably_flutter.dart';
-import 'package:ably_flutter/src/platform/platform_internal.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
+import 'package:ably_pubsub_device_flutter/src/platform/platform_internal.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../mock_method_call_manager.dart';
@@ -20,13 +20,17 @@ void main() {
   group('realtime#channels#channel', () {
     test('publish realtime message without authCallback', () async {
       // setup
-      final realtime = Realtime(key: 'TEST-KEY');
+      final realtime = createClient(options: ClientOptions(key: 'TEST-KEY'));
       final channel = realtime.channels.get('test');
 
       // exercise
       await channel.publish(name: 'name', data: 'data1');
-      await channel.publish(message: Message(name: 'name', data: 'data'));
-      await channel.publish(messages: [Message(name: 'name', data: 'data')]);
+      await channel.publish(
+        message: Message(name: 'name', data: 'data'),
+      );
+      await channel.publish(
+        messages: [Message(name: 'name', data: 'data')],
+      );
 
       // verification
       expect(manager.publishedMessages.length, 3);
@@ -34,8 +38,9 @@ void main() {
       final messageData = firstMessage.message as Map<dynamic, dynamic>;
       expect(messageData[TxTransportKeys.channelName], 'test');
       expect(messageData[TxTransportKeys.messages], isA<List<dynamic>>());
-      final messages =
-          List<Message>.from(messageData[TxTransportKeys.messages] as List);
+      final messages = List<Message>.from(
+        messageData[TxTransportKeys.messages] as List,
+      );
       expect(messages[0].name, 'name');
       expect(messages[0].data, 'data1');
     });
@@ -48,7 +53,7 @@ void main() {
         authCallback: authCallback,
         authUrl: 'hasAuthCallback',
       );
-      final realtime = Realtime(options: options, key: 'TEST-KEY');
+      final realtime = createClient(options: options);
 
       final channel = realtime.channels.get('test');
 
@@ -62,8 +67,9 @@ void main() {
       final messageData = firstMessage.message as Map<dynamic, dynamic>;
       expect(messageData[TxTransportKeys.channelName], 'test');
       expect(messageData[TxTransportKeys.messages], isA<List<dynamic>>());
-      final messages =
-          List<Message>.from(messageData[TxTransportKeys.messages] as List);
+      final messages = List<Message>.from(
+        messageData[TxTransportKeys.messages] as List,
+      );
       expect(messages[0].name, 'name');
       expect(messages[0].data, 'data2');
     });
@@ -74,7 +80,7 @@ void main() {
         authCallback: (tokenParams) async => 'token',
         authUrl: 'hasAuthCallback',
       );
-      final realtime = Realtime(options: options, key: 'TEST-KEY');
+      final realtime = createClient(options: options);
       final channel = realtime.channels.get('test');
 
       // exercise
@@ -97,8 +103,9 @@ void main() {
       final messageData = firstMessage.message as Map<dynamic, dynamic>;
       expect(messageData[TxTransportKeys.channelName], 'test');
       expect(messageData[TxTransportKeys.messages], isA<List<dynamic>>());
-      final messages =
-          List<Message>.from(messageData[TxTransportKeys.messages] as List);
+      final messages = List<Message>.from(
+        messageData[TxTransportKeys.messages] as List,
+      );
       expect(messages[0].name, 'name');
       expect(messages[0].data, 'data3-1');
     });
@@ -111,7 +118,7 @@ void main() {
         authCallback: authCallback,
         authUrl: 'hasAuthCallback',
       );
-      final realtime = Realtime(options: options, key: 'TEST-KEY');
+      final realtime = createClient(options: options);
       final channel = realtime.channels.get('test');
 
       // exercise
@@ -124,8 +131,9 @@ void main() {
       final messageData0 = message0.message as Map<dynamic, dynamic>;
       expect(messageData0[TxTransportKeys.channelName], 'test');
       expect(messageData0[TxTransportKeys.messages], isA<List<dynamic>>());
-      final messages =
-          List<Message>.from(messageData0[TxTransportKeys.messages] as List);
+      final messages = List<Message>.from(
+        messageData0[TxTransportKeys.messages] as List,
+      );
       expect(messages[0].name, 'name');
       expect(messages[0].data, 'data4');
 
@@ -133,8 +141,9 @@ void main() {
       final messageData1 = message1.message as Map<dynamic, dynamic>;
       expect(messageData1[TxTransportKeys.channelName], 'test');
       expect(messageData1[TxTransportKeys.messages], isA<List<dynamic>>());
-      final messages1 =
-          List<Message>.from(messageData1[TxTransportKeys.messages] as List);
+      final messages1 = List<Message>.from(
+        messageData1[TxTransportKeys.messages] as List,
+      );
       expect(messages1[0].name, 'name');
       expect(messages1[0].data, 'data5');
     }, timeout: Timeout.none);

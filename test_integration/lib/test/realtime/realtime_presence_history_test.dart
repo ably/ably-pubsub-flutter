@@ -1,9 +1,9 @@
-import 'package:ably_flutter/ably_flutter.dart';
 import 'package:ably_flutter_integration_test/app_provisioning.dart';
 import 'package:ably_flutter_integration_test/config/test_constants.dart';
 import 'package:ably_flutter_integration_test/factory/reporter.dart';
 import 'package:ably_flutter_integration_test/utils/data.dart';
 import 'package:ably_flutter_integration_test/utils/realtime.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 
 Future<Map<String, dynamic>> testRealtimePresenceHistory({
   required Reporter reporter,
@@ -15,12 +15,12 @@ Future<Map<String, dynamic>> testRealtimePresenceHistory({
 
   final options = ClientOptions(
     key: appKey,
-    environment: 'sandbox',
+    endpoint: 'nonprod:sandbox',
     clientId: 'someClientId',
     logLevel: LogLevel.error,
   );
 
-  final realtime = Realtime(options: options);
+  final realtime = createClient(options: options);
   final channel = realtime.channels.get('test');
 
   final historyInitial = await getPresenceHistory(channel);

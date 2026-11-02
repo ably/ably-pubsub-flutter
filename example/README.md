@@ -135,6 +135,6 @@ samples, guidance on mobile development, and a full API reference.
 
 If your emulator was left running when you put your machine to sleep connected to one network interface (e.g. wired ethernet over USB) and then you wake it up and then connect to a different network interface (e.g. Wi-Fi) later, then you may see errors like this when you try to use the example:
 
-> Error provisioning Ably: SocketException: Failed host lookup: 'sandbox-rest.ably.io' (OS Error: No address associated with hostname, errno = 7)
+> Error provisioning Ably: SocketException: Failed host lookup: 'sandbox.realtime.ably-nonprod.net' (OS Error: No address associated with hostname, errno = 7)
 
 The solution appears to be to quit the emulator and then restart it.

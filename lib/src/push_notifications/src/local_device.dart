@@ -1,4 +1,4 @@
-import 'package:ably_flutter/ably_flutter.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 import 'package:meta/meta.dart';
 
 /// Contains the device identity token and secret of a device.
@@ -19,11 +19,11 @@ class LocalDevice extends DeviceDetails {
     this.deviceIdentityToken,
     this.deviceSecret,
   }) : super(
-          clientId: deviceDetails.clientId,
-          formFactor: deviceDetails.formFactor,
-          id: deviceDetails.id,
-          metadata: deviceDetails.metadata,
-          platform: deviceDetails.platform,
-          push: deviceDetails.push,
-        );
+         clientId: deviceDetails.clientId,
+         formFactor: deviceDetails.formFactor,
+         id: deviceDetails.id,
+         metadata: deviceDetails.metadata,
+         platform: deviceDetails.platform,
+         push: deviceDetails.push,
+       );
 }

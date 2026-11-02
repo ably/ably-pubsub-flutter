@@ -5,8 +5,8 @@ import androidx.annotation.NonNull;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import io.ably.lib.push.ActivationContext;
-import io.ably.lib.types.RegistrationToken;
+import io.ably.pubsub.push.ActivationContext;
+import io.ably.pubsub.types.RegistrationToken;
 
 // This service exists to update Ably with the latest FCM registration token, and not
 // to listen to any messages from FCM.

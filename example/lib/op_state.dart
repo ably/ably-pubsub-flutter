@@ -1,6 +1,1 @@
-enum OpState {
-  notStarted,
-  inProgress,
-  succeeded,
-  failed,
-}
+enum OpState { notStarted, inProgress, succeeded, failed }

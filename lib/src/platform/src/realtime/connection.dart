@@ -1,13 +1,13 @@
 import 'dart:async';
 
-import 'package:ably_flutter/ably_flutter.dart';
-import 'package:ably_flutter/src/platform/platform_internal.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
+import 'package:ably_pubsub_device_flutter/src/platform/platform_internal.dart';
 
 /// Enables the management of a connection to Ably.
 class Connection extends PlatformObject {
   /// @nodoc
-  /// Realtime client instance
-  final Realtime realtime;
+  /// The Pub/Sub client instance
+  final PubSubClient realtime;
 
   ConnectionState _state;
 
@@ -22,9 +22,7 @@ class Connection extends PlatformObject {
   ///
   /// Sets default [state] to [ConnectionState.initialized] and starts listening
   /// for updates to the connection [state].
-  Connection(this.realtime)
-      : _state = ConnectionState.initialized,
-        super() {
+  Connection(this.realtime) : _state = ConnectionState.initialized, super() {
     _onConnectionStateChange().listen((event) {
       _state = event.stateChange.current;
       _errorReason = event.stateChange.reason;
@@ -48,21 +46,14 @@ class Connection extends PlatformObject {
   /// A unique private connection key used to recover or resume a connection,
   /// assigned by Ably.
   ///
-  /// When recovering a connection explicitly, the `recoveryKey` is used in the
-  /// recover client options as it contains both the key and the last message
-  /// serial. This private connection key can also be used by other REST clients
-  /// to publish on behalf of this client. See the
+  /// When recovering a connection explicitly, the recovery key returned by
+  /// [createRecoveryKey] is used in the recover client options, as it contains
+  /// both the key and the last message serial. This private connection key can
+  /// also be used by other REST clients to publish on behalf of this client.
+  /// See the
   /// [publishing over REST on behalf of a realtime client docs](https://ably.com/docs/rest/channels#publish-on-behalf)
   /// for more info.
   String? get key => _key;
-
-  /// The recovery key string can be used by another client to recover this
-  /// connection's state in the recover client options property.
-  ///
-  /// See [connection state recover options](https://ably.com/docs/realtime/connection#connection-state-recover-options)
-  /// for more information.
-  @Deprecated('Use createRecoveryKey instead')
-  String? recoveryKey;
 
   /// The createRecoveryKey returns key string can be used by another client to
   /// recover this connection's state in the recover client options property.
@@ -76,9 +67,9 @@ class Connection extends PlatformObject {
   /// used automatically by the library when recovering or resuming a
   /// connection.
   ///
-  /// When recovering a connection explicitly, the `recoveryKey` is
-  /// used in the recover client options as it contains both the key and the
-  /// last message serial.
+  /// When recovering a connection explicitly, the recovery key returned by
+  /// [createRecoveryKey] is used in the recover client options, as it contains
+  /// both the key and the last message serial.
   int? serial;
 
   /// The current [ConnectionState] of the connection.
@@ -92,10 +83,13 @@ class Connection extends PlatformObject {
 
   /// Stream of connection events with specified [ConnectionEvent] type.
   Stream<ConnectionStateChange> on([ConnectionEvent? connectionEvent]) =>
-      _onConnectionStateChange().map((event) => event.stateChange).where(
-          (connectionStateChange) =>
-              connectionEvent == null ||
-              connectionStateChange.event == connectionEvent);
+      _onConnectionStateChange()
+          .map((event) => event.stateChange)
+          .where(
+            (connectionStateChange) =>
+                connectionEvent == null ||
+                connectionStateChange.event == connectionEvent,
+          );
 
   /// Causes the connection to close, entering the [ConnectionState.closing]
   /// state.

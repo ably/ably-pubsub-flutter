@@ -14,7 +14,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.google.firebase.messaging.RemoteMessage;
 
 import io.ably.flutter.plugin.generated.PlatformConstants;
-import io.ably.lib.util.Log;
+import io.ably.pubsub.util.Log;
 import io.flutter.plugin.common.MethodChannel;
 
 /**

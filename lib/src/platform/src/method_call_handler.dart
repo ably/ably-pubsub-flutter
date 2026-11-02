@@ -1,5 +1,5 @@
-import 'package:ably_flutter/ably_flutter.dart';
-import 'package:ably_flutter/src/platform/platform_internal.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
+import 'package:ably_pubsub_device_flutter/src/platform/platform_internal.dart';
 import 'package:flutter/services.dart';
 
 /// @nodoc
@@ -7,12 +7,10 @@ import 'package:flutter/services.dart';
 class AblyMethodCallHandler {
   /// @nodoc
   /// creates instance with method channel and forwards calls respective
-  /// instance methods: [onAuthCallback], [onRealtimeAuthCallback], etc
+  /// instance methods: [onRealtimeAuthCallback], etc
   AblyMethodCallHandler(MethodChannel channel) {
     channel.setMethodCallHandler((call) async {
       switch (call.method) {
-        case PlatformMethod.authCallback:
-          return onAuthCallback(call.arguments as AblyMessage);
         case PlatformMethod.realtimeAuthCallback:
           return onRealtimeAuthCallback(call.arguments as AblyMessage?);
         case PlatformMethod.pushOnActivate:
@@ -26,32 +24,20 @@ class AblyMethodCallHandler {
         case PlatformMethod.pushOnBackgroundMessage:
           return _onPushBackgroundMessage(call.arguments as RemoteMessage);
         case PlatformMethod.pushOnShowNotificationInForeground:
-          return _pushNotificationEvents
-              .showNotificationInForeground(call.arguments as RemoteMessage);
+          return _pushNotificationEvents.showNotificationInForeground(
+            call.arguments as RemoteMessage,
+          );
         case PlatformMethod.pushOnNotificationTap:
           return _onNotificationTap(call.arguments as RemoteMessage);
         case PlatformMethod.pushOpenSettingsFor:
           return _onOpenSettingsFor();
         default:
           throw PlatformException(
-              code: 'Received invalid method channel call from Platform side',
-              message: 'No such method ${call.method}');
+            code: 'Received invalid method channel call from Platform side',
+            message: 'No such method ${call.method}',
+          );
       }
     });
-  }
-
-  /// @nodoc
-  /// handles auth callback for rest instances
-  Future<Object> onAuthCallback(AblyMessage<dynamic> message) async {
-    final tokenParams = message.message as TokenParams;
-    final rest = restInstances[message.handle];
-    if (rest == null) {
-      throw AblyException(
-        message: "AblyMethodCallHandler#onAuthCallback's "
-            'rest handle is ${message.handle}, and rest is $rest',
-      );
-    }
-    return rest.options.authCallback!(tokenParams);
   }
 
   /// @nodoc
@@ -61,7 +47,8 @@ class AblyMethodCallHandler {
     final realtime = realtimeInstances[message.handle];
     if (realtime == null) {
       throw AblyException(
-        message: "AblyMethodCallHandler#onRealtimeAuthCallback's "
+        message:
+            "AblyMethodCallHandler#onRealtimeAuthCallback's "
             'realtime handle is ${message.handle}, and realtime is $realtime',
       );
     }
@@ -99,8 +86,9 @@ class AblyMethodCallHandler {
   }
 
   Future<Object?> _onNotificationTap(RemoteMessage remoteMessage) async {
-    _pushNotificationEvents.onNotificationTapStreamController
-        .add(remoteMessage);
+    _pushNotificationEvents.onNotificationTapStreamController.add(
+      remoteMessage,
+    );
     return null;
   }
 

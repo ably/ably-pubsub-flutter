@@ -13,7 +13,7 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import io.ably.flutter.plugin.AblyMessageCodec;
 import io.ably.flutter.plugin.util.CipherParamsStorage;
-import io.ably.lib.util.Log;
+import io.ably.pubsub.util.Log;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.embedding.engine.dart.DartExecutor;
 import io.flutter.plugin.common.MethodCall;

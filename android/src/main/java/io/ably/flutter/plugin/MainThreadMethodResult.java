@@ -3,7 +3,7 @@ package io.ably.flutter.plugin;
 import android.os.Handler;
 import android.os.Looper;
 
-import io.ably.lib.util.Log;
+import io.ably.pubsub.util.Log;
 import io.flutter.plugin.common.MethodChannel;
 
 // MethodChannel.Result wrapper that responds on the platform thread.

@@ -1,6 +1,6 @@
-import 'package:ably_flutter/ably_flutter.dart';
 import 'package:ably_flutter_integration_test/utils/data.dart';
 import 'package:ably_flutter_integration_test/utils/encoders.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 
 Future<void> publishMessages(RealtimeChannel channel) async {
   for (final data in messagesToPublish) {
@@ -24,19 +24,20 @@ Future<List<Map<String, dynamic>>> getHistory(
 Future<List<Map<String, dynamic>>> getPresenceMembers(
   RealtimeChannel channel, [
   RealtimePresenceParams? params,
-]) async =>
-    encodeList<PresenceMessage>(
-      await channel.presence.get(params),
-      encodePresenceMessage,
-    );
+]) async => encodeList<PresenceMessage>(
+  await channel.presence.get(params),
+  encodePresenceMessage,
+);
 
 Future<List<Map<String, dynamic>>> getPresenceHistory(
   RealtimeChannel channel, [
   RealtimeHistoryParams? params,
 ]) async {
   var results = await channel.presence.history(params);
-  final messages =
-      encodeList<PresenceMessage>(results.items, encodePresenceMessage);
+  final messages = encodeList<PresenceMessage>(
+    results.items,
+    encodePresenceMessage,
+  );
   while (results.hasNext()) {
     results = await results.next();
     messages.addAll(

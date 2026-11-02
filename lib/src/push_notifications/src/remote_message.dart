@@ -1,5 +1,5 @@
-import 'package:ably_flutter/ably_flutter.dart';
-import 'package:ably_flutter/src/platform/platform_internal.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
+import 'package:ably_pubsub_device_flutter/src/platform/platform_internal.dart';
 
 /// Represents FCM Message on Android and APNS message on iOS
 /// Both [data] and [notification] are related to corresponding fields in
@@ -19,24 +19,23 @@ class RemoteMessage {
 
   /// @nodoc
   /// Initializes an instance with [data] set to empty map
-  RemoteMessage({
-    Map<String, dynamic>? data,
-    this.notification,
-  }) : data = data ??= {};
+  RemoteMessage({Map<String, dynamic>? data, this.notification})
+    : data = data ??= {};
 
   /// @nodoc
   /// Create instance from a map.
   factory RemoteMessage.fromMap(Map<String, dynamic> map) => RemoteMessage(
-        data: (map[TxRemoteMessage.data] == null)
-            ? <String, dynamic>{}
-            : Map<String, dynamic>.from(
-                map[TxRemoteMessage.data] as Map<dynamic, dynamic>,
-              ),
-        notification: (map[TxRemoteMessage.notification] == null)
-            ? null
-            : Notification.fromMap(
-                Map<String, dynamic>.from(
-                    map[TxRemoteMessage.notification] as Map<dynamic, dynamic>),
-              ),
-      );
+    data: (map[TxRemoteMessage.data] == null)
+        ? <String, dynamic>{}
+        : Map<String, dynamic>.from(
+            map[TxRemoteMessage.data] as Map<dynamic, dynamic>,
+          ),
+    notification: (map[TxRemoteMessage.notification] == null)
+        ? null
+        : Notification.fromMap(
+            Map<String, dynamic>.from(
+              map[TxRemoteMessage.notification] as Map<dynamic, dynamic>,
+            ),
+          ),
+  );
 }

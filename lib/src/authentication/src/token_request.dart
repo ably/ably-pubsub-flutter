@@ -1,4 +1,4 @@
-import 'package:ably_flutter/ably_flutter.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 import 'package:flutter/foundation.dart';
 
 /// Contains the properties of a request for a token to Ably. Tokens are
@@ -67,12 +67,11 @@ class TokenRequest {
   /// Ably ensures that all fields are consistently serialized and deserialized
   /// across platforms.
   TokenRequest.fromMap(Map<String, dynamic> map)
-      : capability = map['capability'] as String?,
-        clientId = map['clientId'] as String?,
-        mac = map['mac'] as String?,
-        nonce = map['nonce'] as String?,
-        timestamp =
-            DateTime.fromMillisecondsSinceEpoch(map['timestamp'] as int),
-        ttl = map['ttl'] as int?,
-        keyName = map['keyName'] as String?;
+    : capability = map['capability'] as String?,
+      clientId = map['clientId'] as String?,
+      mac = map['mac'] as String?,
+      nonce = map['nonce'] as String?,
+      timestamp = DateTime.fromMillisecondsSinceEpoch(map['timestamp'] as int),
+      ttl = map['ttl'] as int?,
+      keyName = map['keyName'] as String?;
 }

@@ -1,5 +1,5 @@
 ![Ably Pub/Sub Flutter Header](images/flutter-github.png)
-[![Pub Version](https://img.shields.io/pub/v/ably_flutter)](https://pub.dev/packages/ably_flutter)
+[![Pub Version](https://img.shields.io/pub/v/ably_pubsub_device_flutter)](https://pub.dev/packages/ably_pubsub_device_flutter)
 [![License](https://badgen.net/github/license/ably/ably-pubsub-flutter)](https://github.com/ably/ably-pubsub-flutter/blob/main/LICENSE)
 
 ---
@@ -34,12 +34,10 @@ This SDK supports the following platforms:
 
 | Platform | Support |
 |----------|---------|
-| Android  | Android 4.4 (API level 19) or newer. Java 8 language features supported via [Desugaring](https://developer.android.com/studio/write/java8-support#library-desugaring). |
-| iOS      | iOS 10 or newer |
-| Flutter  | Flutter 2.5.0 or higher |
+| Android  | Android 7.0 (API level 24) or newer |
+| iOS      | iOS 15 or newer |
+| Flutter  | Flutter 3.44.0 or higher |
 
-> [!NOTE]
-> If your project needs support for SDK Version lower than 24, Android Gradle Plugin 4.0.0+ must be used.
 You might also need to upgrade [gradle distribution](https://developer.android.com/studio/releases/gradle-plugin#updating-plugin).
 > [!IMPORTANT]
 > SDK versions < 1.2.25 will be [deprecated](https://ably.com/docs/platform/deprecate/protocol-v1) from November 1, 2025.
@@ -54,17 +52,17 @@ Add the Ably Flutter package to your project by including it in your `pubspec.ya
 
 ```yaml
 dependencies:
-  ably_flutter: ^1.2.44
+  ably_pubsub_device_flutter: ^1.2.44
 ```
 
 Once added to your dependencies, import it in your Dart code:
 
 ```dart
-import 'package:ably_flutter/ably_flutter.dart' as ably;
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart' as ably;
 ```
 
 > [!NOTE]
-> When increasing the version of `ably_flutter` in your `pubspec.yaml`, if there are breaking changes, follow the [updating / migration guide](UPDATING.md).
+> When increasing the version of `ably_pubsub_device_flutter` in your `pubspec.yaml`, if there are breaking changes, follow the [updating / migration guide](UPDATING.md).
 
 ---
 
@@ -73,16 +71,16 @@ import 'package:ably_flutter/ably_flutter.dart' as ably;
 The following code connects to Ably's realtime messaging service, subscribes to a channel to receive messages, and publishes a test message to that same channel:
 
 ```dart
-  // Initialize Ably Realtime client
+  // Initialize Ably Pub/Sub client
   final clientOptions = ably.ClientOptions(
     key: 'your-ably-api-key',
     clientId: 'me',
   );
   
-  final realtimeClient = ably.Realtime(options: clientOptions);
+  final pubSubClient = ably.createClient(options: clientOptions);
   
   // Wait for connection to be established
-  await realtimeClient.connection
+  await pubSubClient.connection
       .on(ably.ConnectionEvent.connected)
       .first
       .then((stateChange) {
@@ -90,7 +88,7 @@ The following code connects to Ably's realtime messaging service, subscribes to 
   });
   
   // Get a reference to the 'test-channel' channel
-  final channel = realtimeClient.channels.get('test-channel');
+  final channel = pubSubClient.channels.get('test-channel');
   
   // Subscribe to all messages published to this channel
   channel.subscribe().listen((ably.Message message) {

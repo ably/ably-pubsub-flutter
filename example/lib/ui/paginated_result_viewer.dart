@@ -1,5 +1,6 @@
-import 'package:ably_flutter/ably_flutter.dart' as ably;
 import 'package:ably_flutter_example/ui/text_row.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart'
+    as ably;
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
@@ -24,8 +25,9 @@ class PaginatedResultViewer<T> extends HookWidget {
   }) : super(key: key);
 
   Future<void> getFirstPaginatedResult(
-      ValueNotifier<ably.PaginatedResult<T>?> currentPaginatedResult,
-      ValueNotifier<int> pageNumber) async {
+    ValueNotifier<ably.PaginatedResult<T>?> currentPaginatedResult,
+    ValueNotifier<int> pageNumber,
+  ) async {
     final result = await query();
     firstPaginatedResult = result;
     currentPaginatedResult.value = result;
@@ -43,9 +45,9 @@ class PaginatedResultViewer<T> extends HookWidget {
         return;
       }
       if (pageNumber.value == 1) {
-        currentPaginatedResult.value!
-            .first()
-            .then((result) => currentPaginatedResult.value = result);
+        currentPaginatedResult.value!.first().then(
+          (result) => currentPaginatedResult.value = result,
+        );
       } else if (currentPaginatedResult.value!.hasNext()) {
         currentPaginatedResult.value!.next().then((result) {
           currentPaginatedResult.value = result;
@@ -73,7 +75,7 @@ class PaginatedResultViewer<T> extends HookWidget {
               onPressed: () =>
                   getFirstPaginatedResult(currentPaginatedResult, pageNumber),
               icon: const Icon(Icons.refresh),
-            )
+            ),
           ],
         ),
         if (subtitle != null)
@@ -88,19 +90,22 @@ class PaginatedResultViewer<T> extends HookWidget {
           children: (items.isEmpty)
               ? [const Text('No messages')]
               : items
-                  .map((item) => Padding(
+                    .map(
+                      (item) => Padding(
                         padding: const EdgeInsets.symmetric(vertical: 4),
                         child: builder(context, item, null),
-                      ))
-                  .toList(),
+                      ),
+                    )
+                    .toList(),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             TextRow('Page', '#${pageNumber.value}'),
             TextButton(
-              onPressed:
-                  pageNumber.value != 1 ? () => pageNumber.value = 1 : null,
+              onPressed: pageNumber.value != 1
+                  ? () => pageNumber.value = 1
+                  : null,
               child: const Text('Go to first page'),
             ),
             TextButton(
@@ -112,7 +117,7 @@ class PaginatedResultViewer<T> extends HookWidget {
               child: const Text('Next page'),
             ),
           ],
-        )
+        ),
       ],
     );
   }

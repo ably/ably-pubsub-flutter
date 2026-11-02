@@ -1,4 +1,4 @@
-import 'package:ably_flutter/ably_flutter.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 import 'package:meta/meta.dart';
 
 /// Contains the details of the push registration of a device.
@@ -17,9 +17,5 @@ class DevicePushDetails {
 
   /// @nodoc
   /// Initializes an instance without any defaults
-  const DevicePushDetails({
-    this.errorReason,
-    this.recipient,
-    this.state,
-  });
+  const DevicePushDetails({this.errorReason, this.recipient, this.state});
 }

@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:ffi';
 
-import 'package:ably_flutter/ably_flutter.dart';
 import 'package:ably_flutter_integration_test/app_provisioning.dart';
 import 'package:ably_flutter_integration_test/factory/reporter.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 
 //Make sure that creating realtime with authUrk connects without a problem
 Future<Map<String, dynamic>> testCreateRealtimeWithAuthUrl({
@@ -15,25 +15,24 @@ Future<Map<String, dynamic>> testCreateRealtimeWithAuthUrl({
 
   final clientOptionsForToken = ClientOptions(
     key: appKey,
-    environment: 'sandbox',
+    endpoint: 'nonprod:sandbox',
     logLevel: LogLevel.error,
-    fallbackHosts: <String>['a.ably-realtime.com', 'b.ably-realtime.com'],
+    autoConnect: false,
   );
 
-  final ablyForToken = Rest(
-    options: clientOptionsForToken,
-  );
+  final ablyForToken = createClient(options: clientOptionsForToken);
   final tokenDetails = await ablyForToken.auth.requestToken();
 
   final authUrl =
       'https://echo.ably.io/?body=${Uri.encodeComponent(tokenDetails.token!)}';
   final options = ClientOptions(
-      authUrl: authUrl,
-      environment: 'sandbox',
-      useTokenAuth: true,
-      autoConnect: false,
-      logLevel: LogLevel.error);
-  final realtime = Realtime(options: options);
+    authUrl: authUrl,
+    endpoint: 'nonprod:sandbox',
+    useTokenAuth: true,
+    autoConnect: false,
+    logLevel: LogLevel.error,
+  );
+  final realtime = createClient(options: options);
   final completer = Completer<void>();
   realtime.connection.on().listen((stateChange) {
     if (stateChange.current == ConnectionState.connected) {
@@ -45,8 +44,10 @@ Future<Map<String, dynamic>> testCreateRealtimeWithAuthUrl({
     throw Error();
   }
 
-  await completer.future
-      .timeout(const Duration(seconds: 30), onTimeout: _onTimeout);
+  await completer.future.timeout(
+    const Duration(seconds: 30),
+    onTimeout: _onTimeout,
+  );
 
   return {'handle': await realtime.handle};
 }

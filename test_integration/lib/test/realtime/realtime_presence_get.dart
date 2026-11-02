@@ -1,22 +1,21 @@
-import 'package:ably_flutter/ably_flutter.dart';
 import 'package:ably_flutter_integration_test/app_provisioning.dart';
 import 'package:ably_flutter_integration_test/config/test_constants.dart';
 import 'package:ably_flutter_integration_test/factory/reporter.dart';
 import 'package:ably_flutter_integration_test/utils/data.dart';
 import 'package:ably_flutter_integration_test/utils/realtime.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 
 final logMessages = <List<String?>>[];
 
 ClientOptions getClientOptions(
   String appKey, [
   String clientId = 'someClientId',
-]) =>
-    ClientOptions(
-      key: appKey,
-      environment: 'sandbox',
-      clientId: clientId,
-      logLevel: LogLevel.error,
-    );
+]) => ClientOptions(
+  key: appKey,
+  endpoint: 'nonprod:sandbox',
+  clientId: clientId,
+  logLevel: LogLevel.error,
+);
 
 Future<Map<String, dynamic>> testRealtimePresenceGet({
   required Reporter reporter,
@@ -25,13 +24,13 @@ Future<Map<String, dynamic>> testRealtimePresenceGet({
   reporter.reportLog('init start');
   final appKey = await AppProvisioning().provisionApp();
 
-  final realtime = Realtime(options: getClientOptions(appKey));
+  final realtime = createClient(options: getClientOptions(appKey));
   final channel = realtime.channels.get('test');
   final membersInitial = await getPresenceMembers(channel);
 
   // enter multiple clients
   for (var i = 0; i < messagesToPublish.length; i++) {
-    await Realtime(
+    await createClient(
       options: getClientOptions(appKey, 'client-$i'),
     ).channels.get('test').presence.enter(messagesToPublish[i][1]);
   }

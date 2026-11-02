@@ -22,10 +22,10 @@ See [issue #226](https://github.com/ably/ably-flutter/issues/226).
 
 ## Supported platforms
 
-- Android API level 19+ (Android 4.4+)
+- Android API level 24+ (Android 7.0+)
     - Android devices
     - Android emulator (with Google APIs)
-- iOS 10+
+- iOS 15+
     - Physical devices only
     - **Not supported:** iOS Simulator. Calling [`UIApplication:registerForRemoteNotifications`](https://developer.apple.com/documentation/uikit/uiapplication/1623078-registerforremotenotifications) will result in [`application:didFailToRegisterForRemoteNotificationsWithError`](https://developer.apple.com/documentation/uikit/uiapplicationdelegate/1622962-application) method being called in your AppDelegate with an error: `remote notifications are not supported in the simulator`). This is an iOS simulator limitation.
     
@@ -77,11 +77,19 @@ To get push notifications setup in your own app, read [Setting up your own app](
     - Add `remote notification` Background mode:
         - Under the **Signing & Capabilities** tab, click `+ Capability` and select `Background Modes`.
         - Check `remote notifications`.
-- In your `AppDelegate.swift` or `AppDelegate.m`, implement [`application:didFailToRegisterForRemoteNotificationsWithError:`](https://developer.apple.com/documentation/uikit/uiapplicationdelegate/1622962-application). An example is shown in the example app, [`AppDelegate.m`](./example/ios/Runner/AppDelegate.m). 
+- In your `AppDelegate.swift` or `AppDelegate.m`, implement [`application:didFailToRegisterForRemoteNotificationsWithError:`](https://developer.apple.com/documentation/uikit/uiapplicationdelegate/1622962-application). An example is shown in the example app, [`AppDelegate.swift`](./example/ios/Runner/AppDelegate.swift). 
 - During development, place a breakpoint in this method to diagnose why your device cannot register with APNs. This method will be called when there is an error, for example, if entitlements are not configured or when registering for APNs on the iOS simulator. You can check the `error` argument. If an error occurs in this method, Ably will not get the APNs device token. [From the `application(_:didFailToRegisterForRemoteNotificationsWithError:)` documentation](https://developer.apple.com/documentation/uikit/uiapplicationdelegate/1622962-application):
 > UIKit calls this method if it was unable to register your app with APNs or if your app is not properly configured for remote notifications. During development, make sure your app has the proper entitlements and that its App ID is configured to support push notifications. You might use your implementation of this method to make a note of the failed registration so that you can try again later.
 - Like the example app, you do not need to implement [`UIApplication:registerForRemoteNotifications`](https://developer.apple.com/documentation/uikit/uiapplication/1623078-registerforremotenotifications), as the Ably plugin does this for you at app launch.
-- Handle messages received on your device by implementing the methods in your `AppDelegate`, such as `didReceiveRemoteNotification`, `didReceiveNotificationResponse` and `willPresentNotification`. This is shown in the example app, [`AppDelegate.m`](./example/ios/Runner/AppDelegate.m). For more information, have a look at the [receiving messages](#receiving-messages) section.
+- Handle messages received on your device by implementing the methods in your `AppDelegate`, such as `didReceiveRemoteNotification`, `didReceiveNotificationResponse` and `willPresentNotification`. This is shown in the example app, [`AppDelegate.swift`](./example/ios/Runner/AppDelegate.swift). For more information, have a look at the [receiving messages](#receiving-messages) section.
+
+#### UIScene life cycle
+
+Ably Flutter supports apps that have adopted the [UIScene life cycle](https://flutter.dev/to/uiscene-migration), which Apple will soon require, as well as apps still on the `UIApplicationDelegate` life cycle. No Ably-specific changes are needed to migrate:
+
+- Register plugins in `didInitializeImplicitFlutterEngine(_:)` as Flutter's migration guide describes. Ably Flutter registers for remote notifications once the scene connects, so the APNs device token still reaches it.
+- When the user launches the app by tapping a notification, iOS passes the tap to the scene rather than in the app's launch options. Ably Flutter reads it from there, so `ably.Push.notificationEvents.notificationTapLaunchedAppFromTerminated` keeps working.
+- The `UIApplicationDelegate` methods for remote notifications, such as `application(_:didRegisterForRemoteNotificationsWithDeviceToken:)` and `application(_:didFailToRegisterForRemoteNotificationsWithError:)`, stay on your `AppDelegate`; they are not scene methods.
 
 ## Usage
 
@@ -93,11 +101,11 @@ The example app contains an example of how to use the Push Notification function
 
 ### Ensure `WidgetsBinding` is initialized
 
-If you invoke any methods from the `ably_flutter` package before calling `runApp()`, you must call `WidgetsFlutterBinding.ensureInitialized();`. This is done to ensure all platform methods will be successfully received by the native Ably plugin on the host platform.
+If you invoke any methods from the `ably_pubsub_device_flutter` package before calling `runApp()`, you must call `WidgetsFlutterBinding.ensureInitialized();`. This is done to ensure all platform methods will be successfully received by the native Ably plugin on the host platform.
 
 ### Device activation
 
-- Create a rest or realtime client: e.g. `final realtime = ably.Realtime(options: clientOptions);`
+- Create a realtime client: e.g. `final realtime = ably.createClient(options: clientOptions);`
 - Activate the device for push notifications with Ably: `ablyClient.push.activate();`. This only
   needs to be done once, and will be used across all future app launches, as long as the app is not deactivated. This method will throw an AblyException if it fails.
 - The `Future` returned by `activate` is not guaranteed to complete quickly. For example, if there is no internet connection, `activate` will wait until it is available. Therefore, there is no guarantee any code awaiting the completion of the `Future` will run.
@@ -144,7 +152,7 @@ In this case, you should provide us with the device token manually in your `didR
 If you're working in Objective-C then this will look something like this in `AppDelegate.m`:
 
 ```objective-c
-#import "AblyFlutter.h"
+@import ably_pubsub_device_flutter;
 
 @implementation AppDelegate
 
@@ -162,9 +170,9 @@ If you're working in Objective-C then this will look something like this in `App
 If you're working in Swift then this will look something like this in `AppDelegate.swift`:
 
 ```swift
-import ably_flutter
+import ably_pubsub_device_flutter
 
-@UIApplicationMain
+@main
 @objc class AppDelegate: FlutterAppDelegate {
     override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         AblyInstanceStore.sharedInstance().didRegisterForRemoteNotifications(withDeviceToken: deviceToken)
@@ -178,7 +186,7 @@ import ably_flutter
 
 ### Subscribing to channels for push notifications
 
-- Get the Realtime/ Rest channel: `final channel = realtime!.channels.get(Constants.channelNameForPushNotifications)`
+- Get the realtime channel: `final channel = realtime!.channels.get(Constants.channelNameForPushNotifications)`
 - Subscribe the device to the **push channel**, by either using the device ID or client ID:
     - `channel.push.subscribeClient()` or `channel.push.subscribeDevice()`
     - This is different to subscribing to a channel for messages.
@@ -238,7 +246,7 @@ Requesting permissions:
 
 ```dart
 // Create an Ably client to access the push field
-final realtime = ably.Realtime(options: clientOptions);
+final realtime = ably.createClient(options: clientOptions);
 final push = realtime.push;
 // Request permission from user on iOS
 bool permissionGranted = await push.requestPermission();
@@ -446,7 +454,7 @@ Then, in your Android Manifest, disable Ably Flutter's broadcast receiver by rem
 
 **iOS**: Implementing the [`didReceiveRemoteNotification` delegate method](https://developer.apple.com/documentation/uikit/uiapplicationdelegate/1623013-application) declared in `UIApplicationDelegate`.
 
-Take a look at the example app platform specific code to handle messages. For iOS, this is `AppDelegate.m`, and in Android, it is `PushMessagingService.java`. For further help on implementing the Platform specific message handlers, see "On Android" and "On iOS" sections on [Push Notifications - Device activation and subscription](https://ably.com/documentation/general/push/activate-subscribe).
+Take a look at the example app platform specific code to handle messages. For iOS, this is `AppDelegate.swift`, and in Android, it is `PushMessagingService.java`. For further help on implementing the Platform specific message handlers, see "On Android" and "On iOS" sections on [Push Notifications - Device activation and subscription](https://ably.com/documentation/general/push/activate-subscribe).
 
 ### Additional considerations and resources
 - For tips on how best to use push messaging on Android, read [Notifying your users with FCM](https://android-developers.googleblog.com/2018/09/notifying-your-users-with-fcm.html). For example:
@@ -488,7 +496,7 @@ During development, you may want to validate or debug situations where your appl
 
 ### Activation and deactivation
 
-The platform SDKs ([ably-android](https://github.com/ably/ably-java) and [ably-cocoa](https://github.com/ably/ably-cocoa)) enable users to check if device activation, deactivation, or registration update fails. On Android, these errors are sent in Intents which users should register for at runtime. In Cocoa, errors are returned through `ARTPushRegistererDelegate` methods. However, in both SDKs, this error does not always return quickly. For example, if there was no internet connection, then `Push.activate()` will not throw an error, it will just block forever, because errors are not provided by the SDKs. Once an internet connection is made, the Intent will be sent and delegate methods will be called.
+The platform SDKs ([ably-pubsub-java](https://github.com/ably/ably-pubsub-java) and [ably-pubsub-cocoa](https://github.com/ably/ably-pubsub-cocoa)) enable users to check if device activation, deactivation, or registration update fails. On Android, these errors are sent in Intents which users should register for at runtime. In Cocoa, errors are returned through `ARTPushRegistererDelegate` methods. However, in both SDKs, this error does not always return quickly. For example, if there was no internet connection, then `Push.activate()` will not throw an error, it will just block forever, because errors are not provided by the SDKs. Once an internet connection is made, the Intent will be sent and delegate methods will be called.
 
 Ably Flutter does this by passing a reference to the `FlutterResult` used to pass back the result to the Dart side, when the activation or deactivation completes. This makes it convenient for users: they can `await push.activate()`. However, users should not rely on this Future completing, in the case of network issues.
 
@@ -563,7 +571,7 @@ For Android device registrations, the device push state error are errors passed 
 
 ### Why are notifications not shown to the user when the app is open on Android?
 
-When the app is in the foreground (open by the user), Firebase messaging ignores the message. You would need to send a data message and build a local notification instead. On iOS, you can specify this in your `UNUserNotificationCenterDelegate`'s `userNotificationCenter:_willPresentNotification:withCompletionHandler` method. In the example app, this is implemented in `AppDelegate.m`, where the notification is always shown. You can perform logic to decide if it should be shown or not based on the notification.
+When the app is in the foreground (open by the user), Firebase messaging ignores the message. You would need to send a data message and build a local notification instead. On iOS, you can specify this in your `UNUserNotificationCenterDelegate`'s `userNotificationCenter:_willPresentNotification:withCompletionHandler` method. In the example app, this is implemented in `AppDelegate.swift`, where the notification is always shown. You can perform logic to decide if it should be shown or not based on the notification.
 
 ### Messaging generated from the "compose notification" in Firebase cloud messaging console are not received.
 
@@ -601,6 +609,6 @@ ActivationContext.getActivationContext(this).onNewRegistrationToken(Registration
 
 **iOS:** Ensure you set the `sound` key in the `push.notification` object when sending the Ably message.
 
-### When building my application, I get the following error: `Manifest merger failed : uses-sdk:minSdkVersion 16 cannot be smaller than version 19 declared in library [:ably_flutter]`
+### When building my application, I get the following error: `Manifest merger failed : uses-sdk:minSdkVersion 16 cannot be smaller than version 19 declared in library [:ably_pubsub_device_flutter]`
 
 A fresh Flutter project generates an Android project with a `minSdkVersion` of 16, but Ably-flutter only supports API level 19 (Android Kitkat 4.4, which was released in 2013) and above. In `android/app/build.gradle`, change `minSdkVersion 16` to `minSdkVersion 19`.

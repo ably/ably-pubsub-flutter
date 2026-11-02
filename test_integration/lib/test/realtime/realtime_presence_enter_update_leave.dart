@@ -1,21 +1,20 @@
 // ignore_for_file: avoid_catching_errors
-import 'package:ably_flutter/ably_flutter.dart';
 import 'package:ably_flutter_integration_test/app_provisioning.dart';
 import 'package:ably_flutter_integration_test/factory/reporter.dart';
 import 'package:ably_flutter_integration_test/utils/data.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 
 final logMessages = <List<String?>>[];
 
 ClientOptions getClientOptions(
   String appKey, [
   String? clientId = 'someClientId',
-]) =>
-    ClientOptions(
-      key: appKey,
-      environment: 'sandbox',
-      clientId: clientId,
-      logLevel: LogLevel.error,
-    );
+]) => ClientOptions(
+  key: appKey,
+  endpoint: 'nonprod:sandbox',
+  clientId: clientId,
+  logLevel: LogLevel.error,
+);
 
 Future<Map<String, dynamic>> testRealtimePresenceEnterUpdateLeave({
   required Reporter reporter,
@@ -27,10 +26,9 @@ Future<Map<String, dynamic>> testRealtimePresenceEnterUpdateLeave({
   final clientIds = [null, 'client-1', 'client-2'];
   final clientIDClashMatrix = <Map<String, dynamic>>[];
   for (final clientId in clientIds) {
-    final presence = Realtime(options: getClientOptions(appKey, clientId))
-        .channels
-        .get('test')
-        .presence;
+    final presence = createClient(
+      options: getClientOptions(appKey, clientId),
+    ).channels.get('test').presence;
     for (final clientId2 in clientIds) {
       final result = <String, dynamic>{
         'realtimeClientId': clientId,
@@ -102,11 +100,9 @@ Future<Map<String, dynamic>> testRealtimePresenceEnterUpdateLeave({
 
   // Interact with different types of data.
   final actionMatrix = <Map<String, dynamic>>[];
-  final realtimePresence =
-      Realtime(options: getClientOptions(appKey, 'test-client'))
-          .channels
-          .get('test')
-          .presence;
+  final realtimePresence = createClient(
+    options: getClientOptions(appKey, 'test-client'),
+  ).channels.get('test').presence;
   for (final message in messagesToPublish) {
     final action = <String, dynamic>{'data': message};
     try {

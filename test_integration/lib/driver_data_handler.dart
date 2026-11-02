@@ -17,10 +17,7 @@ Future<TestControlResponseMessage> requestDataForTest(
 
 /// Used to encode and decode messages between driver test and test widget.
 class TestControlMessage {
-  const TestControlMessage(
-    this.testName, {
-    this.payload,
-  });
+  const TestControlMessage(this.testName, {this.payload});
 
   static const testNameKey = 'testName';
   static const payloadKey = 'payload';
@@ -39,10 +36,7 @@ class TestControlMessage {
         payload: jsonValue[payloadKey] as Map<String, dynamic>?,
       );
 
-  Map<String, dynamic> toJson() => {
-        testNameKey: testName,
-        payloadKey: payload,
-      };
+  Map<String, dynamic> toJson() => {testNameKey: testName, payloadKey: payload};
 
   String toJsonEncoded() => json.encode(toJson());
 
@@ -79,10 +73,10 @@ class TestControlResponseMessage {
       );
 
   Map<String, dynamic> toJson() => {
-        testNameKey: testName,
-        payloadKey: payload,
-        logKey: log,
-      };
+    testNameKey: testName,
+    payloadKey: payload,
+    logKey: log,
+  };
 
   String toJsonEncoded() => json.encode(toJson());
 

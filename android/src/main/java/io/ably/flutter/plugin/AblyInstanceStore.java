@@ -5,14 +5,13 @@ import android.util.LongSparseArray;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-import io.ably.lib.push.Push;
-import io.ably.lib.push.PushChannel;
-import io.ably.lib.realtime.AblyRealtime;
-import io.ably.lib.rest.AblyBase;
-import io.ably.lib.rest.AblyRest;
-import io.ably.lib.types.AblyException;
-import io.ably.lib.types.AsyncPaginatedResult;
-import io.ably.lib.types.ClientOptions;
+import io.ably.pubsub.device.PubSubDevice;
+import io.ably.pubsub.push.Push;
+import io.ably.pubsub.push.PushChannel;
+import io.ably.pubsub.realtime.PubSubRealtimeClient;
+import io.ably.pubsub.types.AblyException;
+import io.ably.pubsub.types.AsyncPaginatedResult;
+import io.ably.pubsub.types.ClientOptions;
 
 /**
  * Stores instances created by Ably Java, by handle. This handle is passed to the Dart side
@@ -31,8 +30,7 @@ class AblyInstanceStore {
     // suggests using LongSparseArray. More information at https://stackoverflow.com/a/31413003
     // It may be simpler to go back to HashMap because this is an unmeasured memory optimisation.
     // > the Hashmap and the SparseArray are very similar for data structure sizes under 1,000
-    private final LongSparseArray<AblyRest> restInstances = new LongSparseArray<>();
-    private final LongSparseArray<AblyRealtime> realtimeInstances = new LongSparseArray<>();
+    private final LongSparseArray<PubSubRealtimeClient> realtimeInstances = new LongSparseArray<>();
     private final LongSparseArray<AsyncPaginatedResult<Object>> paginatedResults = new LongSparseArray<>();
     private final AtomicLong nextHandle = new AtomicLong(1);
 
@@ -43,8 +41,8 @@ class AblyInstanceStore {
     /**
      * A reserved client handle. Safe to be used from any thread.
      *
-     * Instances support the creation of a single Rest or Realtime instance, where only one of the
-     * create methods may be called and it may only be called once.
+     * Instances support the creation of a single Realtime instance, where the create method may
+     * only be called once.
      */
     interface ClientHandle {
         /**
@@ -55,26 +53,14 @@ class AblyInstanceStore {
         long getHandle();
 
         /**
-         * Create an {@link AblyRest} instance and store it using this handle.
-         * @param clientOptions The Ably client options for the new Rest instance.
-         * @param applicationContext The Android application context to supply to the new Rest
-         * instance using its {@link AblyRest#setAndroidContext(Context)} method.
-         * @return The handle used to store the instance. Same as {@link #getHandle()}.
-         * @throws IllegalStateException If this handle has already been used to create a Rest or
-         * Realtime instance.
-         * @throws AblyException If the {@link AblyRest} instance creation failed.
-         */
-        long createRest(ClientOptions clientOptions, Context applicationContext) throws AblyException;
-
-        /**
-         * Create an {@link AblyRealtime} instance and store it using this handle.
+         * Create an {@link PubSubRealtimeClient} instance and store it using this handle.
          * @param clientOptions The Ably client options for the new Realtime instance.
          * @param applicationContext The Android application context to supply to the new Realtime
-         * instance using its {@link AblyRealtime#setAndroidContext(Context)} method.
+         * instance using its {@link PubSubRealtimeClient#setAndroidContext(Context)} method.
          * @return The handle used to store the instance. Same as {@link #getHandle()}.
-         * @throws IllegalStateException If this handle has already been used to create a Rest or
+         * @throws IllegalStateException If this handle has already been used to create a
          * Realtime instance.
-         * @throws AblyException If the {@link AblyRealtime} instance creation failed.
+         * @throws AblyException If the {@link PubSubRealtimeClient} instance creation failed.
          */
         long createRealtime(ClientOptions clientOptions, Context applicationContext) throws AblyException;
     }
@@ -93,18 +79,11 @@ class AblyInstanceStore {
         }
 
         @Override
-        public synchronized long createRest(final ClientOptions clientOptions, final Context applicationContext) throws AblyException {
-            final long handle = use();
-            final AblyRest rest = new AblyRest(clientOptions);
-            rest.setAndroidContext(applicationContext);
-            restInstances.put(handle, rest);
-            return handle;
-        }
-
-        @Override
         public synchronized long createRealtime(final ClientOptions clientOptions, final Context applicationContext) throws AblyException {
             final long handle = use();
-            final AblyRealtime realtime = new AblyRealtime(clientOptions);
+            // The device builder copies the options and marks the client as running on an
+            // end-user device (the `ably-pubsub-device` agent).
+            final PubSubRealtimeClient realtime = PubSubDevice.clientBuilder(clientOptions).build();
             realtime.setAndroidContext(applicationContext);
             realtimeInstances.put(handle, realtime);
             return handle;
@@ -123,36 +102,16 @@ class AblyInstanceStore {
         return new ReservedClientHandle(nextHandle.getAndIncrement());
     }
 
-    synchronized AblyRest getRest(final long handle) {
-        return restInstances.get(handle);
-    }
-
-    synchronized AblyRealtime getRealtime(final long handle) {
+    synchronized PubSubRealtimeClient getRealtime(final long handle) {
         return realtimeInstances.get(handle);
     }
 
-    /**
-     * Gets the Ably client (either REST or Realtime) when the interface being
-     * used is the same (e.g. When using Push from AblyBase / when it does
-     * not matter).
-     *
-     * This method relies on the fact handles are unique between all Ably clients,
-     * (both rest and realtime).
-     * @param handle integer handle to either AblyRealtime or AblyRest
-     * @return AblyBase
-     */
-    synchronized AblyBase getAblyClient(final long handle) {
-        AblyRealtime realtime = getRealtime(handle);
-        return (realtime != null) ? realtime : getRest(handle);
-    }
-    
     synchronized Push getPush(final long handle) {
-        AblyRealtime realtime = getRealtime(handle);
-        return (realtime != null) ? realtime.push : getRest(handle).push;
+        return getRealtime(handle).push;
     }
-    
+
     synchronized PushChannel getPushChannel(final long handle, final String channelName) {
-        return getAblyClient(handle)
+        return getRealtime(handle)
                 .channels
                 .get(channelName).push;
     }
@@ -175,7 +134,7 @@ class AblyInstanceStore {
     synchronized void reset() {
         for (int i = 0; i < realtimeInstances.size(); i++) {
             long key = realtimeInstances.keyAt(i);
-            AblyRealtime r = realtimeInstances.get(key);
+            PubSubRealtimeClient r = realtimeInstances.get(key);
             try {
                 r.close();
             } catch (Throwable t) {
@@ -183,7 +142,6 @@ class AblyInstanceStore {
             }
         }
         realtimeInstances.clear();
-        restInstances.clear();
         paginatedResults.clear();
     }
 }

@@ -8,7 +8,7 @@ class MessageData<T> {
   ///
   /// Only Map, List, string and Buffer types are supported.
   MessageData(this._data)
-      : assert(T == Map || T == List || T == String || T == Uint8List);
+    : assert(T == Map || T == List || T == String || T == Uint8List);
 
   /// A getter for the [_data] object.
   T get data => _data;

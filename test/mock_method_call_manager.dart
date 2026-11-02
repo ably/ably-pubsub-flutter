@@ -1,5 +1,5 @@
-import 'package:ably_flutter/ably_flutter.dart';
-import 'package:ably_flutter/src/platform/platform_internal.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
+import 'package:ably_pubsub_device_flutter/src/platform/platform_internal.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -10,10 +10,13 @@ class MockMethodCallManager {
   bool isAuthenticated = false;
   final channels = <int, ClientOptions?>{};
   final publishedMessages = <AblyMessage<dynamic>>[];
+  PlatformException? releaseRealtimeChannelError;
 
   MockMethodCallManager() {
-    final channel =
-        MethodChannel('io.ably.flutter.plugin', StandardMethodCodec(Codec()));
+    final channel = MethodChannel(
+      'io.ably.flutter.plugin',
+      StandardMethodCodec(Codec()),
+    );
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, handler);
     Platform(methodChannel: channel);
@@ -22,9 +25,12 @@ class MockMethodCallManager {
   void reset() {
     channels.clear();
     publishedMessages.clear();
+    releaseRealtimeChannelError = null;
     handleCounter = 0;
-    final channel =
-        MethodChannel('io.ably.flutter.plugin', StandardMethodCodec(Codec()));
+    final channel = MethodChannel(
+      'io.ably.flutter.plugin',
+      StandardMethodCodec(Codec()),
+    );
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, handler);
     Platform(methodChannel: channel);
@@ -35,7 +41,6 @@ class MockMethodCallManager {
       case PlatformMethod.resetAblyClients:
         return true;
 
-      case PlatformMethod.createRest:
       case PlatformMethod.createRealtime:
         final handle = ++handleCounter;
         final ablyMessage = methodCall.arguments as AblyMessage;
@@ -44,27 +49,6 @@ class MockMethodCallManager {
             channelParams[TxTransportKeys.options] as ClientOptions;
         channels[handle] = channelOptions;
         return handle;
-
-      case PlatformMethod.publish:
-        final ablyMessage = methodCall.arguments as AblyMessage;
-        final clientOptions = channels[ablyMessage.handle!] as ClientOptions;
-
-        // `authUrl` is used to indicate the presence of an authCallback,
-        // because function references (in `authCallback`) get dropped by the
-        // PlatformChannel.
-        if (!isAuthenticated && clientOptions.authUrl == 'hasAuthCallback') {
-          final channel = MethodChannel(
-              'io.ably.flutter.plugin', StandardMethodCodec(Codec()));
-          await AblyMethodCallHandler(channel).onAuthCallback(
-            AblyMessage(
-              message: TokenParams(timestamp: DateTime.now()),
-              handle: ablyMessage.handle,
-            ),
-          );
-          isAuthenticated = true;
-        }
-        publishedMessages.add(ablyMessage);
-        return null;
 
       case PlatformMethod.publishRealtimeChannelMessage:
         final ablyMessage = methodCall.arguments as AblyMessage;
@@ -75,12 +59,12 @@ class MockMethodCallManager {
         // PlatformChannel.
         if (!isAuthenticated && clientOptions.authUrl == 'hasAuthCallback') {
           final channel = MethodChannel(
-              'io.ably.flutter.plugin', StandardMethodCodec(Codec()));
+            'io.ably.flutter.plugin',
+            StandardMethodCodec(Codec()),
+          );
           await AblyMethodCallHandler(channel).onRealtimeAuthCallback(
             AblyMessage(
-              message: TokenParams(
-                timestamp: DateTime.now(),
-              ),
+              message: TokenParams(timestamp: DateTime.now()),
               handle: ablyMessage.handle,
             ),
           );
@@ -90,13 +74,17 @@ class MockMethodCallManager {
         publishedMessages.add(ablyMessage);
         return null;
 
-      case PlatformMethod.releaseRestChannel:
       case PlatformMethod.releaseRealtimeChannel:
+        if (releaseRealtimeChannelError != null) {
+          throw releaseRealtimeChannelError!;
+        }
         return null;
 
       default:
-        return throw Exception('Unexpected method call: ${methodCall.method}'
-            ' args: ${methodCall.arguments}');
+        return throw Exception(
+          'Unexpected method call: ${methodCall.method}'
+          ' args: ${methodCall.arguments}',
+        );
     }
   }
 }

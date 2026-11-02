@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   ios:
-    runs-on: macos-latest
+    runs-on: macos-26 # ably-pubsub-cocoa 2.0 needs Xcode 26
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
@@ -18,13 +18,13 @@ jobs:
 
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
-          flutter-version: '3.29'
+          flutter-version: '3.47.3'
           cache: true
 
-      # test_integration package depends on ably_flutter, so before we run integration
+      # test_integration package depends on ably_pubsub_device_flutter, so before we run integration
       # tests it's best to perform dependency update in both packages, to make sure that
       # integration tests are run with exactly the same dependencies as specified in
-      # current version of ably_flutter package
+      # current version of ably_pubsub_device_flutter package
       - name: Update dependencies
         run: |
           flutter pub get
@@ -81,7 +81,7 @@ jobs:
 
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
-          flutter-version: '3.29'
+          flutter-version: '3.47.3'
           cache: true
 
       - name: 'Run Flutter Driver tests'
@@ -89,8 +89,11 @@ jobs:
         uses: reactivecircus/android-emulator-runner@e89f39f1abbbd05b1113a29cf4db69e7540cae5a # v2.37.0
         with:
           api-level: ${{ matrix.api-level }}
+          # Flutter 3.47 treats 32-bit x86 Android devices as unsupported.
+          arch: x86_64
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           script: |
             flutter pub get
-            cd test_integration && flutter build apk && flutter drive
+            adb devices
+            cd test_integration && flutter drive -d emulator-5554

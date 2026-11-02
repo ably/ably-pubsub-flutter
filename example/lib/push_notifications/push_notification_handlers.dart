@@ -1,5 +1,6 @@
-import 'package:ably_flutter/ably_flutter.dart' as ably;
 import 'package:ably_flutter_example/ui/utilities.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart'
+    as ably;
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -9,7 +10,7 @@ class PushNotificationHandlers {
   static final notificationEvents = ably.Push.notificationEvents;
 
   static final BehaviorSubject<List<ably.RemoteMessage>>
-      _receivedMessagesBehaviorSubject =
+  _receivedMessagesBehaviorSubject =
       BehaviorSubject<List<ably.RemoteMessage>>.seeded([]);
 
   static ValueStream<List<ably.RemoteMessage>> receivedMessagesStream =
@@ -17,8 +18,10 @@ class PushNotificationHandlers {
 
   static void setUpEventHandlers() {
     activationEvents.onUpdateFailed.listen((error) async {
-      logAndDisplayError(error,
-          prefixMessage: 'Push update registration failed');
+      logAndDisplayError(
+        error,
+        prefixMessage: 'Push update registration failed',
+      );
     });
     activationEvents.onActivate.listen((error) async {
       logAndDisplayError(error, prefixMessage: 'Push activation failed');
@@ -39,14 +42,17 @@ class PushNotificationHandlers {
 
     notificationEvents.onMessage.listen((message) {
       addMessage(message);
-      print('RemoteMessage received while app is in foreground:\n'
-          'RemoteMessage.Notification: ${message.notification}'
-          'RemoteMessage.Data: ${message.data}');
+      print(
+        'RemoteMessage received while app is in foreground:\n'
+        'RemoteMessage.Notification: ${message.notification}'
+        'RemoteMessage.Data: ${message.data}',
+      );
     });
 
     notificationEvents.setOnShowNotificationInForeground((message) async {
       print(
-          'Opting to show the notification when the app is in the foreground.');
+        'Opting to show the notification when the app is in the foreground.',
+      );
       return true;
     });
 
@@ -58,8 +64,9 @@ class PushNotificationHandlers {
 
   /// You can get the notification which launched the app by a user tapping it.
   static void getLaunchMessage() {
-    notificationEvents.notificationTapLaunchedAppFromTerminated
-        .then((remoteMessage) {
+    notificationEvents.notificationTapLaunchedAppFromTerminated.then((
+      remoteMessage,
+    ) {
       if (remoteMessage != null) {
         addMessage(remoteMessage);
         print('The app was launched by the user by tapping the notification');
@@ -73,11 +80,14 @@ class PushNotificationHandlers {
   }
 
   static Future<void> _backgroundMessageHandler(
-      ably.RemoteMessage message) async {
+    ably.RemoteMessage message,
+  ) async {
     addMessage(message);
-    print('RemoteMessage received while app is in background:\n'
-        'RemoteMessage.Notification: ${message.notification}'
-        'RemoteMessage.Data: ${message.data}');
+    print(
+      'RemoteMessage received while app is in background:\n'
+      'RemoteMessage.Notification: ${message.notification}'
+      'RemoteMessage.Data: ${message.data}',
+    );
   }
 
   static void addMessage(ably.RemoteMessage message) {

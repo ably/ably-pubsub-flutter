@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   ios-unit-tests:
-    runs-on: macos-latest
+    runs-on: macos-26 # ably-pubsub-cocoa 2.0 needs Xcode 26
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
@@ -18,33 +18,9 @@ jobs:
 
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
-          flutter-version: '3.29'
+          flutter-version: '3.47.3'
           cache: true
-
-      - name: Set up iOS test project
-        # --skip-tests sets up the CocoaPods workspace (downloads all deps, generates
-        # the ably_flutter-Unit-Tests scheme) without booting a simulator
-        run: |
-          cd ios
-          pod lib lint ably_flutter.podspec \
-            --allow-warnings \
-            --skip-tests \
-            --validation-dir=/tmp/ably_test_build \
-            --no-clean 
-
-      - name: Pick simulator
-        run: |
-          UDID=$(xcrun simctl list devices available | \
-            grep -E "iPhone" | head -n 1 | \
-            sed -E 's/.*\(([A-F0-9-]+)\).*/\1/')
-          echo "SIMULATOR_ID=$UDID" >> $GITHUB_ENV
-
 
       - name: Run iOS unit tests
         timeout-minutes: 30
-        run: |
-          xcodebuild test \
-            -workspace /tmp/ably_test_build/App.xcworkspace \
-            -scheme ably_flutter-Unit-Tests \
-            -destination "id=$SIMULATOR_ID,arch=arm64" \
-            CODE_SIGNING_ALLOWED=NO
+        run: ios/run_unit_tests.sh

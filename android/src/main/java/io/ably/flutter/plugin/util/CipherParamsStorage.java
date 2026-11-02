@@ -2,7 +2,7 @@ package io.ably.flutter.plugin.util;
 
 import java.util.HashMap;
 
-import io.ably.lib.util.Crypto;
+import io.ably.pubsub.util.Crypto;
 
 /**
  * Stores and gets CipherParams by an Integer handle. On Android, ably-flutter will use this handle

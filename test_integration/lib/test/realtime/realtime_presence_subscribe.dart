@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:ably_flutter/ably_flutter.dart';
 import 'package:ably_flutter_integration_test/app_provisioning.dart';
 import 'package:ably_flutter_integration_test/config/test_constants.dart';
 import 'package:ably_flutter_integration_test/factory/reporter.dart';
 import 'package:ably_flutter_integration_test/utils/data.dart';
 import 'package:ably_flutter_integration_test/utils/encoders.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 
 final logMessages = <List<String?>>[];
 
@@ -18,10 +18,10 @@ Future<Map<String, dynamic>> testRealtimePresenceSubscribe({
 }) async {
   reporter.reportLog('init start');
   final appKey = await AppProvisioning().provisionApp();
-  final presence = Realtime(
+  final presence = createClient(
     options: ClientOptions(
       key: appKey,
-      environment: 'sandbox',
+      endpoint: 'nonprod:sandbox',
       clientId: 'someClientId',
       logLevel: LogLevel.error,
     ),
@@ -36,14 +36,14 @@ Future<Map<String, dynamic>> testRealtimePresenceSubscribe({
       .listen(enterMessages.add);
 
   final enterUpdateMessages = <PresenceMessage>[];
-  final enterUpdateMessagesSubscription = presence.subscribe(actions: [
-    PresenceAction.enter,
-    PresenceAction.update
-  ]).listen(enterUpdateMessages.add);
+  final enterUpdateMessagesSubscription = presence
+      .subscribe(actions: [PresenceAction.enter, PresenceAction.update])
+      .listen(enterUpdateMessages.add);
 
   final partialMessages = <PresenceMessage>[];
-  final partialMessagesSubscription =
-      presence.subscribe().listen(partialMessages.add);
+  final partialMessagesSubscription = presence.subscribe().listen(
+    partialMessages.add,
+  );
 
   // enter-update-leave sequence with different data types to check if
   // data received by listeners is intact

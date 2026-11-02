@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:ably_flutter/ably_flutter.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 
 /// Type definition for a callback invoked when background push message
 /// is received.
@@ -21,7 +21,8 @@ abstract class PushNotificationEvents {
   /// notifications while the app is in the foreground, manually create one
   /// when a [onMessage] or [BackgroundMessageHandler] is called.
   void setOnShowNotificationInForeground(
-      Future<bool> Function(RemoteMessage message) callback);
+    Future<bool> Function(RemoteMessage message) callback,
+  );
 
   /// A stream that emmits messages while the app is in the foreground.
   Stream<RemoteMessage> get onMessage;

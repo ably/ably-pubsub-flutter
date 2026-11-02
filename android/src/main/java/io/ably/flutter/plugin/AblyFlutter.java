@@ -14,7 +14,7 @@ import io.ably.flutter.plugin.push.RemoteMessageCallback;
 import io.ably.flutter.plugin.push.PushActivationEventHandlers;
 import io.ably.flutter.plugin.push.PushMessagingEventHandlers;
 import io.ably.flutter.plugin.util.CipherParamsStorage;
-import io.ably.lib.util.Log;
+import io.ably.pubsub.util.Log;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;

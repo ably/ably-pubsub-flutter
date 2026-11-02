@@ -1,0 +1,83 @@
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
+import 'package:ably_pubsub_device_flutter/src/platform/platform_internal.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+void main() {
+  final channel = MethodChannel(
+    'io.ably.flutter.plugin',
+    StandardMethodCodec(Codec()),
+  );
+
+  TestWidgetsFlutterBinding.ensureInitialized();
+  var counter = 0;
+
+  //test constants
+  const _platformVersion = '42';
+  const _nativeLibraryVersion = '1.1.0';
+
+  setUp(() {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, (methodCall) async {
+          switch (methodCall.method) {
+            case PlatformMethod.resetAblyClients:
+              return true;
+
+            case PlatformMethod.getPlatformVersion:
+              return _platformVersion;
+            case PlatformMethod.getVersion:
+              return _nativeLibraryVersion;
+
+            case PlatformMethod.createRealtime:
+              return ++counter;
+
+            case PlatformMethod.publishRealtimeChannelMessage:
+            case PlatformMethod.connectRealtime:
+            default:
+              return null;
+          }
+        });
+    Platform(methodChannel: channel);
+  });
+
+  tearDown(() {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, null);
+  });
+
+  test(PlatformMethod.getPlatformVersion, () async {
+    expect(await platformVersion(), _platformVersion);
+  });
+
+  test(PlatformMethod.getVersion, () async {
+    expect(await version(), _nativeLibraryVersion);
+  });
+
+  test(PlatformMethod.createRealtime, () async {
+    const endpoint = 'nonprod:sandbox';
+    final o = ClientOptions(endpoint: endpoint);
+    final realtime = createClient(options: o);
+    expect(await realtime.handle, counter);
+    expect(realtime.options.endpoint, endpoint);
+  });
+
+  test('createRealtimeWithToken', () async {
+    const key = 'TEST-KEY';
+    final realtime = createClient(options: ClientOptions(key: key));
+    expect(await realtime.handle, counter);
+    expect(realtime.options.tokenDetails!.token, key);
+  });
+
+  test('createRealtimeWithKey', () async {
+    const key = 'TEST:KEY';
+    final realtime = createClient(options: ClientOptions(key: key));
+    expect(await realtime.handle, counter);
+    expect(realtime.options.key, key);
+  });
+
+  test('publishMessage', () async {
+    final realtime = createClient(options: ClientOptions(key: 'TEST-KEY'));
+    await realtime.channels.get('test').publish(name: 'name', data: 'data');
+    expect(1, 1);
+  });
+}

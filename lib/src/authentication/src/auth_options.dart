@@ -1,4 +1,4 @@
-import 'package:ably_flutter/ably_flutter.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 
 /// Passes authentication-specific properties in authentication requests to
 /// Ably.
@@ -82,8 +82,8 @@ class AuthOptions {
   /// then the Ably Token issued is [anonymous](https://ably.com/docs/core-features/authentication#identified-clients).
   bool? useTokenAuth;
 
-// TODO(tiholic) missing token attribute here
-//  see: https://docs.ably.com/client-lib-development-guide/features/#AO2h
+  // TODO(tiholic) missing token attribute here
+  //  see: https://docs.ably.com/client-lib-development-guide/features/#AO2h
 
   /// @nodoc
   /// Initializes an instance without any defaults
@@ -101,19 +101,6 @@ class AuthOptions {
     if (key != null && !key!.contains(':')) {
       tokenDetails = TokenDetails(key);
       key = null;
-    }
-  }
-
-  /// @nodoc
-  /// Convenience constructor used to create an AuthOptions object based
-  /// on the key string obtained from the application dashboard.
-  /// param [key] - the full key string as obtained from the dashboard
-  @Deprecated("Use AuthOptions constructor with named 'key' parameter instead")
-  AuthOptions.fromKey(String key) {
-    if (key.contains(':')) {
-      this.key = key;
-    } else {
-      tokenDetails = TokenDetails(key);
     }
   }
 }

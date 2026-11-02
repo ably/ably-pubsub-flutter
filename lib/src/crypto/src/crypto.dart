@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:ably_flutter/ably_flutter.dart';
-import 'package:ably_flutter/src/platform/platform_internal.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
+import 'package:ably_pubsub_device_flutter/src/platform/platform_internal.dart';
 
 /// Contains the properties required to configure the encryption of [Message]
 /// payloads.
@@ -34,17 +34,17 @@ class Crypto {
     } else if (key is Uint8List) {
       ensureSupportedKeyLength(key);
     } else {
-      throw AblyException(
-        message: 'key must be a String or Uint8List.',
-      );
+      throw AblyException(message: 'key must be a String or Uint8List.');
     }
 
     return Platform().invokePlatformMethodNonNull<CipherParams>(
       PlatformMethod.cryptoGetParams,
-      AblyMessage(message: {
-        TxCryptoGetParams.algorithm: defaultAlgorithm,
-        TxCryptoGetParams.key: key,
-      }),
+      AblyMessage(
+        message: {
+          TxCryptoGetParams.algorithm: defaultAlgorithm,
+          TxCryptoGetParams.key: key,
+        },
+      ),
     );
   }
 
@@ -54,9 +54,7 @@ class Crypto {
   static void ensureSupportedKeyLength(Uint8List key) {
     if (key.length != keyLength256bits / 8 &&
         key.length != keyLength128bits / 8) {
-      throw AblyException(
-        message: 'Key must be 256 bits or 128 bits long.',
-      );
+      throw AblyException(message: 'Key must be 256 bits or 128 bits long.');
     }
   }
 
@@ -68,11 +66,8 @@ class Crypto {
   /// default algorithm: for AES this is 256 bits.
   static Future<Uint8List> generateRandomKey({
     int keyLength = defaultKeyLengthInBits,
-  }) =>
-      Platform().invokePlatformMethodNonNull<Uint8List>(
-        PlatformMethod.cryptoGenerateRandomKey,
-        AblyMessage(message: {
-          TxCryptoGenerateRandomKey.keyLength: keyLength,
-        }),
-      );
+  }) => Platform().invokePlatformMethodNonNull<Uint8List>(
+    PlatformMethod.cryptoGenerateRandomKey,
+    AblyMessage(message: {TxCryptoGenerateRandomKey.keyLength: keyLength}),
+  );
 }

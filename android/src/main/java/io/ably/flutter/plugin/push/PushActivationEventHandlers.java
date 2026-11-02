@@ -9,8 +9,8 @@ import android.content.Context;
 import androidx.annotation.Nullable;
 
 import io.ably.flutter.plugin.generated.PlatformConstants;
-import io.ably.lib.types.ErrorInfo;
-import io.ably.lib.util.Log;
+import io.ably.pubsub.types.ErrorInfo;
+import io.ably.pubsub.util.Log;
 import io.flutter.plugin.common.MethodChannel;
 
 public class PushActivationEventHandlers {

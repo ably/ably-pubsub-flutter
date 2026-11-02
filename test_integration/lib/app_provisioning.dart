@@ -2,19 +2,19 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:ably_flutter/ably_flutter.dart';
+import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/retry.dart';
 
 /// Used to provision the app with Ably sandbox environment
 /// A copy of this class is also present in example app, to avoid putting
-/// it in the base ably_flutter package
+/// it in the base ably_pubsub_device_flutter package
 class AppProvisioning {
-  /// Prefix of REST environment used to provision the app. For example,
-  /// with prefix `sandbox-` URL `sandbox-rest.ably.io` will be used
+  /// Host of the Ably environment the app is provisioned in.
   ///
-  /// Defaults to [defaultEnvironmentPrefix]
-  String environmentPrefix;
+  /// Defaults to [defaultHost], the sandbox environment that clients reach
+  /// with `endpoint: 'nonprod:sandbox'`.
+  String host;
 
   /// List of capabilities for the provisioned key
   ///
@@ -28,13 +28,13 @@ class AppProvisioning {
 
   /// Creates instance of [AppProvisioning]
   AppProvisioning({
-    this.environmentPrefix = defaultEnvironmentPrefix,
+    this.host = defaultHost,
     this.keyCapabilities = defaultKeyCapabilities,
     this.pushEnabled = true,
   });
 
-  /// Default prefix for REST provisioning url
-  static const String defaultEnvironmentPrefix = 'sandbox-';
+  /// Host of the sandbox environment
+  static const String defaultHost = 'sandbox.realtime.ably-nonprod.net';
 
   /// Default list of key capabilities
   /// Enables all capabilities on all channels
@@ -57,8 +57,7 @@ class AppProvisioning {
   );
 
   /// URL used for app provisioning requests
-  String get _provisioningUrl =>
-      'https://${environmentPrefix}rest.ably.io/apps';
+  String get _provisioningUrl => 'https://$host/apps';
 
   /// URL used for getting token request
   String get _tokenRequestAuthUrl =>
@@ -66,30 +65,27 @@ class AppProvisioning {
 
   /// A set of base headers for HTTP requests
   Map<String, String> get _requestHeaders => {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      };
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  };
 
   /// App spec used to provision the app
   ///
   /// See: https://docs.ably.com/client-lib-development-guide/test-api
   Map<String, List<dynamic>> get _appSpec => {
-        'namespaces': [
-          {
-            'id': 'pushenabled',
-            'pushEnabled': pushEnabled,
-          }
-        ],
-        'keys': [
-          {
-            // The need to use jsonEncode here is a requirement of the
-            // Sandbox Test API. The capability map has to be JSON encoded
-            // as a string and then appropriately escaped in order for
-            // presentation within a string value.
-            'capability': jsonEncode(keyCapabilities),
-          },
-        ],
-      };
+    'namespaces': [
+      {'id': 'pushenabled', 'pushEnabled': pushEnabled},
+    ],
+    'keys': [
+      {
+        // The need to use jsonEncode here is a requirement of the
+        // Sandbox Test API. The capability map has to be JSON encoded
+        // as a string and then appropriately escaped in order for
+        // presentation within a string value.
+        'capability': jsonEncode(keyCapabilities),
+      },
+    ],
+  };
 
   /// Makes request to configured Ably provisioning URL and returns a
   /// new key for test application instance
@@ -102,8 +98,10 @@ class AppProvisioning {
 
     if (response.statusCode != HttpStatus.created) {
       log("Server didn't return success. ${response.body}");
-      throw HttpException("Server didn't return success."
-          ' Status: ${response.statusCode} : ${response.body}');
+      throw HttpException(
+        "Server didn't return success."
+        ' Status: ${response.statusCode} : ${response.body}',
+      );
     }
 
     final responseBody = jsonDecode(response.body) as Map<String, dynamic>;
@@ -121,8 +119,10 @@ class AppProvisioning {
 
     if (response.statusCode != HttpStatus.ok) {
       log("Server didn't return success. ${response.body}");
-      throw HttpException("Server didn't return success."
-          ' Status: ${response.statusCode} : ${response.body}');
+      throw HttpException(
+        "Server didn't return success."
+        ' Status: ${response.statusCode} : ${response.body}',
+      );
     }
 
     return Map.castFrom<dynamic, dynamic, String, dynamic>(

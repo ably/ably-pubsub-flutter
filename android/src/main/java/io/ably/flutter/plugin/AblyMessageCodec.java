@@ -23,29 +23,29 @@ import io.ably.flutter.plugin.types.SerializationException;
 import io.ably.flutter.plugin.types.PlatformClientOptions;
 import io.ably.flutter.plugin.util.CipherParamsStorage;
 import io.ably.flutter.plugin.util.Consumer;
-import io.ably.lib.push.LocalDevice;
-import io.ably.lib.push.Push;
-import io.ably.lib.push.PushBase;
-import io.ably.lib.realtime.ChannelEvent;
-import io.ably.lib.realtime.ChannelState;
-import io.ably.lib.realtime.ChannelStateListener;
-import io.ably.lib.realtime.ConnectionEvent;
-import io.ably.lib.realtime.ConnectionState;
-import io.ably.lib.rest.Auth;
-import io.ably.lib.rest.Auth.TokenDetails;
-import io.ably.lib.rest.DeviceDetails;
-import io.ably.lib.types.AsyncPaginatedResult;
-import io.ably.lib.types.ChannelMode;
-import io.ably.lib.types.ChannelOptions;
-import io.ably.lib.types.ClientOptions;
-import io.ably.lib.types.DeltaExtras;
-import io.ably.lib.types.ErrorInfo;
-import io.ably.lib.types.Message;
-import io.ably.lib.types.MessageExtras;
-import io.ably.lib.types.Param;
-import io.ably.lib.types.PresenceMessage;
-import io.ably.lib.util.Crypto;
-import io.ably.lib.util.Log;
+import io.ably.pubsub.push.LocalDevice;
+import io.ably.pubsub.push.Push;
+import io.ably.pubsub.push.PushBase;
+import io.ably.pubsub.realtime.ChannelEvent;
+import io.ably.pubsub.realtime.ChannelState;
+import io.ably.pubsub.realtime.ChannelStateListener;
+import io.ably.pubsub.realtime.ConnectionEvent;
+import io.ably.pubsub.realtime.ConnectionState;
+import io.ably.pubsub.http.Auth;
+import io.ably.pubsub.http.Auth.TokenDetails;
+import io.ably.pubsub.http.DeviceDetails;
+import io.ably.pubsub.types.AsyncPaginatedResult;
+import io.ably.pubsub.types.ChannelMode;
+import io.ably.pubsub.types.ChannelOptions;
+import io.ably.pubsub.types.ClientOptions;
+import io.ably.pubsub.types.DeltaExtras;
+import io.ably.pubsub.types.ErrorInfo;
+import io.ably.pubsub.types.Message;
+import io.ably.pubsub.types.MessageExtras;
+import io.ably.pubsub.types.Param;
+import io.ably.pubsub.types.PresenceMessage;
+import io.ably.pubsub.util.Crypto;
+import io.ably.pubsub.util.Log;
 import io.flutter.plugin.common.StandardMessageCodec;
 
 public class AblyMessageCodec extends StandardMessageCodec {
@@ -110,18 +110,12 @@ public class AblyMessageCodec extends StandardMessageCodec {
                         new CodecPair<>(self::encodeTokenDetails, self::decodeTokenDetails));
                 put(PlatformConstants.CodecTypes.tokenRequest,
                         new CodecPair<>(self::encodeTokenRequest, self::decodeTokenRequest));
-                put(PlatformConstants.CodecTypes.restChannelOptions,
-                        new CodecPair<>(null, self::decodeRestChannelOptions));
                 put(PlatformConstants.CodecTypes.realtimeChannelOptions,
                         new CodecPair<>(null, self::decodeRealtimeChannelOptions));
                 put(PlatformConstants.CodecTypes.paginatedResult,
                         new CodecPair<>(self::encodePaginatedResult, null));
-                put(PlatformConstants.CodecTypes.restHistoryParams,
-                        new CodecPair<>(null, self::decodeRestHistoryParams));
                 put(PlatformConstants.CodecTypes.realtimeHistoryParams,
                         new CodecPair<>(null, self::decodeRealtimeHistoryParams));
-                put(PlatformConstants.CodecTypes.restPresenceParams,
-                        new CodecPair<>(null, self::decodeRestPresenceParams));
                 put(PlatformConstants.CodecTypes.realtimePresenceParams,
                         new CodecPair<>(null, self::decodeRealtimePresenceParams));
                 put(PlatformConstants.CodecTypes.errorInfo,
@@ -207,7 +201,6 @@ public class AblyMessageCodec extends StandardMessageCodec {
         } else if (value instanceof Crypto.CipherParams) {
             return PlatformConstants.CodecTypes.cipherParams;
         } else if (value instanceof ChannelOptions) {
-            // Encoding it into a RealtimeChannelOptions instance, because it extends RestChannelOptions
             return PlatformConstants.CodecTypes.realtimeChannelOptions;
         } else if (value instanceof TokenDetails) {
             return PlatformConstants.CodecTypes.tokenDetails;
@@ -337,8 +330,7 @@ public class AblyMessageCodec extends StandardMessageCodec {
         readValueFromJson(jsonMap, PlatformConstants.TxClientOptions.clientId, v -> clientOptions.clientId = (String) v);
         readValueFromJson(jsonMap, PlatformConstants.TxClientOptions.logLevel, v -> clientOptions.logLevel = decodeLogLevel((String) v));
         readValueFromJson(jsonMap, PlatformConstants.TxClientOptions.tls, v -> clientOptions.tls = (Boolean) v);
-        readValueFromJson(jsonMap, PlatformConstants.TxClientOptions.restHost, v -> clientOptions.restHost = (String) v);
-        readValueFromJson(jsonMap, PlatformConstants.TxClientOptions.realtimeHost, v -> clientOptions.realtimeHost = (String) v);
+        readValueFromJson(jsonMap, PlatformConstants.TxClientOptions.endpoint, v -> clientOptions.endpoint = (String) v);
         readValueFromJson(jsonMap, PlatformConstants.TxClientOptions.port, v -> clientOptions.port = (Integer) v);
         readValueFromJson(jsonMap, PlatformConstants.TxClientOptions.tlsPort, v -> clientOptions.tlsPort = (Integer) v);
         clientOptions.autoConnect = false; // Always avoid auto-connect, to allow handle to be returned back to Dart side before authCallback is called.
@@ -348,14 +340,12 @@ public class AblyMessageCodec extends StandardMessageCodec {
         readValueFromJson(jsonMap, PlatformConstants.TxClientOptions.queueMessages, v -> clientOptions.queueMessages = (Boolean) v);
         readValueFromJson(jsonMap, PlatformConstants.TxClientOptions.echoMessages, v -> clientOptions.echoMessages = (Boolean) v);
         readValueFromJson(jsonMap, PlatformConstants.TxClientOptions.recover, v -> clientOptions.recover = (String) v);
-        readValueFromJson(jsonMap, PlatformConstants.TxClientOptions.environment, v -> clientOptions.environment = (String) v);
         readValueFromJson(jsonMap, PlatformConstants.TxClientOptions.idempotentRestPublishing, v -> clientOptions.idempotentRestPublishing = (Boolean) v);
         readValueFromJson(jsonMap, PlatformConstants.TxClientOptions.httpOpenTimeout, v -> clientOptions.httpOpenTimeout = (Integer) v);
         readValueFromJson(jsonMap, PlatformConstants.TxClientOptions.httpRequestTimeout, v -> clientOptions.httpRequestTimeout = (Integer) v);
         readValueFromJson(jsonMap, PlatformConstants.TxClientOptions.httpMaxRetryCount, v -> clientOptions.httpMaxRetryCount = (Integer) v);
         readValueFromJson(jsonMap, PlatformConstants.TxClientOptions.realtimeRequestTimeout, v -> clientOptions.realtimeRequestTimeout = readValueAsLong(v));
         readValueFromJson(jsonMap, PlatformConstants.TxClientOptions.fallbackHosts, v -> clientOptions.fallbackHosts = Arrays.copyOf(((ArrayList<?>)v).toArray(), ((ArrayList<?>)v).size(), String[].class));
-        readValueFromJson(jsonMap, PlatformConstants.TxClientOptions.fallbackHostsUseDefault, v -> clientOptions.fallbackHostsUseDefault = (Boolean) v);
         readValueFromJson(jsonMap, PlatformConstants.TxClientOptions.fallbackRetryTimeout, v -> clientOptions.fallbackRetryTimeout = readValueAsLong(v));
         readValueFromJson(jsonMap, PlatformConstants.TxClientOptions.defaultTokenParams, v -> clientOptions.defaultTokenParams = decodeTokenParams((Map<String, Object>) v));
         readValueFromJson(jsonMap, PlatformConstants.TxClientOptions.disconnectedRetryTimeout, v -> clientOptions.disconnectedRetryTimeout = (Integer) v);
@@ -454,16 +444,6 @@ public class AblyMessageCodec extends StandardMessageCodec {
         return o;
     }
 
-    private ChannelOptions decodeRestChannelOptions(Map<String, Object> jsonMap) {
-        if (jsonMap == null) return null;
-        ChannelOptions options = new ChannelOptions();
-        options.cipherParams = decodeCipherParams((Map<String, Object>) jsonMap.get(PlatformConstants.TxRestChannelOptions.cipherParams));
-        if (options.cipherParams != null) {
-            options.encrypted = true;
-        }
-        return options;
-    }
-
     private ChannelOptions decodeRealtimeChannelOptions(Map<String, Object> jsonMap) {
         if (jsonMap == null) return null;
         ChannelOptions options = new ChannelOptions();
@@ -520,29 +500,6 @@ public class AblyMessageCodec extends StandardMessageCodec {
         }
     }
 
-    private Param[] decodeRestHistoryParams(Map<String, Object> jsonMap) {
-        if (jsonMap == null) return null;
-        Param[] params = new Param[jsonMap.size()];
-        int index = 0;
-        final Object start = jsonMap.get(PlatformConstants.TxRestHistoryParams.start);
-        final Object end = jsonMap.get(PlatformConstants.TxRestHistoryParams.end);
-        final Object limit = jsonMap.get(PlatformConstants.TxRestHistoryParams.limit);
-        final Object direction = jsonMap.get(PlatformConstants.TxRestHistoryParams.direction);
-        if (start != null) {
-            params[index++] = new Param(PlatformConstants.TxRestHistoryParams.start, readValueAsLong(start));
-        }
-        if (end != null) {
-            params[index++] = new Param(PlatformConstants.TxRestHistoryParams.end, readValueAsLong(end));
-        }
-        if (limit != null) {
-            params[index++] = new Param(PlatformConstants.TxRestHistoryParams.limit, (Integer) limit);
-        }
-        if (direction != null) {
-            params[index] = new Param(PlatformConstants.TxRestHistoryParams.direction, (String) direction);
-        }
-        return params;
-    }
-
     private Param[] decodeRealtimeHistoryParams(Map<String, Object> jsonMap) {
         if (jsonMap == null) return null;
         Param[] params = new Param[jsonMap.size()];
@@ -566,25 +523,6 @@ public class AblyMessageCodec extends StandardMessageCodec {
         }
         if (untilAttach != null) {
             params[index] = new Param(PlatformConstants.TxRealtimeHistoryParams.untilAttach, (boolean) untilAttach);
-        }
-        return params;
-    }
-
-    private Param[] decodeRestPresenceParams(Map<String, Object> jsonMap) {
-        if (jsonMap == null) return null;
-        Param[] params = new Param[jsonMap.size()];
-        int index = 0;
-        final Object limit = jsonMap.get(PlatformConstants.TxRestPresenceParams.limit);
-        final Object clientId = jsonMap.get(PlatformConstants.TxRestPresenceParams.clientId);
-        final Object connectionId = jsonMap.get(PlatformConstants.TxRestPresenceParams.connectionId);
-        if (limit != null) {
-            params[index++] = new Param(PlatformConstants.TxRestPresenceParams.limit, (Integer) limit);
-        }
-        if (clientId != null) {
-            params[index++] = new Param(PlatformConstants.TxRestPresenceParams.clientId, (String) clientId);
-        }
-        if (connectionId != null) {
-            params[index] = new Param(PlatformConstants.TxRestPresenceParams.connectionId, (String) connectionId);
         }
         return params;
     }
