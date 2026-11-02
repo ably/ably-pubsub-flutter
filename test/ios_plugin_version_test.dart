@@ -8,14 +8,17 @@ import 'package:flutter_test/flutter_test.dart';
 /// bumped alongside it.
 void main() {
   test('iOS plugin version matches pubspec.yaml', () {
-    final pubspecVersion = RegExp(r'^version:\s*(\S+)', multiLine: true)
-        .firstMatch(File('pubspec.yaml').readAsStringSync())!
-        .group(1);
+    final pubspecVersion = RegExp(
+      r'^version:\s*(\S+)',
+      multiLine: true,
+    ).firstMatch(File('pubspec.yaml').readAsStringSync())!.group(1);
     final iosVersion = RegExp('FLUTTER_PACKAGE_PLUGIN_VERSION @"([^"]+)"')
-        .firstMatch(File(
-          'ios/ably_pubsub_device_flutter/Sources/ably_pubsub_device_flutter/'
-          'codec/AblyFlutterVersion.h',
-        ).readAsStringSync())!
+        .firstMatch(
+          File(
+            'ios/ably_pubsub_device_flutter/Sources/ably_pubsub_device_flutter/'
+            'codec/AblyFlutterVersion.h',
+          ).readAsStringSync(),
+        )!
         .group(1);
 
     expect(iosVersion, pubspecVersion);

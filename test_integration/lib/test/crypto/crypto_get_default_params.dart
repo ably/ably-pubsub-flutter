@@ -13,8 +13,9 @@ Future<Map<String, dynamic>> testCryptoGetDefaultParams({
 
   final keyWithDefaultLength = await Crypto.generateRandomKey();
 
-  final keyWith127BitLength =
-      Uint8List.fromList(List.generate(127, (index) => index));
+  final keyWith127BitLength = Uint8List.fromList(
+    List.generate(127, (index) => index),
+  );
 
   try {
     await Crypto.getDefaultParams(key: keyWith127BitLength);

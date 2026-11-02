@@ -9,33 +9,33 @@ class RealtimeAuth extends Auth {
   RealtimeAuth(this._realtime);
 
   @override
-  Future<TokenDetails> authorize(
-          {AuthOptions? authOptions, TokenParams? tokenParams}) =>
-      _realtime.invokeRequest<TokenDetails>(
-          PlatformMethod.realtimeAuthAuthorize, {
-        TxTransportKeys.options: authOptions,
-        TxTransportKeys.params: tokenParams
-      });
+  Future<TokenDetails> authorize({
+    AuthOptions? authOptions,
+    TokenParams? tokenParams,
+  }) => _realtime.invokeRequest<TokenDetails>(
+    PlatformMethod.realtimeAuthAuthorize,
+    {TxTransportKeys.options: authOptions, TxTransportKeys.params: tokenParams},
+  );
 
   @override
   Future<String?> get clientId async =>
       _realtime.invokeRequest<String>(PlatformMethod.realtimeAuthGetClientId);
 
   @override
-  Future<TokenRequest> createTokenRequest(
-          {AuthOptions? authOptions, TokenParams? tokenParams}) =>
-      _realtime.invokeRequest<TokenRequest>(
-          PlatformMethod.realtimeAuthCreateTokenRequest, {
-        TxTransportKeys.options: authOptions,
-        TxTransportKeys.params: tokenParams
-      });
+  Future<TokenRequest> createTokenRequest({
+    AuthOptions? authOptions,
+    TokenParams? tokenParams,
+  }) => _realtime.invokeRequest<TokenRequest>(
+    PlatformMethod.realtimeAuthCreateTokenRequest,
+    {TxTransportKeys.options: authOptions, TxTransportKeys.params: tokenParams},
+  );
 
   @override
-  Future<TokenDetails> requestToken(
-          {AuthOptions? authOptions, TokenParams? tokenParams}) =>
-      _realtime.invokeRequest<TokenDetails>(
-          PlatformMethod.realtimeAuthRequestToken, {
-        TxTransportKeys.options: authOptions,
-        TxTransportKeys.params: tokenParams
-      });
+  Future<TokenDetails> requestToken({
+    AuthOptions? authOptions,
+    TokenParams? tokenParams,
+  }) => _realtime.invokeRequest<TokenDetails>(
+    PlatformMethod.realtimeAuthRequestToken,
+    {TxTransportKeys.options: authOptions, TxTransportKeys.params: tokenParams},
+  );
 }

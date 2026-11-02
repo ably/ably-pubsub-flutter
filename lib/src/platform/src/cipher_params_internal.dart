@@ -33,18 +33,14 @@ class CipherParamsInternal implements CipherParams {
 
   /// @nodoc
   /// Create a Dart side representation of CipherParams for iOS devices
-  CipherParamsInternal.forIOS({
-    required this.algorithm,
-    required this.key,
-  }) {
+  CipherParamsInternal.forIOS({required this.algorithm, required this.key}) {
     if (!io.Platform.isIOS) {
-      throw AblyException(
-        message: 'This method is for iOS platforms only',
-      );
+      throw AblyException(message: 'This method is for iOS platforms only');
     }
     if (key == null) {
       throw AblyException(
-        message: 'CipherParamsNative on iOS must have a key, as '
+        message:
+            'CipherParamsNative on iOS must have a key, as '
             'this key is used to regenerate the ARTCipherParams on the '
             'iOS side.',
       );
@@ -53,15 +49,14 @@ class CipherParamsInternal implements CipherParams {
 
   /// @nodoc
   /// Create a Dart side representation of CipherParams for Android devices
-  CipherParamsInternal.forAndroid({
-    required this.androidHandle,
-  }) {
+  CipherParamsInternal.forAndroid({required this.androidHandle}) {
     if (!io.Platform.isAndroid) {
       throw AblyException(message: 'This method is for Android platforms only');
     }
     if (androidHandle == null) {
       throw AblyException(
-        message: 'CipherParamsNative on Android must have a handle, '
+        message:
+            'CipherParamsNative on Android must have a handle, '
             'as this key is used to get the previously generated '
             'CipherParams on the Android side',
       );

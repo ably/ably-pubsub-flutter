@@ -19,24 +19,23 @@ class RemoteMessage {
 
   /// @nodoc
   /// Initializes an instance with [data] set to empty map
-  RemoteMessage({
-    Map<String, dynamic>? data,
-    this.notification,
-  }) : data = data ??= {};
+  RemoteMessage({Map<String, dynamic>? data, this.notification})
+    : data = data ??= {};
 
   /// @nodoc
   /// Create instance from a map.
   factory RemoteMessage.fromMap(Map<String, dynamic> map) => RemoteMessage(
-        data: (map[TxRemoteMessage.data] == null)
-            ? <String, dynamic>{}
-            : Map<String, dynamic>.from(
-                map[TxRemoteMessage.data] as Map<dynamic, dynamic>,
-              ),
-        notification: (map[TxRemoteMessage.notification] == null)
-            ? null
-            : Notification.fromMap(
-                Map<String, dynamic>.from(
-                    map[TxRemoteMessage.notification] as Map<dynamic, dynamic>),
-              ),
-      );
+    data: (map[TxRemoteMessage.data] == null)
+        ? <String, dynamic>{}
+        : Map<String, dynamic>.from(
+            map[TxRemoteMessage.data] as Map<dynamic, dynamic>,
+          ),
+    notification: (map[TxRemoteMessage.notification] == null)
+        ? null
+        : Notification.fromMap(
+            Map<String, dynamic>.from(
+              map[TxRemoteMessage.notification] as Map<dynamic, dynamic>,
+            ),
+          ),
+  );
 }

@@ -21,31 +21,20 @@ class AblyMessage<T> {
   /// creates instance with a non-null [message]
   ///
   /// [handle] and [type] are optional
-  const AblyMessage({
-    required this.message,
-    this.handle,
-    this.type,
-  });
+  const AblyMessage({required this.message, this.handle, this.type});
 
   /// @nodoc
   /// creates instance with [message] set to empty map
   ///
   /// [handle] and [type] are optional
-  static AblyMessage<Map<String, dynamic>> empty({
-    int? handle,
-    int? type,
-  }) =>
-      AblyMessage(
-        message: const {},
-        handle: handle,
-        type: type,
-      );
+  static AblyMessage<Map<String, dynamic>> empty({int? handle, int? type}) =>
+      AblyMessage(message: const {}, handle: handle, type: type);
 
   /// @nodoc
   /// Cast ably message from [G] to [T]
   static AblyMessage<T> castFrom<G, T>(AblyMessage<G> source) => AblyMessage(
-        message: source.message as T,
-        handle: source.handle,
-        type: source.type,
-      );
+    message: source.message as T,
+    handle: source.handle,
+    type: source.type,
+  );
 }

@@ -53,8 +53,9 @@ void testRealtimePublishSpec(FlutterDriver Function() getDriver) {
     messages = transformListResponse(response.payload['publishedMessages']);
     messages2 = transformListResponse(response.payload['publishedMessages2']);
     messages3 = transformListResponse(response.payload['publishedMessages3']);
-    messagesWithExtras =
-        transformListResponse(response.payload['publishedExtras']);
+    messagesWithExtras = transformListResponse(
+      response.payload['publishedExtras'],
+    );
     exception = response.payload['exception'] as Map<String, dynamic>?;
   });
 
@@ -96,15 +97,13 @@ void testRealtimePublishSpec(FlutterDriver Function() getDriver) {
       expect(messages[5]['timestamp'] != messages[4]['timestamp'], true);
     });
 
-    test(
-        '(RSL1m1) Publishing a Message with no clientId when the clientId'
+    test('(RSL1m1) Publishing a Message with no clientId when the clientId'
         ' is set to some value in the client options should result in a message'
         ' received with the clientId property set to that value', () {
       expect(messages[0]['clientId'], 'someClientId');
     });
 
-    test(
-        '(RSL1m2) Publishing a Message with a clientId set to the same'
+    test('(RSL1m2) Publishing a Message with a clientId set to the same'
         ' value as the clientId in the client options should result in'
         ' a message received with the clientId property set to that value', () {
       expect(messages[7]['clientId'], 'someClientId');
@@ -132,13 +131,10 @@ void testRealtimePublishSpec(FlutterDriver Function() getDriver) {
       () => expect(messages2[0]['clientId'], 'client-id'),
     );
 
-    test(
-      'publishes non-ascii characters',
-      () {
-        expect(messages3[0]['name'], 'Ωπ');
-        expect(messages3[0]['data'], 'ΨΔ');
-      },
-    );
+    test('publishes non-ascii characters', () {
+      expect(messages3[0]['name'], 'Ωπ');
+      expect(messages3[0]['data'], 'ΨΔ');
+    });
   });
 
   test('(RSL6a2) publishes message extras', () {
@@ -173,21 +169,27 @@ void testRealtimeEncryptedPublishSpec(FlutterDriver Function() getDriver) {
   setUpAll(() async {
     response = await requestDataForTest(getDriver(), message);
 
-    historyOfEncryptedChannel =
-        transformListResponse(response.payload['historyOfEncryptedChannel']);
-    historyOfPlaintextChannel =
-        transformListResponse(response.payload['historyOfPlaintextChannel']);
+    historyOfEncryptedChannel = transformListResponse(
+      response.payload['historyOfEncryptedChannel'],
+    );
+    historyOfPlaintextChannel = transformListResponse(
+      response.payload['historyOfPlaintextChannel'],
+    );
     historyOfEncryptedPushEnabledChannel = transformListResponse(
-        response.payload['historyOfEncryptedPushEnabledChannel']);
+      response.payload['historyOfEncryptedPushEnabledChannel'],
+    );
     historyOfPlaintextPushEnabledChannel = transformListResponse(
-        response.payload['historyOfPlaintextPushEnabledChannel']);
+      response.payload['historyOfPlaintextPushEnabledChannel'],
+    );
   });
 
   group('RSL5', () {
     test('does not encrypt name', () {
       for (var i = 0; i < historyOfEncryptedPushEnabledChannel.length; i++) {
-        expect(historyOfEncryptedChannel[i]['name'],
-            equals(historyOfPlaintextChannel[i]['name']));
+        expect(
+          historyOfEncryptedChannel[i]['name'],
+          equals(historyOfPlaintextChannel[i]['name']),
+        );
       }
     });
 
@@ -205,8 +207,10 @@ void testRealtimeEncryptedPublishSpec(FlutterDriver Function() getDriver) {
 
     test('does not encrypt extras', () {
       for (var i = 0; i < historyOfEncryptedPushEnabledChannel.length; i++) {
-        expect(historyOfEncryptedPushEnabledChannel[i]['name'],
-            equals(historyOfPlaintextPushEnabledChannel[i]['name']));
+        expect(
+          historyOfEncryptedPushEnabledChannel[i]['name'],
+          equals(historyOfPlaintextPushEnabledChannel[i]['name']),
+        );
       }
     });
   });
@@ -246,70 +250,63 @@ void testRealtimeEvents(FlutterDriver Function() getDriver) {
   group('realtime#channel#connection', () {
     test('#state', () {
       expect(
-          connectionStates,
-          orderedEquals(const [
-            'initialized',
-            'initialized',
-            'connected',
-            'connected',
-            'closed',
-          ]));
+        connectionStates,
+        orderedEquals(const [
+          'initialized',
+          'initialized',
+          'connected',
+          'connected',
+          'closed',
+        ]),
+      );
     });
     test(
       '#on returns a stream which can be subscribed for connectionStateChanges',
       () {
         expect(
-            connectionStateChanges.map((e) => e['event']),
-            orderedEquals(const [
-              'connecting',
-              'connected',
-              'closing',
-              'closed',
-            ]));
+          connectionStateChanges.map((e) => e['event']),
+          orderedEquals(const ['connecting', 'connected', 'closing', 'closed']),
+        );
         expect(
-            connectionStateChanges.map((e) => e['previous']),
-            orderedEquals(const [
-              'initialized',
-              'connecting',
-              'connected',
-              'closing',
-            ]));
+          connectionStateChanges.map((e) => e['previous']),
+          orderedEquals(const [
+            'initialized',
+            'connecting',
+            'connected',
+            'closing',
+          ]),
+        );
       },
     );
 
-    test(
-      '#on returns a stream which can be subscribed'
-      ' for connection state changes with filter',
-      () {
-        expect(filteredConnectionStateChanges.map((e) => e['event']), const [
-          'connected',
-        ]);
-        expect(filteredConnectionStateChanges.map((e) => e['current']), const [
-          'connected',
-        ]);
-        expect(filteredConnectionStateChanges.map((e) => e['previous']), const [
-          'connecting',
-        ]);
-      },
-    );
+    test('#on returns a stream which can be subscribed'
+        ' for connection state changes with filter', () {
+      expect(filteredConnectionStateChanges.map((e) => e['event']), const [
+        'connected',
+      ]);
+      expect(filteredConnectionStateChanges.map((e) => e['current']), const [
+        'connected',
+      ]);
+      expect(filteredConnectionStateChanges.map((e) => e['previous']), const [
+        'connecting',
+      ]);
+    });
   });
 
   group('realtime#channel#chanenls#channel', () {
-    test(
-      '#state',
-      () {
-        expect(
-            channelStates,
-            orderedEquals(const [
-              'initialized',
-              'initialized',
-              'attached',
-              'attached',
-              'detached',
-              'detached',
-            ]));
-      },
-    );
+    test('#state', () {
+      expect(
+        channelStates,
+        orderedEquals(const [
+          'initialized',
+          'initialized',
+          'attached',
+          'attached',
+          'detached',
+          'detached',
+        ]),
+      );
+    });
     test(
       '#on returns a stream which can be subscribed for channel state changes',
       () {
@@ -359,55 +356,54 @@ void testRealtimeEvents(FlutterDriver Function() getDriver) {
           ];
         }
 
-        expect(channelStateChanges.map((e) => e['event']),
-            orderedEquals(_stateChangeEvents));
+        expect(
+          channelStateChanges.map((e) => e['event']),
+          orderedEquals(_stateChangeEvents),
+        );
 
-        expect(channelStateChanges.map((e) => e['current']),
-            orderedEquals(_stateChangeCurrent));
+        expect(
+          channelStateChanges.map((e) => e['current']),
+          orderedEquals(_stateChangeCurrent),
+        );
 
-        expect(channelStateChanges.map((e) => e['previous']),
-            orderedEquals(_stateChangePrevious));
+        expect(
+          channelStateChanges.map((e) => e['previous']),
+          orderedEquals(_stateChangePrevious),
+        );
       },
     );
 
-    test(
-      '#on returns a stream which can be subscribed'
-      ' for channel state changes with filter',
-      () {
-        List<String> _stateChangeCurrent;
-        List<String> _stateChangePrevious;
-        List<String> _stateChangeEvents;
-        if (channelStateChanges.length == 4) {
-          // iOS
-          _stateChangeCurrent = const [
-            'attaching',
-          ];
-          _stateChangePrevious = const [
-            'initialized',
-          ];
-        } else {
-          // Android
-          _stateChangeCurrent = const [
-            'attaching',
-            'attaching',
-          ];
-          _stateChangePrevious = const [
-            'initialized',
-            'attaching',
-          ];
-        }
-        _stateChangeEvents = _stateChangeCurrent;
-        // filteredChannelStateChanges
-        expect(filteredChannelStateChanges.map((e) => e['event']),
-            orderedEquals(_stateChangeEvents));
+    test('#on returns a stream which can be subscribed'
+        ' for channel state changes with filter', () {
+      List<String> _stateChangeCurrent;
+      List<String> _stateChangePrevious;
+      List<String> _stateChangeEvents;
+      if (channelStateChanges.length == 4) {
+        // iOS
+        _stateChangeCurrent = const ['attaching'];
+        _stateChangePrevious = const ['initialized'];
+      } else {
+        // Android
+        _stateChangeCurrent = const ['attaching', 'attaching'];
+        _stateChangePrevious = const ['initialized', 'attaching'];
+      }
+      _stateChangeEvents = _stateChangeCurrent;
+      // filteredChannelStateChanges
+      expect(
+        filteredChannelStateChanges.map((e) => e['event']),
+        orderedEquals(_stateChangeEvents),
+      );
 
-        expect(filteredChannelStateChanges.map((e) => e['current']),
-            orderedEquals(_stateChangeCurrent));
+      expect(
+        filteredChannelStateChanges.map((e) => e['current']),
+        orderedEquals(_stateChangeCurrent),
+      );
 
-        expect(filteredChannelStateChanges.map((e) => e['previous']),
-            orderedEquals(_stateChangePrevious));
-      },
-    );
+      expect(
+        filteredChannelStateChanges.map((e) => e['previous']),
+        orderedEquals(_stateChangePrevious),
+      );
+    });
   });
 }
 
@@ -422,55 +418,47 @@ void testRealtimeSubscribe(FlutterDriver Function() getDriver) {
   setUpAll(() async {
     response = await requestDataForTest(getDriver(), message);
     all = transformListResponse(response.payload['all']);
-    filteredWithName =
-        transformListResponse(response.payload['filteredWithName']);
+    filteredWithName = transformListResponse(
+      response.payload['filteredWithName'],
+    );
     filteredWithNames = transformListResponse(
       response.payload['filteredWithNames'],
     );
     extrasMessages = transformListResponse(response.payload['extrasMessages']);
   });
 
-  test(
-    'realtime#channels#channel#subscribe should subscribe to'
-    ' all message on channel',
-    () {
-      testAllPublishedMessages(all);
-    },
-  );
+  test('realtime#channels#channel#subscribe should subscribe to'
+      ' all message on channel', () {
+    testAllPublishedMessages(all);
+  });
 
-  test(
-    'realtime#channels#channel#subscribe(name: string)'
-    ' should subscribe to messages with specified name',
-    () {
-      expect(filteredWithName.length, equals(2));
+  test('realtime#channels#channel#subscribe(name: string)'
+      ' should subscribe to messages with specified name', () {
+    expect(filteredWithName.length, equals(2));
 
-      expect(filteredWithName[0]['name'], 'name1');
-      expect(filteredWithName[0]['data'], isNull);
+    expect(filteredWithName[0]['name'], 'name1');
+    expect(filteredWithName[0]['data'], isNull);
 
-      expect(filteredWithName[1]['name'], 'name1');
-      expect(filteredWithName[1]['data'], equals('Ably'));
-    },
-  );
+    expect(filteredWithName[1]['name'], 'name1');
+    expect(filteredWithName[1]['data'], equals('Ably'));
+  });
 
-  test(
-    'realtime#channels#channel#subscribe(names: List<string>)'
-    ' should subscribe to messages with specified names',
-    () {
-      expect(filteredWithNames.length, equals(4));
+  test('realtime#channels#channel#subscribe(names: List<string>)'
+      ' should subscribe to messages with specified names', () {
+    expect(filteredWithNames.length, equals(4));
 
-      expect(filteredWithNames[0]['name'], 'name1');
-      expect(filteredWithNames[0]['data'], isNull);
+    expect(filteredWithNames[0]['name'], 'name1');
+    expect(filteredWithNames[0]['data'], isNull);
 
-      expect(filteredWithNames[1]['name'], 'name1');
-      expect(filteredWithNames[1]['data'], equals('Ably'));
+    expect(filteredWithNames[1]['name'], 'name1');
+    expect(filteredWithNames[1]['data'], equals('Ably'));
 
-      expect(filteredWithNames[2]['name'], 'name2');
-      expect(filteredWithNames[2]['data'], equals([1, 2, 3]));
+    expect(filteredWithNames[2]['name'], 'name2');
+    expect(filteredWithNames[2]['data'], equals([1, 2, 3]));
 
-      expect(filteredWithNames[3]['name'], 'name2');
-      expect(filteredWithNames[3]['data'], equals(['hello', 'ably']));
-    },
-  );
+    expect(filteredWithNames[3]['name'], 'name2');
+    expect(filteredWithNames[3]['data'], equals(['hello', 'ably']));
+  });
 
   test('retrieves extras posted in message', () {
     expect(extrasMessages[0]['name'], 'name');
@@ -499,10 +487,12 @@ void testRealtimeHistory(FlutterDriver Function() getDriver) {
     historyDefault = transformListResponse(response.payload['historyDefault']);
     historyLimit4 = transformListResponse(response.payload['historyLimit4']);
     historyLimit2 = transformListResponse(response.payload['historyLimit2']);
-    historyForwardLimit4 =
-        transformListResponse(response.payload['historyForwardLimit4']);
-    historyWithStart =
-        transformListResponse(response.payload['historyWithStart']);
+    historyForwardLimit4 = transformListResponse(
+      response.payload['historyForwardLimit4'],
+    );
+    historyWithStart = transformListResponse(
+      response.payload['historyWithStart'],
+    );
     historyWithStartAndEnd = transformListResponse(
       response.payload['historyWithStartAndEnd'],
     );
@@ -531,11 +521,13 @@ void testRealtimeHistory(FlutterDriver Function() getDriver) {
       testAllPublishedMessages(historyLimit4.reversed.toList());
       testAllPublishedMessages(historyLimit2.reversed.toList());
     });
-    test('queries entries in reverse order with direction set to "forward"',
-        () {
-      expect(historyForwardLimit4.length, equals(8));
-      testAllPublishedMessages(historyForwardLimit4);
-    });
+    test(
+      'queries entries in reverse order with direction set to "forward"',
+      () {
+        expect(historyForwardLimit4.length, equals(8));
+        testAllPublishedMessages(historyForwardLimit4);
+      },
+    );
     test('returns entries created after specified time', () {
       expect(historyWithStart.length, equals(2));
       expect(historyWithStart[0]['name'], equals('history'));
@@ -555,7 +547,8 @@ void testRealtimeHistoryWithAuthCallback(FlutterDriver Function() getDriver) {
   const message = TestControlMessage(TestName.realtimeHistoryWithAuthCallback);
   late TestControlResponseMessage response;
   setUpAll(
-      () async => response = await requestDataForTest(getDriver(), message));
+    () async => response = await requestDataForTest(getDriver(), message),
+  );
 
   test('auth callback is invoked', () {
     expect(response.payload['authCallbackInvoked'], isTrue);
@@ -592,10 +585,12 @@ void testRealtimePresenceGet(FlutterDriver Function() getDriver) {
     response = await requestDataForTest(getDriver(), message);
     membersInitial = transformListResponse(response.payload['membersInitial']);
     membersDefault = transformListResponse(response.payload['membersDefault']);
-    membersClientId =
-        transformListResponse(response.payload['membersClientId']);
-    membersConnectionId =
-        transformListResponse(response.payload['membersConnectionId']);
+    membersClientId = transformListResponse(
+      response.payload['membersClientId'],
+    );
+    membersConnectionId = transformListResponse(
+      response.payload['membersConnectionId'],
+    );
   });
 
   group('realtime#channels#channel#presence#get', () {
@@ -639,8 +634,9 @@ void testRealtimePresenceHistory(FlutterDriver Function() getDriver) {
     historyDefault = transformListResponse(response.payload['historyDefault']);
     historyLimit4 = transformListResponse(response.payload['historyLimit4']);
     historyLimit2 = transformListResponse(response.payload['historyLimit2']);
-    historyForwards =
-        transformListResponse(response.payload['historyForwards']);
+    historyForwards = transformListResponse(
+      response.payload['historyForwards'],
+    );
     historyWithStart = transformListResponse(
       response.payload['historyWithStart'],
     ).reversed.toList();
@@ -663,13 +659,10 @@ void testRealtimePresenceHistory(FlutterDriver Function() getDriver) {
     testAllPresenceMessagesHistory(historyLimit4.reversed.toList());
     testAllPresenceMessagesHistory(historyLimit2.reversed.toList());
   });
-  test(
-    'queries entries in reverse order with direction set to "forward"',
-    () {
-      expect(historyForwards.length, equals(8));
-      testAllPresenceMessagesHistory(historyForwards.toList());
-    },
-  );
+  test('queries entries in reverse order with direction set to "forward"', () {
+    expect(historyForwards.length, equals(8));
+    testAllPresenceMessagesHistory(historyForwards.toList());
+  });
   test('returns entries created after specified time', () {
     expect(historyWithStart.length, equals(2));
     expect(historyWithStart[0]['clientId'], equals('someClientId'));
@@ -693,8 +686,9 @@ void testRealtimeEnterUpdateLeave(FlutterDriver Function() getDriver) {
 
   setUpAll(() async {
     response = await requestDataForTest(getDriver(), message);
-    clientIDClashMatrix =
-        transformListResponse(response.payload['clientIDClashMatrix']);
+    clientIDClashMatrix = transformListResponse(
+      response.payload['clientIDClashMatrix'],
+    );
     actionMatrix = transformListResponse(response.payload['actionMatrix']);
   });
 
@@ -739,8 +733,7 @@ void testRealtimeEnterUpdateLeave(FlutterDriver Function() getDriver) {
     );
   }
 
-  test(
-      'clientID should be same in both realtime ClientOptions as well as'
+  test('clientID should be same in both realtime ClientOptions as well as'
       ' the one passed to presence enter/update/leave APIs.'
       ' If unequal, throw error.', () {
     for (final clashEntry in clientIDClashMatrix) {
@@ -758,20 +751,10 @@ void testRealtimeEnterUpdateLeave(FlutterDriver Function() getDriver) {
           );
         } else if (presenceClientID == null) {
           // only realtimeClientID is present
-          testMatrixEntry(
-            clashEntry,
-            enter: true,
-            update: true,
-            leave: true,
-          );
+          testMatrixEntry(clashEntry, enter: true, update: true, leave: true);
         } else {
           // both clientIDs are present and are unequal
-          testMatrixEntry(
-            clashEntry,
-            enter: true,
-            update: true,
-            leave: true,
-          );
+          testMatrixEntry(clashEntry, enter: true, update: true, leave: true);
         }
       } else {
         if (presenceClientID == null) {
@@ -820,10 +803,12 @@ void testRealtimePresenceSubscription(FlutterDriver Function() getDriver) {
     response = await requestDataForTest(getDriver(), message);
     allMessages = transformListResponse(response.payload['allMessages']);
     enterMessages = transformListResponse(response.payload['enterMessages']);
-    enterUpdateMessages =
-        transformListResponse(response.payload['enterUpdateMessages']);
-    partialMessages =
-        transformListResponse(response.payload['partialMessages']);
+    enterUpdateMessages = transformListResponse(
+      response.payload['enterUpdateMessages'],
+    );
+    partialMessages = transformListResponse(
+      response.payload['partialMessages'],
+    );
   });
 
   void _test(List<Map<String, dynamic>> messages) {
@@ -838,31 +823,43 @@ void testRealtimePresenceSubscription(FlutterDriver Function() getDriver) {
     }
   }
 
-  test('listens to messages', () {
-    expect(allMessages.length, equals(8));
-    _test(allMessages);
-  },
-      skip:
-          'One message in allMessages gets `present` action, but should have been `enter`. See https://github.com/ably/ably-flutter/issues/150');
+  test(
+    'listens to messages',
+    () {
+      expect(allMessages.length, equals(8));
+      _test(allMessages);
+    },
+    skip:
+        'One message in allMessages gets `present` action, but should have been `enter`. See https://github.com/ably/ably-flutter/issues/150',
+  );
 
-  test('filters messages with single action', () {
-    expect(enterMessages.length, equals(1));
-    _test(enterMessages);
-  },
-      skip:
-          'expected 1 but got 0. See https://github.com/ably/ably-flutter/issues/150');
+  test(
+    'filters messages with single action',
+    () {
+      expect(enterMessages.length, equals(1));
+      _test(enterMessages);
+    },
+    skip:
+        'expected 1 but got 0. See https://github.com/ably/ably-flutter/issues/150',
+  );
 
-  test('filters messages with multiple actions', () {
-    expect(enterUpdateMessages.length, equals(7));
-    _test(enterUpdateMessages);
-  },
-      skip:
-          'Got a length of 6 but expected 7. See https://github.com/ably/ably-flutter/issues/150');
+  test(
+    'filters messages with multiple actions',
+    () {
+      expect(enterUpdateMessages.length, equals(7));
+      _test(enterUpdateMessages);
+    },
+    skip:
+        'Got a length of 6 but expected 7. See https://github.com/ably/ably-flutter/issues/150',
+  );
 
-  test('listens to messages only until subscription is active', () {
-    expect(partialMessages.length, equals(7));
-    expect(partialMessages, equals(enterUpdateMessages));
-  },
-      skip:
-          'Expected a set of messages, but got the same set but with 1 unexpected extra message at the start, with `present` action. See https://github.com/ably/ably-flutter/issues/150');
+  test(
+    'listens to messages only until subscription is active',
+    () {
+      expect(partialMessages.length, equals(7));
+      expect(partialMessages, equals(enterUpdateMessages));
+    },
+    skip:
+        'Expected a set of messages, but got the same set but with 1 unexpected extra message at the start, with `present` action. See https://github.com/ably/ably-flutter/issues/150',
+  );
 }

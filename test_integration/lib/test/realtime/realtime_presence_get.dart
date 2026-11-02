@@ -10,13 +10,12 @@ final logMessages = <List<String?>>[];
 ClientOptions getClientOptions(
   String appKey, [
   String clientId = 'someClientId',
-]) =>
-    ClientOptions(
-      key: appKey,
-      endpoint: 'nonprod:sandbox',
-      clientId: clientId,
-      logLevel: LogLevel.error,
-    );
+]) => ClientOptions(
+  key: appKey,
+  endpoint: 'nonprod:sandbox',
+  clientId: clientId,
+  logLevel: LogLevel.error,
+);
 
 Future<Map<String, dynamic>> testRealtimePresenceGet({
   required Reporter reporter,

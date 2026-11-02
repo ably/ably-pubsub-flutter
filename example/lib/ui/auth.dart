@@ -16,20 +16,23 @@ Future<Map<String, dynamic>> getTokenDetails(
 ]) async {
   final stringToBase64 = utf8.fuse(base64);
   final encoded = stringToBase64.encode('$keyName:$keySecret');
-  final r = await const RetryOptions(
-    maxAttempts: 5,
-    delayFactor: Duration(seconds: 2),
-  ).retry(() => http.post(
-        Uri.parse(_tokenDetailsURL(keyName, prefix)),
-        headers: {
-          'Authorization': 'Basic $encoded',
-          'Content-Type': 'application/json',
-        },
-        body: json.encode({
-          'keyName': keyName,
-          'timestamp': DateTime.now().millisecondsSinceEpoch,
-        }),
-      ));
+  final r =
+      await const RetryOptions(
+        maxAttempts: 5,
+        delayFactor: Duration(seconds: 2),
+      ).retry(
+        () => http.post(
+          Uri.parse(_tokenDetailsURL(keyName, prefix)),
+          headers: {
+            'Authorization': 'Basic $encoded',
+            'Content-Type': 'application/json',
+          },
+          body: json.encode({
+            'keyName': keyName,
+            'timestamp': DateTime.now().millisecondsSinceEpoch,
+          }),
+        ),
+      );
   print('tokenDetails from server: ${r.body}');
   return Map.castFrom<dynamic, dynamic, String, dynamic>(
     jsonDecode(r.body) as Map,

@@ -31,8 +31,8 @@ Future<List<Map<String, dynamic>>> _getAllMessages(
   final subscription = channel
       .subscribe(name: messageName, names: messageNames)
       .listen((message) {
-    messages.add(encodeMessage(message));
-  });
+        messages.add(encodeMessage(message));
+      });
   await publishMessages(channel);
   await subscription.cancel();
   return messages;

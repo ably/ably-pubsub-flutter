@@ -23,24 +23,20 @@ void checkMessageData(int index, Object? data) {
     case 6:
       expect(
         data,
-        equals(
-          {
-            'hello': 'ably',
-            'items': ['1', 2.2, true]
-          },
-        ),
+        equals({
+          'hello': 'ably',
+          'items': ['1', 2.2, true],
+        }),
       );
       break;
     case 7:
       expect(
         data,
-        equals(
-          [
-            {'hello': 'ably'},
-            'ably',
-            'realtime'
-          ],
-        ),
+        equals([
+          {'hello': 'ably'},
+          'ably',
+          'realtime',
+        ]),
       );
   }
 }
@@ -113,6 +109,6 @@ void checkMessageExtras(Map<dynamic, dynamic> messageExtras) {
 }
 
 List<Map<String, dynamic>> transformListResponse(dynamic items) =>
-    List<dynamic>.from(items as List)
-        .map((t) => t as Map<String, dynamic>)
-        .toList();
+    List<dynamic>.from(
+      items as List,
+    ).map((t) => t as Map<String, dynamic>).toList();

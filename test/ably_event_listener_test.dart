@@ -69,8 +69,9 @@ void main() {
 
     //Checking if data received by stream is same as expected
     expect(
-        const ListEquality<int>().equals(resultsDefault, emitter.injectables),
-        true);
+      const ListEquality<int>().equals(resultsDefault, emitter.injectables),
+      true,
+    );
     expect(const ListEquality<int>().equals(resultsNestedPre, [1, 2]), true);
     expect(const ListEquality<int>().equals(resultsNestedPost, [1]), true);
   });

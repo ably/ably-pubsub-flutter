@@ -50,57 +50,70 @@ class StreamsChannel {
     final handlerName = '$name#$id';
 
     late StreamController<T> controller;
-    controller = StreamController<T>.broadcast(onListen: () async {
-      // We need to keep this null-asserted for backwards compatibility with
-      // Flutter versions before 3.0.0
-      // ignore: unnecessary_non_null_assertion
-      ServicesBinding.instance!.defaultBinaryMessenger
-          .setMessageHandler(handlerName, (reply) async {
-        if (reply == null) {
-          await controller.close();
-        } else {
-          try {
-            controller.add(codec.decodeEnvelope(reply) as T);
-          } on PlatformException catch (pe) {
-            if (pe.details is ErrorInfo) {
-              throw AblyException.fromPlatformException(pe);
+    controller = StreamController<T>.broadcast(
+      onListen: () async {
+        // We need to keep this null-asserted for backwards compatibility with
+        // Flutter versions before 3.0.0
+        // ignore: unnecessary_non_null_assertion
+        ServicesBinding.instance!.defaultBinaryMessenger.setMessageHandler(
+          handlerName,
+          (reply) async {
+            if (reply == null) {
+              await controller.close();
             } else {
-              controller.addError(pe);
+              try {
+                controller.add(codec.decodeEnvelope(reply) as T);
+              } on PlatformException catch (pe) {
+                if (pe.details is ErrorInfo) {
+                  throw AblyException.fromPlatformException(pe);
+                } else {
+                  controller.addError(pe);
+                }
+              }
             }
-          }
-        }
 
-        return reply;
-      });
-      try {
-        await methodChannel.invokeMethod('listen#$id', arguments);
-      } on Exception catch (exception, stack) {
-        FlutterError.reportError(FlutterErrorDetails(
-          exception: exception,
-          stack: stack,
-          library: 'streams_channel',
-          context: DiagnosticsNode.message(
-              'while activating platform stream on channel $name'),
-        ));
-      }
-    }, onCancel: () async {
-      // We need to keep this null-asserted for backwards compatibility with
-      // Flutter versions before 3.0.0
-      // ignore: unnecessary_non_null_assertion
-      ServicesBinding.instance!.defaultBinaryMessenger
-          .setMessageHandler(handlerName, null);
-      try {
-        await methodChannel.invokeMethod('cancel#$id', arguments);
-      } on Exception catch (exception, stack) {
-        FlutterError.reportError(FlutterErrorDetails(
-          exception: exception,
-          stack: stack,
-          library: 'streams_channel',
-          context: DiagnosticsNode.message(
-              'while de-activating platform stream on channel $name'),
-        ));
-      }
-    });
+            return reply;
+          },
+        );
+        try {
+          await methodChannel.invokeMethod('listen#$id', arguments);
+        } on Exception catch (exception, stack) {
+          FlutterError.reportError(
+            FlutterErrorDetails(
+              exception: exception,
+              stack: stack,
+              library: 'streams_channel',
+              context: DiagnosticsNode.message(
+                'while activating platform stream on channel $name',
+              ),
+            ),
+          );
+        }
+      },
+      onCancel: () async {
+        // We need to keep this null-asserted for backwards compatibility with
+        // Flutter versions before 3.0.0
+        // ignore: unnecessary_non_null_assertion
+        ServicesBinding.instance!.defaultBinaryMessenger.setMessageHandler(
+          handlerName,
+          null,
+        );
+        try {
+          await methodChannel.invokeMethod('cancel#$id', arguments);
+        } on Exception catch (exception, stack) {
+          FlutterError.reportError(
+            FlutterErrorDetails(
+              exception: exception,
+              stack: stack,
+              library: 'streams_channel',
+              context: DiagnosticsNode.message(
+                'while de-activating platform stream on channel $name',
+              ),
+            ),
+          );
+        }
+      },
+    );
     return controller.stream;
   }
 }

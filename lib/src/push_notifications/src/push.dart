@@ -91,7 +91,8 @@ class Push extends PlatformObject {
   Future<UNNotificationSettings> getNotificationSettings() async {
     if (io.Platform.isIOS) {
       return invokeRequest<UNNotificationSettings>(
-          PlatformMethod.pushGetNotificationSettings);
+        PlatformMethod.pushGetNotificationSettings,
+      );
     } else {
       throw UnsupportedError('getNotificationSettings is only valid on iOS.');
     }

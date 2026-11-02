@@ -17,19 +17,18 @@ Future<Map<String, dynamic>> testRealtimeAuthClientId({
     autoConnect: false,
   );
 
-  final ablyForToken = createClient(
-    options: clientOptionsForToken,
-  );
+  final ablyForToken = createClient(options: clientOptionsForToken);
   /* get first token */
   final firstToken = await ablyForToken.auth.requestToken();
 
   final clientOptions = ClientOptions(
-      key: appKey,
-      endpoint: 'nonprod:sandbox',
-      useTokenAuth: true,
-      autoConnect: false,
-      clientId: 'testClientId',
-      tokenDetails: firstToken);
+    key: appKey,
+    endpoint: 'nonprod:sandbox',
+    useTokenAuth: true,
+    autoConnect: false,
+    clientId: 'testClientId',
+    tokenDetails: firstToken,
+  );
   final realtime = createClient(options: clientOptions);
   await realtime.connect();
 

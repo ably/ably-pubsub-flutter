@@ -23,10 +23,11 @@ import 'package:ably_flutter_integration_test/test/realtime/realtime_publish_wit
 import 'package:ably_flutter_integration_test/test/realtime/realtime_subscribe.dart';
 import 'package:ably_flutter_integration_test/test/realtime/realtime_time_test.dart';
 
-typedef TestFactory = Future<Map<String, dynamic>> Function({
-  required Reporter reporter,
-  Map<String, dynamic>? payload,
-});
+typedef TestFactory =
+    Future<Map<String, dynamic>> Function({
+      required Reporter reporter,
+      Map<String, dynamic>? payload,
+    });
 
 final testFactory = <String, TestFactory>{
   // platform and app key tests

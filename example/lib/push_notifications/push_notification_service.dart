@@ -24,20 +24,20 @@ class PushNotificationService {
   }
 
   final BehaviorSubject<ably.PaginatedResult<ably.PushChannelSubscription>>
-      _pushChannelDeviceSubscriptionsSubject =
+  _pushChannelDeviceSubscriptionsSubject =
       BehaviorSubject<ably.PaginatedResult<ably.PushChannelSubscription>>();
 
   ValueStream<ably.PaginatedResult<ably.PushChannelSubscription>>
-      get pushChannelDeviceSubscriptionsStream =>
-          _pushChannelDeviceSubscriptionsSubject.stream;
+  get pushChannelDeviceSubscriptionsStream =>
+      _pushChannelDeviceSubscriptionsSubject.stream;
 
   final BehaviorSubject<ably.PaginatedResult<ably.PushChannelSubscription>>
-      _pushChannelClientSubscriptionsSubject =
+  _pushChannelClientSubscriptionsSubject =
       BehaviorSubject<ably.PaginatedResult<ably.PushChannelSubscription>>();
 
   ValueStream<ably.PaginatedResult<ably.PushChannelSubscription>>
-      get pushChannelClientSubscriptionsStream =>
-          _pushChannelClientSubscriptionsSubject.stream;
+  get pushChannelClientSubscriptionsStream =>
+      _pushChannelClientSubscriptionsSubject.stream;
 
   final BehaviorSubject<bool> _hasPushChannelSubject =
       BehaviorSubject<bool>.seeded(false);
@@ -55,9 +55,9 @@ class PushNotificationService {
       _userNotificationPermissionGrantedSubject.stream;
 
   final BehaviorSubject<ably.UNNotificationSettings>
-      _notificationSettingsSubject = BehaviorSubject();
+  _notificationSettingsSubject = BehaviorSubject();
   late final ValueStream<ably.UNNotificationSettings>
-      notificationSettingsStream = _notificationSettingsSubject.stream;
+  notificationSettingsStream = _notificationSettingsSubject.stream;
 
   Future<void> ensureRealtimeClientConnected() async {
     if (_realtime.connection.state != ably.ConnectionState.connected) {
@@ -66,12 +66,14 @@ class PushNotificationService {
   }
 
   /// Only valid on iOS
-  Future<void> requestNotificationPermission(
-      {bool provisional = false,
-      bool providesAppNotificationSettings = true}) async {
+  Future<void> requestNotificationPermission({
+    bool provisional = false,
+    bool providesAppNotificationSettings = true,
+  }) async {
     final granted = await _realtime.push.requestPermission(
-        provisional: provisional,
-        providesAppNotificationSettings: providesAppNotificationSettings);
+      provisional: provisional,
+      providesAppNotificationSettings: providesAppNotificationSettings,
+    );
     _userNotificationPermissionGrantedSubject.add(granted);
     await updateNotificationSettings();
   }
@@ -136,19 +138,22 @@ class PushNotificationService {
   Future<void> publishNotificationMessageToChannel() async {
     await ensureRealtimeClientConnected();
     await _realtimeChannel!.publish(
-        message: PushNotificationMessageExamples.pushNotificationMessage);
+      message: PushNotificationMessageExamples.pushNotificationMessage,
+    );
   }
 
   Future<void> publishDataMessageToChannel() async {
     await ensureRealtimeClientConnected();
-    await _realtimeChannel!
-        .publish(message: PushNotificationMessageExamples.pushDataMessage);
+    await _realtimeChannel!.publish(
+      message: PushNotificationMessageExamples.pushDataMessage,
+    );
   }
 
   Future<void> publishDataNotificationMessageToChannel() async {
     await ensureRealtimeClientConnected();
     await _realtimeChannel!.publish(
-        message: PushNotificationMessageExamples.pushDataNotificationMessage);
+      message: PushNotificationMessageExamples.pushDataNotificationMessage,
+    );
   }
 
   void close() {
@@ -163,8 +168,9 @@ class PushNotificationService {
 
   void _getChannels() {
     _hasPushChannelSubject.add(false);
-    _realtimeChannel =
-        _realtime.channels.get(Constants.channelNameForPushNotifications);
+    _realtimeChannel = _realtime.channels.get(
+      Constants.channelNameForPushNotifications,
+    );
     _pushChannel = _realtimeChannel!.push;
     _pushLogMetaChannel = _realtime.channels.get(Constants.pushMetaChannelName);
     _hasPushChannelSubject.add(true);
@@ -175,7 +181,7 @@ class PushNotificationService {
   /// ably-cocoa will only give the one you specify in params.
   /// This behavior is the same for [listSubscriptionsWithDeviceId]
   Future<ably.PaginatedResult<ably.PushChannelSubscription>>
-      listSubscriptionsWithClientId() async {
+  listSubscriptionsWithClientId() async {
     await getDevice();
     final subscriptions = await _pushChannel!.listSubscriptions({
       'clientId': localDeviceStream.value!.clientId!,
@@ -187,7 +193,7 @@ class PushNotificationService {
   }
 
   Future<ably.PaginatedResult<ably.PushChannelSubscription>>
-      listSubscriptionsWithDeviceId() async {
+  listSubscriptionsWithDeviceId() async {
     await getDevice();
     final subscriptions = await _pushChannel!.listSubscriptions({
       'deviceId': localDeviceStream.value!.id!,

@@ -65,10 +65,7 @@ void main() {
 
       expect(
         channels.where((e) => e.name.endsWith('3')).map((e) => e.name).toList(),
-        orderedEquals(const [
-          'channel-3',
-          'channel-33',
-        ]),
+        orderedEquals(const ['channel-3', 'channel-33']),
       );
     });
 
@@ -87,8 +84,7 @@ void main() {
     });
 
     group('#release', () {
-      test(
-          '(RTS4d) Releasing a channel the platform SDK releases'
+      test('(RTS4d) Releasing a channel the platform SDK releases'
           ' removes it from the collection', () async {
         channels
           ..get('channel-1')
@@ -99,8 +95,7 @@ void main() {
         expect(channels.exists('channel-1'), false);
       });
 
-      test(
-          '(RTS4c) Calling release() with a channel name'
+      test('(RTS4c) Calling release() with a channel name'
           ' that does not correspond to an extant channel'
           ' must return without error', () async {
         channels
@@ -113,14 +108,14 @@ void main() {
         expect(channels.exists('channel-2'), true);
       });
 
-      test(
-          '(RTS4e) If the platform SDK fails to release the channel,'
+      test('(RTS4e) If the platform SDK fails to release the channel,'
           ' release() completes with its error and the channel is not'
           ' removed', () async {
         final channel = channels.get('channel-1');
         manager.releaseRealtimeChannelError = PlatformException(
           code: '90011',
-          message: 'Can only release a channel in a state where there is no'
+          message:
+              'Can only release a channel in a state where there is no'
               ' possibility of further updates from the server being'
               ' received (initialized, detached, or failed).'
               ' The current state is attached',
@@ -132,8 +127,11 @@ void main() {
           throwsA(
             isA<AblyException>()
                 .having((e) => e.errorInfo?.code, 'errorInfo.code', 90011)
-                .having((e) => e.errorInfo?.statusCode, 'errorInfo.statusCode',
-                    400),
+                .having(
+                  (e) => e.errorInfo?.statusCode,
+                  'errorInfo.statusCode',
+                  400,
+                ),
           ),
         );
         expect(channels.exists('channel-1'), true);

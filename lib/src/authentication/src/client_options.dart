@@ -181,16 +181,16 @@ class ClientOptions extends AuthOptions {
     bool? useBinaryProtocol,
     bool? useTokenAuth,
   }) : super(
-          authCallback: authCallback,
-          authUrl: authUrl,
-          authMethod: authMethod,
-          key: key,
-          tokenDetails: tokenDetails,
-          authHeaders: authHeaders,
-          authParams: authParams,
-          queryTime: queryTime,
-          useTokenAuth: useTokenAuth,
-        ) {
+         authCallback: authCallback,
+         authUrl: authUrl,
+         authMethod: authMethod,
+         key: key,
+         tokenDetails: tokenDetails,
+         authHeaders: authHeaders,
+         authParams: authParams,
+         queryTime: queryTime,
+         useTokenAuth: useTokenAuth,
+       ) {
     this.autoConnect = autoConnect ?? this.autoConnect;
     this.channelRetryTimeout = channelRetryTimeout ?? this.channelRetryTimeout;
     this.disconnectedRetryTimeout =
@@ -209,13 +209,13 @@ class ClientOptions extends AuthOptions {
     this.useBinaryProtocol = useBinaryProtocol ?? this.useBinaryProtocol;
   }
 
-// TODO(tiholic) unimplemented:
-//
-//  (TO3m) logExceptionReportingUrl
-//  (TO3l6) httpMaxRetryDuration
-//  (TO3l8) maxMessageSize
-//  (TO3l9) maxFrameSize
-//  (TO3o) plugins
-//  (TO3p) addRequestIds
-//  (DF1a) connectionStateTtl
+  // TODO(tiholic) unimplemented:
+  //
+  //  (TO3m) logExceptionReportingUrl
+  //  (TO3l6) httpMaxRetryDuration
+  //  (TO3l8) maxMessageSize
+  //  (TO3l9) maxFrameSize
+  //  (TO3o) plugins
+  //  (TO3p) addRequestIds
+  //  (DF1a) connectionStateTtl
 }

@@ -57,8 +57,7 @@ class AppProvisioning {
   );
 
   /// URL used for app provisioning requests
-  String get _provisioningUrl =>
-      'https://$host/apps';
+  String get _provisioningUrl => 'https://$host/apps';
 
   /// URL used for getting token request
   String get _tokenRequestAuthUrl =>
@@ -66,30 +65,27 @@ class AppProvisioning {
 
   /// A set of base headers for HTTP requests
   Map<String, String> get _requestHeaders => {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      };
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  };
 
   /// App spec used to provision the app
   ///
   /// See: https://docs.ably.com/client-lib-development-guide/test-api
   Map<String, List<dynamic>> get _appSpec => {
-        'namespaces': [
-          {
-            'id': 'pushenabled',
-            'pushEnabled': pushEnabled,
-          }
-        ],
-        'keys': [
-          {
-            // The need to use jsonEncode here is a requirement of the
-            // Sandbox Test API. The capability map has to be JSON encoded
-            // as a string and then appropriately escaped in order for
-            // presentation within a string value.
-            'capability': jsonEncode(keyCapabilities),
-          },
-        ],
-      };
+    'namespaces': [
+      {'id': 'pushenabled', 'pushEnabled': pushEnabled},
+    ],
+    'keys': [
+      {
+        // The need to use jsonEncode here is a requirement of the
+        // Sandbox Test API. The capability map has to be JSON encoded
+        // as a string and then appropriately escaped in order for
+        // presentation within a string value.
+        'capability': jsonEncode(keyCapabilities),
+      },
+    ],
+  };
 
   /// Makes request to configured Ably provisioning URL and returns a
   /// new key for test application instance
@@ -102,8 +98,10 @@ class AppProvisioning {
 
     if (response.statusCode != HttpStatus.created) {
       log("Server didn't return success. ${response.body}");
-      throw HttpException("Server didn't return success."
-          ' Status: ${response.statusCode} : ${response.body}');
+      throw HttpException(
+        "Server didn't return success."
+        ' Status: ${response.statusCode} : ${response.body}',
+      );
     }
 
     final responseBody = jsonDecode(response.body) as Map<String, dynamic>;
@@ -121,8 +119,10 @@ class AppProvisioning {
 
     if (response.statusCode != HttpStatus.ok) {
       log("Server didn't return success. ${response.body}");
-      throw HttpException("Server didn't return success."
-          ' Status: ${response.statusCode} : ${response.body}');
+      throw HttpException(
+        "Server didn't return success."
+        ' Status: ${response.statusCode} : ${response.body}',
+      );
     }
 
     return Map.castFrom<dynamic, dynamic, String, dynamic>(

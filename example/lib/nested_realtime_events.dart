@@ -16,16 +16,20 @@ void listenRealtimeConnection(ably.PubSubClient realtime) {
   // and must cancel each subscription one by one
   //RETAINING LISTENER - α
   realtime.connection.on().listen((stateChange) {
-    print('RETAINING LISTENER α :: Change event arrived!: ${stateChange.event}'
-        '\nReason: ${stateChange.reason}');
+    print(
+      'RETAINING LISTENER α :: Change event arrived!: ${stateChange.event}'
+      '\nReason: ${stateChange.reason}',
+    );
   });
 
   //DISPOSE ON CONNECTED
   final stream = realtime.connection.on();
   late StreamSubscription<ably.ConnectionStateChange> omegaSubscription;
   omegaSubscription = stream.listen((stateChange) async {
-    print('DISPOSABLE LISTENER ω :: Change event arrived!:'
-        ' ${stateChange.event}');
+    print(
+      'DISPOSABLE LISTENER ω :: Change event arrived!:'
+      ' ${stateChange.event}',
+    );
     if (stateChange.event == ably.ConnectionEvent.connected) {
       await omegaSubscription.cancel();
     }
@@ -33,8 +37,10 @@ void listenRealtimeConnection(ably.PubSubClient realtime) {
 
   //RETAINING LISTENER - β
   realtime.connection.on().listen((stateChange) {
-    print('RETAINING LISTENER β :: Change event arrived!:'
-        ' ${stateChange.event}');
+    print(
+      'RETAINING LISTENER β :: Change event arrived!:'
+      ' ${stateChange.event}',
+    );
     // NESTED LISTENER - ξ
     // will be registered only when connected event is received by β listener
     realtime.connection.on().listen((stateChange) {
@@ -55,7 +61,8 @@ void listenRealtimeConnection(ably.PubSubClient realtime) {
   //RETAINING LISTENER - γ
   realtime.connection.on().listen((stateChange) async {
     print(
-        'RETAINING LISTENER γ :: Change event arrived!: ${stateChange.event}');
+      'RETAINING LISTENER γ :: Change event arrived!: ${stateChange.event}',
+    );
     if (stateChange.event == ably.ConnectionEvent.connected) {
       //by the time this cancel is triggered,
       // preZeta will already have received current event.

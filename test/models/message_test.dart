@@ -8,12 +8,12 @@ void main() {
   const connectionId = 'connection-id';
   const data = {
     'a': 'b',
-    'c': [1, 2, 3]
+    'c': [1, 2, 3],
   };
   const encoding = 'msgpack';
   const extras = {
     'a': 'b',
-    'c': [1, 2, 3]
+    'c': [1, 2, 3],
   };
   final timestamp = DateTime.now();
 
@@ -77,21 +77,23 @@ void main() {
         expect(message.hashCode == message2.hashCode, true);
       });
 
-      test("#== is false and hashes don't match when attributes are not same",
-          () {
-        final message2 = Message(
-          id: messageId,
-          name: 'other-name',
-          clientId: clientId,
-          connectionId: connectionId,
-          data: data,
-          encoding: encoding,
-          extras: const MessageExtras(extras),
-          timestamp: timestamp,
-        );
-        expect(message == message2, false);
-        expect(message.hashCode == message2.hashCode, false);
-      });
+      test(
+        "#== is false and hashes don't match when attributes are not same",
+        () {
+          final message2 = Message(
+            id: messageId,
+            name: 'other-name',
+            clientId: clientId,
+            connectionId: connectionId,
+            data: data,
+            encoding: encoding,
+            extras: const MessageExtras(extras),
+            timestamp: timestamp,
+          );
+          expect(message == message2, false);
+          expect(message.hashCode == message2.hashCode, false);
+        },
+      );
 
       test("#== is false and hashes don't match for different classes", () {
         final object = Object();
@@ -139,7 +141,7 @@ void main() {
               'encoding': encoding,
               'extras': extras,
               'timestamp': timestamp.millisecondsSinceEpoch,
-            }
+            },
           ]);
           final message = messages[0];
           expect(message.id, messageId);
@@ -167,8 +169,9 @@ void main() {
           expect(message.extras, null);
         });
         test('a map of extras is allowed', () {
-          final message =
-              Message(extras: const MessageExtras({'key': 'value'}));
+          final message = Message(
+            extras: const MessageExtras({'key': 'value'}),
+          );
           expect(message.extras!.map, const {'key': 'value'});
         });
       });

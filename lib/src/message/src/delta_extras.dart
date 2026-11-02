@@ -17,16 +17,13 @@ class DeltaExtras with ObjectHash {
   /// create instance from a map
   @protected
   DeltaExtras.fromMap(Map<String, dynamic> value)
-      : format = value[TxDeltaExtras.format] as String?,
-        from = value[TxDeltaExtras.from] as String?;
+    : format = value[TxDeltaExtras.format] as String?,
+      from = value[TxDeltaExtras.from] as String?;
 
   @override
   bool operator ==(Object other) =>
       other is DeltaExtras && other.from == from && other.format == format;
 
   @override
-  int get hashCode => objectHash([
-        from,
-        format,
-      ]);
+  int get hashCode => objectHash([from, format]);
 }

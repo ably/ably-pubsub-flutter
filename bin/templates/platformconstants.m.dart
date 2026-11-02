@@ -1,4 +1,5 @@
-String $(Map<String, dynamic> c) => '''
+String $(Map<String, dynamic> c) =>
+    '''
 #import "AblyPlatformConstants.h"
 
 

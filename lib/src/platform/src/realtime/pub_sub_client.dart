@@ -21,10 +21,10 @@ class PubSubClient extends PlatformObject {
   ///@nodoc
   @override
   Future<int?> createPlatformInstance() async {
-    final handle =
-        await invokeWithoutHandle<int>(PlatformMethod.createRealtime, {
-      TxTransportKeys.options: options,
-    });
+    final handle = await invokeWithoutHandle<int>(
+      PlatformMethod.createRealtime,
+      {TxTransportKeys.options: options},
+    );
     _realtimeInstances[handle] = this;
 
     if (io.Platform.isAndroid && options.autoConnect) {
@@ -35,11 +35,7 @@ class PubSubClient extends PlatformObject {
       // to false, and call connect immediately once we get the handle.
       // This is also a specific case where it's required to pass the handle
       // value from external source
-      await invoke<void>(
-        PlatformMethod.connectRealtime,
-        null,
-        handle,
-      );
+      await invoke<void>(PlatformMethod.connectRealtime, null, handle);
     }
     return handle;
   }

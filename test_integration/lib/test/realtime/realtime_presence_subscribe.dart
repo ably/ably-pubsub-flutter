@@ -36,14 +36,14 @@ Future<Map<String, dynamic>> testRealtimePresenceSubscribe({
       .listen(enterMessages.add);
 
   final enterUpdateMessages = <PresenceMessage>[];
-  final enterUpdateMessagesSubscription = presence.subscribe(actions: [
-    PresenceAction.enter,
-    PresenceAction.update
-  ]).listen(enterUpdateMessages.add);
+  final enterUpdateMessagesSubscription = presence
+      .subscribe(actions: [PresenceAction.enter, PresenceAction.update])
+      .listen(enterUpdateMessages.add);
 
   final partialMessages = <PresenceMessage>[];
-  final partialMessagesSubscription =
-      presence.subscribe().listen(partialMessages.add);
+  final partialMessagesSubscription = presence.subscribe().listen(
+    partialMessages.add,
+  );
 
   // enter-update-leave sequence with different data types to check if
   // data received by listeners is intact

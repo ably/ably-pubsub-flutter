@@ -26,31 +26,19 @@ enum UNAuthorizationStatus {
 /// Constants indicating the presentation styles for alerts.
 ///
 /// [Apple docs](https://developer.apple.com/documentation/usernotifications/unalertstyle)
-enum UNAlertStyle {
-  none,
-  banner,
-  alert,
-}
+enum UNAlertStyle { none, banner, alert }
 
 /// @nodoc
 /// Constants that indicate the current status of a notification setting.
 ///
 /// [Apple docs](https://developer.apple.com/documentation/usernotifications/unnotificationsetting)
-enum UNNotificationSetting {
-  notSupported,
-  disabled,
-  enabled,
-}
+enum UNNotificationSetting { notSupported, disabled, enabled }
 
 /// @nodoc
 /// Constants indicating the style previewing a notification's content.
 ///
 /// [Apple docs](https://developer.apple.com/documentation/usernotifications/unshowpreviewssetting)
-enum UNShowPreviewsSetting {
-  always,
-  whenAuthenticated,
-  never,
-}
+enum UNShowPreviewsSetting { always, whenAuthenticated, never }
 
 /// @nodoc
 /// The object for managing notification-related settings and the authorization

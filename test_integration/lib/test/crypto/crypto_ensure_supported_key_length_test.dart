@@ -36,8 +36,9 @@ Future<Map<String, dynamic>> testCryptoEnsureSupportedKeyLength({
   }
 
   try {
-    final keyWith127BitLength =
-        Uint8List.fromList(List.generate(127, (index) => index));
+    final keyWith127BitLength = Uint8List.fromList(
+      List.generate(127, (index) => index),
+    );
     Crypto.ensureSupportedKeyLength(keyWith127BitLength);
   } on AblyException catch (exception) {
     keyWith127BitLengthException = encodeAblyException(exception);

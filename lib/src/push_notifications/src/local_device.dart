@@ -19,11 +19,11 @@ class LocalDevice extends DeviceDetails {
     this.deviceIdentityToken,
     this.deviceSecret,
   }) : super(
-          clientId: deviceDetails.clientId,
-          formFactor: deviceDetails.formFactor,
-          id: deviceDetails.id,
-          metadata: deviceDetails.metadata,
-          platform: deviceDetails.platform,
-          push: deviceDetails.push,
-        );
+         clientId: deviceDetails.clientId,
+         formFactor: deviceDetails.formFactor,
+         id: deviceDetails.id,
+         metadata: deviceDetails.metadata,
+         platform: deviceDetails.platform,
+         push: deviceDetails.push,
+       );
 }

@@ -16,8 +16,5 @@ class AblyEventMessage {
   /// creates an instance with non-nul [eventName]
   ///
   /// [message] is optional
-  const AblyEventMessage({
-    required this.eventName,
-    this.message,
-  });
+  const AblyEventMessage({required this.eventName, this.message});
 }

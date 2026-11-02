@@ -4,8 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  final channel =
-      MethodChannel('io.ably.flutter.plugin', StandardMethodCodec(Codec()));
+  final channel = MethodChannel(
+    'io.ably.flutter.plugin',
+    StandardMethodCodec(Codec()),
+  );
 
   TestWidgetsFlutterBinding.ensureInitialized();
   var counter = 0;
@@ -17,24 +19,24 @@ void main() {
   setUp(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (methodCall) async {
-      switch (methodCall.method) {
-        case PlatformMethod.resetAblyClients:
-          return true;
+          switch (methodCall.method) {
+            case PlatformMethod.resetAblyClients:
+              return true;
 
-        case PlatformMethod.getPlatformVersion:
-          return _platformVersion;
-        case PlatformMethod.getVersion:
-          return _nativeLibraryVersion;
+            case PlatformMethod.getPlatformVersion:
+              return _platformVersion;
+            case PlatformMethod.getVersion:
+              return _nativeLibraryVersion;
 
-        case PlatformMethod.createRealtime:
-          return ++counter;
+            case PlatformMethod.createRealtime:
+              return ++counter;
 
-        case PlatformMethod.publishRealtimeChannelMessage:
-        case PlatformMethod.connectRealtime:
-        default:
-          return null;
-      }
-    });
+            case PlatformMethod.publishRealtimeChannelMessage:
+            case PlatformMethod.connectRealtime:
+            default:
+              return null;
+          }
+        });
     Platform(methodChannel: channel);
   });
 
@@ -53,9 +55,7 @@ void main() {
 
   test(PlatformMethod.createRealtime, () async {
     const endpoint = 'nonprod:sandbox';
-    final o = ClientOptions(
-      endpoint: endpoint,
-    );
+    final o = ClientOptions(endpoint: endpoint);
     final realtime = createClient(options: o);
     expect(await realtime.handle, counter);
     expect(realtime.options.endpoint, endpoint);

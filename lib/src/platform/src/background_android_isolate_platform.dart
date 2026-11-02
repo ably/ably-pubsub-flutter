@@ -23,7 +23,9 @@ class BackgroundIsolateAndroidPlatform {
           return _onPushBackgroundMessage(call.arguments as RemoteMessage);
         default:
           throw PlatformException(
-              code: 'invalid_method', message: 'No such method ${call.method}');
+            code: 'invalid_method',
+            message: 'No such method ${call.method}',
+          );
       }
     });
   }
@@ -40,7 +42,9 @@ class BackgroundIsolateAndroidPlatform {
   /// we explicitly launched when a RemoteMessage is received.
   /// Used only on Android.
   final MethodChannel _methodChannel = MethodChannel(
-      'io.ably.flutter.plugin.background', StandardMethodCodec(Codec()));
+    'io.ably.flutter.plugin.background',
+    StandardMethodCodec(Codec()),
+  );
 
   final PushNotificationEventsInternal _pushNotificationEvents =
       Push.notificationEvents as PushNotificationEventsInternal;

@@ -20,19 +20,18 @@ Future<Map<String, dynamic>> testCreateRealtimeWithAuthUrl({
     autoConnect: false,
   );
 
-  final ablyForToken = createClient(
-    options: clientOptionsForToken,
-  );
+  final ablyForToken = createClient(options: clientOptionsForToken);
   final tokenDetails = await ablyForToken.auth.requestToken();
 
   final authUrl =
       'https://echo.ably.io/?body=${Uri.encodeComponent(tokenDetails.token!)}';
   final options = ClientOptions(
-      authUrl: authUrl,
-      endpoint: 'nonprod:sandbox',
-      useTokenAuth: true,
-      autoConnect: false,
-      logLevel: LogLevel.error);
+    authUrl: authUrl,
+    endpoint: 'nonprod:sandbox',
+    useTokenAuth: true,
+    autoConnect: false,
+    logLevel: LogLevel.error,
+  );
   final realtime = createClient(options: options);
   final completer = Completer<void>();
   realtime.connection.on().listen((stateChange) {
@@ -45,8 +44,10 @@ Future<Map<String, dynamic>> testCreateRealtimeWithAuthUrl({
     throw Error();
   }
 
-  await completer.future
-      .timeout(const Duration(seconds: 30), onTimeout: _onTimeout);
+  await completer.future.timeout(
+    const Duration(seconds: 30),
+    onTimeout: _onTimeout,
+  );
 
   return {'handle': await realtime.handle};
 }

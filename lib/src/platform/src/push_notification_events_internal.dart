@@ -15,7 +15,7 @@ class PushNotificationEventsInternal implements PushNotificationEvents {
   /// @nodoc
   /// Invoked when pushOnShowNotificationInForeground platform method is called.
   Future<bool> Function(RemoteMessage message)?
-      onShowNotificationInForegroundHandler;
+  onShowNotificationInForegroundHandler;
 
   /// @nodoc
   /// Exposes stream of received [RemoteMessage] objects.
@@ -34,7 +34,8 @@ class PushNotificationEventsInternal implements PushNotificationEvents {
   @override
   Future<RemoteMessage?> get notificationTapLaunchedAppFromTerminated =>
       Platform().invokePlatformMethod<RemoteMessage>(
-          PlatformMethod.pushNotificationTapLaunchedAppFromTerminated);
+        PlatformMethod.pushNotificationTapLaunchedAppFromTerminated,
+      );
 
   @override
   Stream<RemoteMessage> get onMessage => onMessageStreamController.stream;
@@ -50,7 +51,8 @@ class PushNotificationEventsInternal implements PushNotificationEvents {
 
   @override
   void setOnShowNotificationInForeground(
-      Future<bool> Function(RemoteMessage message) callback) {
+    Future<bool> Function(RemoteMessage message) callback,
+  ) {
     onShowNotificationInForegroundHandler = callback;
   }
 
@@ -91,10 +93,12 @@ class PushNotificationEventsInternal implements PushNotificationEvents {
       }
     } else {
       // ignore:avoid_print
-      print('Received RemoteMessage but no handler was set. '
-          'RemoteMessage.data: ${remoteMessage.data}. '
-          'RemoteMessage.notification: ${remoteMessage.notification}. '
-          'Set `ably.Push.notificationEvents.setOnBackgroundMessage()`.');
+      print(
+        'Received RemoteMessage but no handler was set. '
+        'RemoteMessage.data: ${remoteMessage.data}. '
+        'RemoteMessage.notification: ${remoteMessage.notification}. '
+        'Set `ably.Push.notificationEvents.setOnBackgroundMessage()`.',
+      );
     }
   }
 

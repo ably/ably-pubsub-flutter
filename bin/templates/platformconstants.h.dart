@@ -1,4 +1,5 @@
-String $(Map<String, dynamic> c) => '''
+String $(Map<String, dynamic> c) =>
+    '''
 @import Foundation;
 
 typedef NS_ENUM(UInt8, CodecType) {
