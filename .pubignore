@@ -1,3 +1,20 @@
+# pub uses this file instead of the root .gitignore, so it repeats the
+# .gitignore entries that would otherwise be published from a local checkout,
+# such as build output.
+.DS_Store
+.dart_tool/
+.packages
+.pub/
+build/
+doc/
+.fvm
+.project
+.classpath
+.settings
+.factorypath
+.idea/
+*.iml
+
 # Test suite is not published for pub.dev
 # See <https://github.com/ably/ably-flutter/issues/400#issuecomment-1129236627>
 test/

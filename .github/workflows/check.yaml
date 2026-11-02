@@ -37,3 +37,10 @@ jobs:
 
       - name: 'Run unit tests'
         run: flutter test --no-pub
+
+      # Runs the same validation as the publish step in release.yaml, so a
+      # problem that would block publishing to pub.dev (a missing CHANGELOG
+      # entry, an invalid pubspec, an oversized archive) fails here first.
+      # Warnings fail the step; hints don't.
+      - name: 'Check the package can be published'
+        run: flutter pub publish --dry-run
