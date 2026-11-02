@@ -89,8 +89,11 @@ jobs:
         uses: reactivecircus/android-emulator-runner@e89f39f1abbbd05b1113a29cf4db69e7540cae5a # v2.37.0
         with:
           api-level: ${{ matrix.api-level }}
+          # Flutter 3.47 treats 32-bit x86 Android devices as unsupported.
+          arch: x86_64
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           script: |
             flutter pub get
-            cd test_integration && flutter build apk && flutter drive
+            adb devices
+            cd test_integration && flutter drive -d emulator-5554
