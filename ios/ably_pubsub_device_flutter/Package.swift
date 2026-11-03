@@ -70,5 +70,14 @@ let package = Package(
                 .product(name: "FlutterFramework", package: "FlutterFramework"),
             ]
         ),
+        .testTarget(
+            name: "AblyFlutterCodecTests",
+            dependencies: [
+                "ably_pubsub_device_flutter",
+                "AblyFlutterCommon",
+                .product(name: "FlutterFramework", package: "FlutterFramework"),
+                .product(name: "AblyPubSubDevice", package: "ably-pubsub-cocoa"),
+            ]
+        ),
     ]
 )
