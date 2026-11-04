@@ -31,12 +31,12 @@ and iOS 15 or later, and iOS builds need Xcode 26 or later.
 flutter pub add ably_pubsub_device_flutter
 ```
 
-### Platform setup
+### iOS setup
 
-- Android: set `minSdkVersion` to 24 or higher in `android/app/build.gradle`.
-- iOS: the plugin is a Swift package, so Swift Package Manager must be on. It is on by default
-  from Flutter 3.44. If you turned it off, remove `enable-swift-package-manager: false` from
-  `pubspec.yaml`, or run `flutter config --enable-swift-package-manager`.
+The plugin is a Swift package that needs iOS 15, but `flutter create` targets iOS 13. In Xcode, open
+`ios/Runner.xcworkspace` and set **Runner > General > Minimum Deployments** to 15.0 or later.
+Swift Package Manager is on by default from Flutter 3.44; if your app turns it off, see
+[UPDATING.md](https://github.com/ably/ably-pubsub-flutter/blob/main/UPDATING.md#upgrading-from-v12x).
 
 ## Quick start
 
@@ -131,11 +131,6 @@ The SDK can activate a device for push notifications and subscribe it to channel
 - Physical iOS devices, but not the iOS Simulator
 
 See [PushNotifications.md](https://github.com/ably/ably-pubsub-flutter/blob/main/PushNotifications.md) for setup, sending and receiving.
-
-### Android Gradle
-
-If your Android build fails after you add the package, you might need to upgrade your
-[Android Gradle plugin and Gradle distribution](https://developer.android.com/studio/releases/gradle-plugin#updating-plugin).
 
 ## Known limitations
 
