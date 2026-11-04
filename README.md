@@ -1,122 +1,161 @@
-![Ably Pub/Sub Flutter Header](images/flutter-github.png)
-[![Pub Version](https://img.shields.io/pub/v/ably_pubsub_device_flutter)](https://pub.dev/packages/ably_pubsub_device_flutter)
-[![License](https://badgen.net/github/license/ably/ably-pubsub-flutter)](https://github.com/ably/ably-pubsub-flutter/blob/main/LICENSE)
+![Ably Pub/Sub Flutter Header](https://raw.githubusercontent.com/ably/ably-pubsub-flutter/main/images/flutter-github.png)
 
----
+[![pub.dev: ably_pubsub_device_flutter](https://img.shields.io/pub/v/ably_pubsub_device_flutter?label=ably_pubsub_device_flutter)](https://pub.dev/packages/ably_pubsub_device_flutter)
+[![License](https://badgen.net/github/license/ably/ably-pubsub-flutter)](https://github.com/ably/ably-pubsub-flutter/blob/main/LICENSE)
 
 # Ably Pub/Sub Flutter SDK
 
-Build any realtime experience using Ably’s Pub/Sub Flutter SDK. Supported on popular platforms and frameworks, including Android and iOS.
+The Flutter SDK for [Ably Pub/Sub](https://ably.com/docs/basics): publish and subscribe to
+channels, and use message history, presence and push notifications, from Android and iOS apps.
 
-Ably Pub/Sub provides flexible APIs that deliver features such as pub-sub messaging, message history, presence, and push notifications. Utilizing Ably’s realtime messaging platform, applications benefit from its highly performant, reliable, and scalable infrastructure.
+## Overview
 
-Find out more:
+This SDK provides the device package only, for end-user apps. There is no server package; for
+backends, use a server SDK such as [JavaScript](https://github.com/ably/ably-pubsub-js),
+[Java](https://github.com/ably/ably-pubsub-java), [Go](https://github.com/ably/ably-pubsub-go),
+[.NET](https://github.com/ably/ably-pubsub-dotnet), [Python](https://github.com/ably/ably-pubsub-python),
+[PHP](https://github.com/ably/ably-pubsub-php) or [Ruby](https://github.com/ably/ably-pubsub-ruby).
 
-* [Ably Pub/Sub docs.](https://ably.com/docs/basics)
-* [Ably Pub/Sub examples.](https://ably.com/examples?product=pubsub)
+| Package | Use it for | Entry point |
+|---------|------------|-------------|
+| [`ably_pubsub_device_flutter`](https://pub.dev/packages/ably_pubsub_device_flutter) | Applications on end-user devices | `createClient` |
 
----
+## Requirements
 
-## Getting started
-
-Everything you need to get started with Ably:
-
-* [Getting started in Pub/Sub using Flutter.](https://ably.com/docs/getting-started/flutter)
-* [SDK Setup for Flutter.](https://ably.com/docs/getting-started/setup?lang=flutter)
-
----
-
-## Supported platforms
-
-Ably aims to support a wide range of platforms. If you experience any compatibility issues, open an issue in the repository or contact [Ably support](https://ably.com/support).
-
-This SDK supports the following platforms:
-
-| Platform | Support |
-|----------|---------|
-| Android  | Android 7.0 (API level 24) or newer |
-| iOS      | iOS 15 or newer |
-| Flutter  | Flutter 3.44.0 or higher |
-
-You might also need to upgrade [gradle distribution](https://developer.android.com/studio/releases/gradle-plugin#updating-plugin).
-> [!IMPORTANT]
-> SDK versions < 1.2.25 will be [deprecated](https://ably.com/docs/platform/deprecate/protocol-v1) from November 1, 2025.
-
----
+Flutter 3.44 or later, with Dart 3.12 or later. Apps run on Android 7.0 (API level 24) or later
+and iOS 15 or later, and iOS builds need Xcode 26 or later.
 
 ## Installation
 
-To get started with your project, install the package:
-
-Add the Ably Flutter package to your project by including it in your `pubspec.yaml` file:
-
-```yaml
-dependencies:
-  ably_pubsub_device_flutter: ^2.0.0
+```bash
+flutter pub add ably_pubsub_device_flutter
 ```
 
-Once added to your dependencies, import it in your Dart code:
+### iOS setup
+
+The plugin is a Swift package that needs iOS 15, but `flutter create` targets iOS 13. In Xcode, open
+`ios/Runner.xcworkspace` and set **Runner > General > Minimum Deployments** to 15.0 or later.
+Swift Package Manager is on by default from Flutter 3.44; if your app turns it off, see
+[UPDATING.md](https://github.com/ably/ably-pubsub-flutter/blob/main/UPDATING.md#upgrading-from-v12x).
+
+## Quick start
+
+Authenticate a device with tokens issued by your own server, through `authUrl` or `authCallback`.
+Never embed an API key in an app that runs on an end-user device.
 
 ```dart
 import 'package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart' as ably;
+import 'package:flutter/widgets.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final client = ably.createClient(
+    options: ably.ClientOptions(
+      authUrl: 'https://your-server.example.com/ably-auth',
+      clientId: 'me',
+    ),
+  );
+
+  // The client connects automatically. Subscribing attaches the channel.
+  final channel = client.channels.get('test-channel');
+  channel.subscribe().listen((ably.Message message) {
+    print('Received: ${message.data}');
+  });
+
+  await channel.publish(name: 'test-event', data: 'hello world');
+}
 ```
 
-> [!NOTE]
-> When increasing the version of `ably_pubsub_device_flutter` in your `pubspec.yaml`, if there are breaking changes, follow the [updating / migration guide](UPDATING.md).
+To get tokens from your own code instead of a URL, set `authCallback`. It can return a token
+string, a `TokenDetails` or a `TokenRequest`.
 
----
+## Migrating from 1.x
 
-## Usage
+Version 2.0 renames the package and creates clients with `createClient`.
 
-The following code connects to Ably's realtime messaging service, subscribes to a channel to receive messages, and publishes a test message to that same channel:
+| | 1.x | 2.0 |
+|---|---|---|
+| Package | `ably_flutter` | `ably_pubsub_device_flutter` |
+| Import | `package:ably_flutter/ably_flutter.dart` | `package:ably_pubsub_device_flutter/ably_pubsub_device_flutter.dart` |
+| Realtime client | `ably.Realtime(options: ...)` | `ably.createClient(options: ...)` |
+| REST client | `ably.Rest(options: ...)` | Removed |
+
+See [UPDATING.md](https://github.com/ably/ably-pubsub-flutter/blob/main/UPDATING.md#upgrading-from-v12x) for all other changes.
+
+## Common configuration
+
+### Endpoint
+
+`endpoint` selects the Ably host for HTTP requests and the realtime connection. It replaces
+the 1.x `environment`, `restHost` and `realtimeHost` options.
 
 ```dart
-  // Initialize Ably Pub/Sub client
-  final clientOptions = ably.ClientOptions(
-    key: 'your-ably-api-key',
+final client = ably.createClient(
+  options: ably.ClientOptions(
+    authUrl: 'https://your-server.example.com/ably-auth',
     clientId: 'me',
-  );
-  
-  final pubSubClient = ably.createClient(options: clientOptions);
-  
-  // Wait for connection to be established
-  await pubSubClient.connection
-      .on(ably.ConnectionEvent.connected)
-      .first
-      .then((stateChange) {
-    print('Connected to Ably');
-  });
-  
-  // Get a reference to the 'test-channel' channel
-  final channel = pubSubClient.channels.get('test-channel');
-  
-  // Subscribe to all messages published to this channel
-  channel.subscribe().listen((ably.Message message) {
-    print('Received message: ${message.data}');
-  });
-  
-  // Publish a test message to the channel
-  await channel.publish(
-    name: 'test-event',
-    data: 'hello world',
-  );
+    endpoint: 'nonprod:sandbox',
+  ),
+);
 ```
 
----
+- Never put a port in `endpoint`: `localhost:8080` is not a hostname and does not resolve.
+- Set the port with `tlsPort`, or with `port` when TLS is off.
+- With TLS off (`tls: false`), use token authentication.
 
+See [UPDATING.md](https://github.com/ably/ably-pubsub-flutter/blob/main/UPDATING.md#upgrading-from-v12x) for how the old options map to `endpoint`.
 
-## Releases
+### Logging
 
-The [CHANGELOG.md](./CHANGELOG.md) contains details of the latest releases for this SDK. You can also view all Ably releases on [changelog.ably.com](https://changelog.ably.com).
+Set `logLevel` to a `LogLevel` value: `none`, `verbose`, `debug`, `info`, `warn` or `error`. The
+default is `info`. The native SDK writes the log output; there is no log handler option.
 
----
+```dart
+final client = ably.createClient(
+  options: ably.ClientOptions(
+    authUrl: 'https://your-server.example.com/ably-auth',
+    clientId: 'me',
+    logLevel: ably.LogLevel.debug,
+  ),
+);
+```
+
+## Platform notes
+
+### Push notifications
+
+The SDK can activate a device for push notifications and subscribe it to channels. Push works on:
+
+- Android devices, and Android emulators with Google APIs
+- Physical iOS devices, but not the iOS Simulator
+
+See [PushNotifications.md](https://github.com/ably/ably-pubsub-flutter/blob/main/PushNotifications.md) for setup, sending and receiving.
+
+## Known limitations
+
+- The Push Admin API is not available. The push APIs manage the current device only. See
+  [Known Limitations](https://github.com/ably/ably-pubsub-flutter/blob/main/PushNotifications.md#known-limitations) in PushNotifications.md.
+
+## Further reading
+
+- [Getting started with Pub/Sub using Flutter](https://ably.com/docs/getting-started/flutter)
+- [Ably Pub/Sub documentation](https://ably.com/docs/basics) and [examples](https://ably.com/examples?product=pubsub)
+- [UPDATING.md](https://github.com/ably/ably-pubsub-flutter/blob/main/UPDATING.md): migrating from 1.x
+- [CHANGELOG.md](https://github.com/ably/ably-pubsub-flutter/blob/main/CHANGELOG.md): release notes; all Ably releases are listed on [changelog.ably.com](https://changelog.ably.com)
+- [PushNotifications.md](https://github.com/ably/ably-pubsub-flutter/blob/main/PushNotifications.md): push notifications on Android and iOS
+- [example/](https://github.com/ably/ably-pubsub-flutter/tree/main/example): an example app
 
 ## Contributing
 
-Read the [CONTRIBUTING.md](./CONTRIBUTING.md) guidelines to contribute to Ably.
+Read [CONTRIBUTING.md](https://github.com/ably/ably-pubsub-flutter/blob/main/CONTRIBUTING.md) before contributing; it also describes the release
+process.
 
----
+## Support, feedback and troubleshooting
 
-## Support, feedback, and troubleshooting
+For help, visit Ably's [support page](https://ably.com/support). Report bugs and compatibility
+problems on [GitHub Issues](https://github.com/ably/ably-pubsub-flutter/issues).
 
-For help or technical support, visit the [Ably Support page](https://ably.com/support) or [GitHub Issues](https://github.com/ably/ably-pubsub-flutter/issues) for community-reported bugs and discussions.
+## License
+
+Licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/ably/ably-pubsub-flutter/blob/main/LICENSE).
