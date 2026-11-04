@@ -129,7 +129,8 @@ static AblyCodecDecoder readClientOptions = ^AblyFlutterClientOptions*(NSDiction
     READ_BOOL(clientOptions, autoConnect, dictionary, TxClientOptions_autoConnect);
     READ_VALUE(clientOptions, useBinaryProtocol, dictionary, TxClientOptions_useBinaryProtocol);
     READ_VALUE(clientOptions, queueMessages, dictionary, TxClientOptions_queueMessages);
-    READ_VALUE(clientOptions, echoMessages, dictionary, TxClientOptions_echoMessages);
+    // Unbox NSNumber so an explicit false is not treated as a non-null pointer.
+    READ_BOOL(clientOptions, echoMessages, dictionary, TxClientOptions_echoMessages);
     READ_VALUE(clientOptions, recover, dictionary, TxClientOptions_recover);
     READ_VALUE(clientOptions, idempotentRestPublishing, dictionary, TxClientOptions_idempotentRestPublishing);
     READ_VALUE(clientOptions, fallbackHosts, dictionary, TxClientOptions_fallbackHosts);
